@@ -117,18 +117,18 @@ function parseSchedule(text) {
 		nc.major = carryOver;
 		var line = lines[i++].split(' ');
 		nc.number = line[1];
-		nc.name = line.splice(0, 3).join(' ');//the name of the class, minus the major, number and dash from the line
+		nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
 		i++;//skip the second line, it has no information
 		nc.enrolled = "Enrolled" == lines[i++];
 		nc.credits = lines[i++];
 		i += 4;
 		carryOver = lines[i++].split(' ', 1)[0];
-		console.log(carryOver);
+		//console.log(carryOver);
 		
 		var parentClass = 0;//null
 		var unParented = [];
 		while (!isNaN(carryOver) && carryOver != '') {//while carryOver is numeric
-			console.log("carryOver:" + carryOver + " was numberic");
+			//console.log("carryOver:" + carryOver + " was numberic");
 			var toAdd = nc.clone();
 			
 			toAdd.classNumber = carryOver;
@@ -136,7 +136,7 @@ function parseSchedule(text) {
 			toAdd.type = lines[i++];
 			line = lines[i++].split(' ');
 			toAdd.days = parseDays(line[0]);
-			console.log(line);
+			//console.log(line);
 			toAdd.stime = parseTime(line[1]);
 			toAdd.etime = parseTime(line[3]);//line[2] is '-'
 			toAdd.location = lines[i++];
@@ -177,7 +177,7 @@ function parseSchedule(text) {
 			if (i >= lines.length) {
 				carryOver = "I'm not a number";
 			}
-			console.log(i +": " + carryOver);
+			//console.log(i +": " + carryOver);
 		}
 	}
 	return classes;
@@ -187,6 +187,9 @@ function parseAndPrint(text) {
 	console.log('beginning');
 	var cl = parseSchedule(text);
 	console.log('completed--------------');
-	console.log(cl);
+	for (var i = 0; i < cl.length; i++) {
+		cl[i].log();
+	}
+	//console.log(cl);
 	return false;
 }
