@@ -38,20 +38,17 @@ function parseDays(string) {
 	var out = [false, false, false, false, false];
 	var map = { "Mo":0, "Tu":1, "We":2, "Th":3, "Fr":4 };
 	var i = 0;
-	console.log(string);
 	while (string.length >= i+2) {
 		str = string.substring(i, i+2);
-		console.log(str);
 		out[map[str]] = true;
 		i+=2;
 	}
-	console.log(out);
 	return out;
 }
 function parseTime(string) {
 	var out = [0, 0];
 	var time = string.split(':');
-	out[0] = +time[0] + (time[1].substring(2,4) == "PM" && !time[0] == "12" ? 12 : 0);
+	out[0] = +time[0] + (time[1].substring(2,4) == "PM" && time[0] != "12" ? 12 : 0);
 	out[1] = +time[1].substring(0, 2);
 	return out;
 }
