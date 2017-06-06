@@ -199,7 +199,7 @@ function parseAndPrint(text) {
 //hue is out of 1
 function hueToRed(hue) {
 	hue %= 1;
-	if (hue < 0) {
+	while (hue < 0) {
 		hue += 1;
 	}
 	return Math.floor(255*Math.max(0, 3*(Math.abs(0.5-hue)-1/6)));
@@ -217,7 +217,7 @@ function hueVal(h, v) {
 		g = 1 - (1 - g)*(1-v)*2;
 		b = 1 - (1 - b)*(1-v)*2;
 	}
-	return '#' + r.toString(16) + g.toString(16) + b.toString(16);
+	return '#' + padMinutes(Math.round(r).toString(16)) + padMinutes(Math.round(g).toString(16)) + padMinutes(Math.round(b).toString(16));
 }
 
 function padMinutes(number) {
@@ -243,6 +243,7 @@ function updateCanvas(canvas, classes) {
 				c.subClasses[j].displayColor = hueVal(hue, 0.7);
 			}
 		}
+		hue += 1/classes.length;
 	} 
 	
 	ctx.fillStyle = '#fff';
