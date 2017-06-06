@@ -4,8 +4,9 @@
 <script type="text/javascript" src="swft.js"></script>
 </head>
 <!--<form onsubmit="download(this['name'].value, this['text'].value)">-->
-<form onsubmit="console.log(this['text'].value); return false;">
+<form onsubmit="parseAndPrint(this['text'].value); return false;">
   <input type="text" name="name" value="test.txt">
   <textarea name="text" style="margin: 10px 65.2px 10px 10px; width: 757px; height: 516px;"></textarea>
   <input type="submit" value="Download">
 </form>
+<canvas width="1050" height="650" id="image">Your browser doesn't seem to support canvases, please consider a newer browser</canvas>
