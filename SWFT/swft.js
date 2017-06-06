@@ -281,22 +281,22 @@ function updateCanvas(canvas, classes) {
 				console.log(d);
 				ctx.fillStyle = c.displayColor;
 				
-				ctx.fillRect(gX + i*gsX + 1, gY + (stime*gsY - 8*gsY), gsX - 1, (dur*gsY));
+				ctx.fillRect(gX + d*gsX + 1, gY + (stime*gsY - 8*gsY), gsX - 1, (dur*gsY));
 				
 				//shadow text
 				ctx.fillStyle = '#bbb';
 				var sOffX = 1, sOffY = 1;
-				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*i + sOffX, gY + gsY/10 + 10 + (stime*gsY - 8*gsY) + sOffY);
+				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + (stime*gsY - 8*gsY) + sOffY);
 				ctx.font = '12px sans-serif';
-				ctx.fillText(c.location, gX + gsX/30 + gsX*i + sOffX, gY + gsY/10 + 10 + 10 + (stime*gsY - 8*gsY) + sOffY);
-				ctx.fillText(c.stime[0] + ':' + padMinutes(c.stime[0]) + ' - ' + c.etime[0] + ':' + padMinutes(c.etime[0]), gX + gsX/30 + gsX*i + sOffX, gY + gsY/10 + 10 + 10 + 10 + (stime*gsY - 8*gsY) + sOffY);
+				ctx.fillText(c.location, gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + 10 + (stime*gsY - 8*gsY) + sOffY);
+				ctx.fillText(c.stime[0] + ':' + padMinutes(c.stime[1]) + ' - ' + c.etime[0] + ':' + padMinutes(c.etime[1]), gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + 10 + 10 + (stime*gsY - 8*gsY) + sOffY);
 				ctx.font = '16px sans-serif';
 				
 				ctx.fillStyle = '#fff';
-				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*i, gY + gsY/10 + 10 + (stime*gsY - 8*gsY));
+				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*d, gY + gsY/10 + 10 + (stime*gsY - 8*gsY));
 				ctx.font = '12px sans-serif';
-				ctx.fillText(c.location, gX + gsX/30 + gsX*i, gY + gsY/10 + 10 + 10 + (stime*gsY - 8*gsY));
-				ctx.fillText(c.stime[0] + ':' + padMinutes(c.stime[0]) + ' - ' + c.etime[0] + ':' + padMinutes(c.etime[0]), gX + gsX/30 + gsX*i, gY + gsY/10 + 10 + 10 + 10 + (stime*gsY - 8*gsY));
+				ctx.fillText(c.location, gX + gsX/30 + gsX*d, gY + gsY/10 + 10 + 10 + (stime*gsY - 8*gsY));
+				ctx.fillText(c.stime[0] + ':' + padMinutes(c.stime[1]) + ' - ' + c.etime[0] + ':' + padMinutes(c.etime[1]), gX + gsX/30 + gsX*d, gY + gsY/10 + 10 + 10 + 10 + (stime*gsY - 8*gsY));
 				ctx.font = '16px sans-serif';
 			}
 		}
