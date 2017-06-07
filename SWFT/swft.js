@@ -206,18 +206,19 @@ function hueToRed(hue) {
 	//return Math.floor(255*Math.max(0, 3*(Math.abs(0.5-hue)-1/6)));
 	return Math.floor(255* Math.max(0, Math.min(1, 2 - Math.abs(2 - hue * 6) ) ) );
 }
+//v from -1 to 1
 function hueVal(h, v) {
-	r = hueToRed(h);
-	g = hueToRed(h-1/3);
-	b = hueToRed(h-2/3);
-	if (v < 0.5) {
-		r *= v*2;
-		g *= v*2;
-		b *= v*2;
+	var r = hueToRed(h);
+	var g = hueToRed(h-1/3);
+	var b = hueToRed(h-2/3);
+	if (v < 0) {
+		r *= 1+v;
+		g *= 1+v;
+		b *= 1+v;
 	} else {
-		r = 1 - (1 - r)*(1-v)*2;
-		g = 1 - (1 - g)*(1-v)*2;
-		b = 1 - (1 - b)*(1-v)*2;
+		r = 255*v + (1-v)*r;
+		g = 255*v + (1-v)*g;
+		b = 255*v + (1-v)*b;
 	}
 	return '#' + padMinutes(Math.round(r).toString(16)) + padMinutes(Math.round(g).toString(16)) + padMinutes(Math.round(b).toString(16));
 }
@@ -235,17 +236,24 @@ function updateCanvas(canvas, classes) {
 	var ctx = canvas.getContext('2d');
 	
 	//evenly space colors between parent classes
-	var hue = 0; //random number
+	var hue = Math.random(); //random number
+	
+	var parentClasses = [];
 	for (var i = 0; i < classes.length; i++) {
-		var c = classes[i];
+		if (classes[i].type == "Lecture") {
+			parentClasses.push(classes[i]);
+		}
+	}
+	for (var i = 0; i < parentClasses.length; i++) {
+		var c = parentClasses[i];
 		if (c.type == "Lecture") {
-			c.displayColor = hueVal(hue, 0.5);
-			//go through subclasses, same hue but 0.7 or something for the val
+			c.displayColor = hueVal(hue, 0);
+			//go through subclasses, same hue but 0.3 or something for the val
 			for (var j = 0; j < c.subClasses.length; j++) {
-				c.subClasses[j].displayColor = hueVal(hue, 0.7);
+				c.subClasses[j].displayColor = hueVal(hue, 0.6);
 			}
 		}
-		hue += 1/classes.length;
+		hue += 1/parentClasses.length;
 	} 
 	
 	ctx.fillStyle = '#fff';
@@ -276,7 +284,7 @@ function updateCanvas(canvas, classes) {
 		var c = classes[i];
 		
 		var stime = c.stime[0] + (c.stime[1]/60); //start time
-		var dur = c.etime[0] + (c.etime[1]/60) - stime; //start time
+		var dur = c.etime[0] + (c.etime[1]/60) - stime; //duration
 		
 		console.log(c.days);
 		for (d = 0; d < c.days.length; d++) {
@@ -290,14 +298,14 @@ function updateCanvas(canvas, classes) {
 				ctx.fillStyle = '#bbb';
 				var sOffX = 1, sOffY = 1;
 				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + (stime*gsY - 8*gsY) + sOffY);
-				ctx.font = '12px sans-serif';
+				ctx.font = '11px sans-serif';
 				ctx.fillText(c.location, gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + 10 + (stime*gsY - 8*gsY) + sOffY);
 				ctx.fillText(c.stime[0] + ':' + padMinutes(c.stime[1]) + ' - ' + c.etime[0] + ':' + padMinutes(c.etime[1]), gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + 10 + 10 + (stime*gsY - 8*gsY) + sOffY);
 				ctx.font = '16px sans-serif';
 				
 				ctx.fillStyle = '#fff';
 				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*d, gY + gsY/10 + 10 + (stime*gsY - 8*gsY));
-				ctx.font = '12px sans-serif';
+				ctx.font = '11px sans-serif';
 				ctx.fillText(c.location, gX + gsX/30 + gsX*d, gY + gsY/10 + 10 + 10 + (stime*gsY - 8*gsY));
 				ctx.fillText(c.stime[0] + ':' + padMinutes(c.stime[1]) + ' - ' + c.etime[0] + ':' + padMinutes(c.etime[1]), gX + gsX/30 + gsX*d, gY + gsY/10 + 10 + 10 + 10 + (stime*gsY - 8*gsY));
 				ctx.font = '16px sans-serif';
