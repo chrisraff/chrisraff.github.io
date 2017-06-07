@@ -198,11 +198,13 @@ function parseAndPrint(text) {
 
 //hue is out of 1
 function hueToRed(hue) {
+	hue += 1/3;
 	hue %= 1;
 	while (hue < 0) {
 		hue += 1;
 	}
-	return Math.floor(255*Math.max(0, 3*(Math.abs(0.5-hue)-1/6)));
+	//return Math.floor(255*Math.max(0, 3*(Math.abs(0.5-hue)-1/6)));
+	return Math.floor(255* Math.max(0, Math.min(1, 2 - Math.abs(2 - hue * 6) ) ) );
 }
 function hueVal(h, v) {
 	r = hueToRed(h);
