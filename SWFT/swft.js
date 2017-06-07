@@ -1,6 +1,7 @@
 //var classes = []
 //var numParentClasses = 0;
 
+
 function download(filename, text) {
   var element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -292,30 +293,36 @@ function updateCanvas(canvas, classes) {
 				console.log(d);
 				ctx.fillStyle = c.displayColor;
 				
-				ctx.fillRect(gX + d*gsX + 1, gY + (stime*gsY - 8*gsY), gsX - 1, (dur*gsY));
+				ctx.fillRect(gX + d*gsX + 1, gY + (stime*gsY - 8*gsY), gsX - 2, (dur*gsY));
 				
 				//shadow text
 				ctx.fillStyle = '#bbb';
 				var sOffX = 1, sOffY = 1;
 				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + (stime*gsY - 8*gsY) + sOffY);
-				ctx.font = '11px sans-serif';
+				ctx.font = '12px sans-serif';
 				ctx.fillText(c.location, gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + 10 + (stime*gsY - 8*gsY) + sOffY);
 				ctx.fillText(c.stime[0] + ':' + padMinutes(c.stime[1]) + ' - ' + c.etime[0] + ':' + padMinutes(c.etime[1]), gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + 10 + 10 + (stime*gsY - 8*gsY) + sOffY);
 				ctx.font = '16px sans-serif';
 				
 				ctx.fillStyle = '#fff';
 				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*d, gY + gsY/10 + 10 + (stime*gsY - 8*gsY));
-				ctx.font = '11px sans-serif';
+				ctx.font = '12px sans-serif';
 				ctx.fillText(c.location, gX + gsX/30 + gsX*d, gY + gsY/10 + 10 + 10 + (stime*gsY - 8*gsY));
 				ctx.fillText(c.stime[0] + ':' + padMinutes(c.stime[1]) + ' - ' + c.etime[0] + ':' + padMinutes(c.etime[1]), gX + gsX/30 + gsX*d, gY + gsY/10 + 10 + 10 + 10 + (stime*gsY - 8*gsY));
 				ctx.font = '16px sans-serif';
 			}
 		}
 	}
+	
+	
+	document.getElementById('downloadImage').addEventListener('click', function() {
+		downloadCanvas(this, 'image', document.getElementById('name').value + '.png');
+	}, false);	
 }
 
 //http://jsfiddle.net/wboykinm/fL0q2uce/
 function downloadCanvas(link, canvasId, filename) {
     link.href = document.getElementById(canvasId).toDataURL();
     link.download = filename;
+	return 'what';
 }
