@@ -4,11 +4,12 @@
 </head>
 <!--<form onsubmit="download(this['name'].value, this['text'].value)">-->
 <form onsubmit="parseAndPrint(this['text'].value); return false;">
-  <input type="text" id = "name" name="name" value="Schedule">
-  <textarea name="text" style="margin: 10px 65.2px 10px 10px; width: 757px; height: 516px;"></textarea>
+  <input type="text" id="name" name="name" value="Schedule">
+  <textarea id="classPaste" name="text" style="margin: 10px 65.2px 10px 10px; width: 757px; height: 516px;" onChange="parseAndPrint(document.getElementById('classPaste').value); return false;"></textarea>
   <input type="submit" value="Submit">
 </form>
 <a id="downloadImage">
   <canvas width="1050" height="650" id="image">Your browser doesn't seem to support canvases, please consider a newer browser</canvas>
+  <br/>
   Click to download weekly calendar image
 </a>
