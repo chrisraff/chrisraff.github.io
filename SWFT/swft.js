@@ -127,6 +127,7 @@ function parseSchedule(text) {
 		i--;
 		var nc = new Class();
 		nc.major = carryOver;
+		console.log(carryOver);
 		var line = lines[i++].split(' ');
 		nc.number = line[1];
 		nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
@@ -182,7 +183,7 @@ function parseSchedule(text) {
 			while (i < lines.length) {
 				carryOver = lines[i++].split(' ', 1)[0];
 				
-				if (carryOver != "URL") {
+				if (carryOver != "URL" && carryOver != "") {
 					break;
 				}
 			}
@@ -526,9 +527,9 @@ function getIcalString(classes) {
 		days = days.substring(0, days.length - 1);//shave off final comma
 		out += "RRULE:FREQ=WEEKLY;UNTIL=" + cl.edate[2] + padMinutes(cl.edate[0]) + padMinutes(cl.edate[1] + 1) + "T045959Z;BYDAY=" + days + "\n";
 		//sequence could go here, set it to 0, I guess
-		out += "SUMMARY:" + cl.major + " " + cl.number + " -" + cl.name + ", " + cl.type + "\n";
+		out += "SUMMARY:" + cl.major + " " + cl.number + " - " + cl.name + ", " + cl.type + "\n";
 		out += "TRANSP:OPAQUE\n"; //this seems to indicate that the event is "busy" aka not free time
-		var uidTail = cl.major + "-" + cl.number + cl.name + "-" + cl.type;
+		var uidTail = cl.major + "-" + cl.number + "-" + cl.name + "-" + cl.type;
 		uidTail = uidTail.split(' ').join('-');//replace spaces
 		out += "UID:SWFT-" + cl.sdate[0]+"-"+cl.sdate[1]+"-"+cl.sdate[2] + "-" + uidTail + "\n";
 		//date stamp
