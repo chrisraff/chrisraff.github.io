@@ -24,14 +24,14 @@ class Time {
 		return new Time(this.hour, this.minute);
 	}
 }
-class Date {
+class SimpleDate {
 	constructor(d, m, y) {
 		this.day = d;
 		this.month = m;
 		this.year = y;
 	}
 	clone() {
-		return new Date(this.day, this.month, this.year);
+		return new SimpleDate(this.day, this.month, this.year);
 	}
 }
 
@@ -65,8 +65,8 @@ class Class {
 		
 		this.stime = new Time(0,0);
 		this.etime = new Time(0,0);
-		this.sdate = new Date(0,0,0);
-		this.edate = new Date(0,0,0);
+		this.sdate = new SimpleDate(0,0,0);
+		this.edate = new SimpleDate(0,0,0);
 		this.number = "";
 		this.classNumber = "";
 		this.days = [false, false, false, false, false];
