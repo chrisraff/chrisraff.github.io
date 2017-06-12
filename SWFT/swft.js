@@ -514,7 +514,7 @@ function getIcalString(classes) {
 		out += "DTEND;TZID=" + timeZone + ":" + date.getFullYear() + padMinutes(date.getMonth()) + padMinutes(date.getDate()) + "T" + padMinutes(cl.etime[0]) + padMinutes(cl.etime[1]) + "00\n";
 		out += "DTSTART;TZID=" + timeZone + ":" + cl.edate[2] + padMinutes(cl.edate[0]) + padMinutes(cl.edate[1]) + "T" + padMinutes(cl.stime[0]) + padMinutes(cl.stime[1]) + "00\n";
 		
-		out += "LOCATION:" + location + "\n";
+		out += "LOCATION:" + cl.location + "\n";
 		//recurrence
 		var days = "";
 		var dayMap = ["MO", "TU", "WE", "TH", "FR"];
