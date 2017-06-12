@@ -5,8 +5,9 @@
 <!--<form onsubmit="download(this['name'].value, this['text'].value)">-->
 <form onsubmit="parseAndUpdate(this['text'].value); return false;">
   <input type="text" id="name" name="name" value="Schedule">
-  <textarea id="classPaste" name="text" style="margin: 10px 65.2px 10px 10px; width: 757px; height: 516px;" onChange="parseAndPrint(document.getElementById('classPaste').value); return false;"></textarea>
+  <textarea id="classPaste" name="text" style="margin: 10px 65.2px 10px 10px; width: 757px; height: 516px;" onChange="parseAndUpdate(document.getElementById('classPaste').value); return false;"></textarea>
   <input type="submit" value="Submit">
+  <input id="downloadCalendar" type="button" value="Download Calendar" onclick="download(this['name'].value, getIcalString(globalClasses)); return false;"></input>
 </form>
 <a id="downloadImage">
   <canvas width="1050" height="650" id="image" style="max-width: 100%">Your browser doesn't seem to support canvases, please consider a newer browser</canvas>
