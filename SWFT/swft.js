@@ -327,7 +327,7 @@ function updateCanvas(canvas, classes) {
 	
 	
 	document.getElementById('downloadImage').addEventListener('click', function() {
-		downloadCanvas(this, 'image', document.getElementById('name').value + '.png');
+		downloadCanvas(this, 'image', document.getElementById('filename').value + '.png');
 	}, false);	
 }
 
