@@ -1,4 +1,4 @@
-//var classes = []
+var globalClasses = []
 //var numParentClasses = 0;
 
 
@@ -185,15 +185,16 @@ function parseSchedule(text) {
 	return classes;
 }
 
-function parseAndPrint(text) {
+function parseAndUpdate(text) {
 	console.log('beginning');
-	var cl = parseSchedule(text);
+	globalClasses = parseSchedule(text);
 	console.log('completed--------------');
 	//for (var i = 0; i < cl.length; i++) {
 	//	cl[i].log();
 	//}
 	//console.log(cl);
-	updateCanvas(document.getElementById('image'), cl);
+	updateCanvas(document.getElementById('image'), globalClasses);
+	
 	return false;
 }
 
@@ -324,5 +325,190 @@ function updateCanvas(canvas, classes) {
 function downloadCanvas(link, canvasId, filename) {
     link.href = document.getElementById(canvasId).toDataURL();
     link.download = filename;
-	return 'what';
 }
+
+/*function getIcalString(classes) {
+	String out = "BEGIN:VCALENDAR\n"
+				+ "CALSCALE:GREGORIAN\n"
+				+ "VERSION:2.0\n"
+				+ "PRODID:-//SpireWithFewerTears//IcalExport Version 0.9.2//EN\n"
+				+ "METHOD:PUBLISH\n";
+	
+	//time zone
+	out += "BEGIN:VTIMEZONE\n"
+				+ "TZID:America/New_York\n"
+				+ "X-LIC-LOCATION:America/New_York\n"
+				+ "BEGIN:STANDARD\n"
+				+ "DTSTART:18831118T120358\n"
+				+ "RDATE;VALUE=DATE-TIME:18831118T120358\n"
+				+ "TZNAME:EST\n"
+				+ "TZOFFSETFROM:-0456\n"
+				+ "TZOFFSETTO:-0500\n"
+				+ "END:STANDARD\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:19180331T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=19190330T070000Z;BYDAY=-1SU;BYMONTH=3\n"
+				+ "TZNAME:EDT\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:STANDARD\n"
+				+ "DTSTART:19181027T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=19191026T060000Z;BYDAY=-1SU;BYMONTH=10\n"
+				+ "TZNAME:EST\n"
+				+ "TZOFFSETFROM:-0400\n"
+				+ "TZOFFSETTO:-0500\n"
+				+ "END:STANDARD\n"
+				+ "BEGIN:STANDARD\n"
+				+ "DTSTART:19200101T000000\n"
+				+ "RDATE;VALUE=DATE-TIME:19200101T000000\n"
+				+ "RDATE;VALUE=DATE-TIME:19420101T000000\n"
+				+ "RDATE;VALUE=DATE-TIME:19460101T000000\n"
+				+ "RDATE;VALUE=DATE-TIME:19670101T000000\n"
+				+ "TZNAME:EST\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0500\n"
+				+ "END:STANDARD\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:19200328T020000\n"
+				+ "RDATE;VALUE=DATE-TIME:19200328T020000\n"
+				+ "RDATE;VALUE=DATE-TIME:19740106T020000\n"
+				+ "RDATE;VALUE=DATE-TIME:19750223T020000\n"
+				+ "TZNAME:EDT\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:STANDARD\n"
+				+ "DTSTART:19201031T020000\n"
+				+ "RDATE;VALUE=DATE-TIME:19201031T020000\n"
+				+ "RDATE;VALUE=DATE-TIME:19450930T020000\n"
+				+ "TZNAME:EST\n"
+				+ "TZOFFSETFROM:-0400\n"
+				+ "TZOFFSETTO:-0500\n"
+				+ "END:STANDARD\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:19210424T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=19410427T070000Z;BYDAY=-1SU;BYMONTH=4\n"
+				+ "TZNAME:EDT\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:STANDARD\n"
+				+ "DTSTART:19210925T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=19410928T060000Z;BYDAY=-1SU;BYMONTH=9\n"
+				+ "TZNAME:EST\n"
+				+ "TZOFFSETFROM:-0400\n"
+				+ "TZOFFSETTO:-0500\n"
+				+ "END:STANDARD\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:19420209T020000\n"
+				+ "RDATE;VALUE=DATE-TIME:19420209T020000\n"
+				+ "TZNAME:EWT\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:19450814T190000\n"
+				+ "RDATE;VALUE=DATE-TIME:19450814T190000\n"
+				+ "TZNAME:EPT\n"
+				+ "TZOFFSETFROM:-0400\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:19460428T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=19660424T070000Z;BYDAY=-1SU;BYMONTH=4\n"
+				+ "TZNAME:EDT\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:STANDARD\n"
+				+ "DTSTART:19460929T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=19540926T060000Z;BYDAY=-1SU;BYMONTH=9\n"
+				+ "TZNAME:EST\n"
+				+ "TZOFFSETFROM:-0400\n"
+				+ "TZOFFSETTO:-0500\n"
+				+ "END:STANDARD\n"
+				+ "BEGIN:STANDARD\n"
+				+ "DTSTART:19551030T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=19661030T060000Z;BYDAY=-1SU;BYMONTH=10\n"
+				+ "TZNAME:EST\n"
+				+ "TZOFFSETFROM:-0400\n"
+				+ "TZOFFSETTO:-0500\n"
+				+ "END:STANDARD\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:19670430T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=19730429T070000Z;BYDAY=-1SU;BYMONTH=4\n"
+				+ "TZNAME:EDT\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:STANDARD\n"
+				+ "DTSTART:19671029T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=20061029T060000Z;BYDAY=-1SU;BYMONTH=10\n"
+				+ "TZNAME:EST\n"
+				+ "TZOFFSETFROM:-0400\n"
+				+ "TZOFFSETTO:-0500\n"
+				+ "END:STANDARD\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:19760425T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=19860427T070000Z;BYDAY=-1SU;BYMONTH=4\n"
+				+ "TZNAME:EDT\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:19870405T020000\n"
+				+ "RRULE:FREQ=YEARLY;UNTIL=20060402T070000Z;BYDAY=1SU;BYMONTH=4\n"
+				+ "TZNAME:EDT\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "DTSTART:20070311T020000\n"
+				+ "RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3\n"
+				+ "TZNAME:EDT\n"
+				+ "TZOFFSETFROM:-0500\n"
+				+ "TZOFFSETTO:-0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "BEGIN:STANDARD\n"
+				+ "DTSTART:20071104T020000\n"
+				+ "RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=11\n"
+				+ "TZNAME:EST\n"
+				+ "TZOFFSETFROM:-0400\n"
+				+ "TZOFFSETTO:-0500\n"
+				+ "END:STANDARD\n"
+				+ "END:VTIMEZONE\n";
+				
+	function classToIcalEvent(cl) {
+		var timeZone = "America/New_York";
+		
+		var out = "BEGIN:VEVENT\n"
+				+ "DESCRIPTION:Instructor: " + instructor + "\\n" //the description becomes the notes section
+					+ "Credits: " + credits + "\\n"
+					+ "Section number: " + section + "\\n"
+					+ "Class number: " + classNumber + "\\n"
+					+ "\\nGenerated by Spire With Fewer Tears\n"; 
+			
+		//Date(year, month, day, hours, minutes, seconds, milliseconds);
+		//first occurrence of event - must find the first day the class occurs, not the first day of the semester
+		var date = new Date(cl.sdate[2], cl.sdate[0] - 1, cl.sdate[1], cl.stime[0], cl.stime[1], 0, 0);
+		var day = date.getDay();
+		var sdateOffset = 0;
+		for (var i = day - 1; i < day - 2 + 7; i++) {
+			if (i%7<5 && cl.days[i%7]) {
+				break;
+			} else sdateOffset++;
+		}
+		date.setDate(cl.sdate[2] + sdateOffset);
+		
+		out += "DTEND;TZID=" + timeZone + ":" + date.getFullYear() + padMinutes(date.getMonth() + padMinutes(date.getDate()) + "T" + padMinutes(etime[0]) + padMinutes(etime[1]) + "00\n";
+		tr += "DTSTART;TZID=" + timeZone + ":" + fYear + String.format("%02d", fMonth) + String.format("%02d", fDate) + "T" + String.format("%02d", stime[0]) + String.format("%02d", stime[1]) + "00\n";
+	}
+				
+	for (var i = 0; i < classes.length; i++) {
+		out += classToIcalEvent(classes[i]);
+	}
+	out += "END:VCALENDAR";
+	
+	return out;
+}*/
