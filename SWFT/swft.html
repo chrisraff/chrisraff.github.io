@@ -3,7 +3,7 @@
 <script type="text/javascript" src="swft.js"></script>
 </head>
 <!--<form onsubmit="download(this['name'].value, this['text'].value)">-->
-<form onsubmit="parseAndUpdate(this['text'].value); return false;">
+<form onsubmit="return false;">
   <input type="text" id="filename" name="filename" value="Schedule">
   <textarea id="classPaste" name="text" style="margin: 10px 65.2px 10px 10px; width: 757px; height: 516px;" onChange="parseAndUpdate(document.getElementById('classPaste').value); return false;"></textarea>
   <input type="submit" value="Submit">
