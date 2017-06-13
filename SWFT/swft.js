@@ -510,10 +510,11 @@ function getIcalString(classes) {
 				break;
 			} else sdateOffset++;
 		}
-		date.setDate(cl.sdate[2] + sdateOffset);
 		
-		out += "DTEND;TZID=" + timeZone + ":" + date.getFullYear() + padMinutes(date.getMonth()) + padMinutes(date.getDate()) + "T" + padMinutes(cl.etime[0]) + padMinutes(cl.etime[1]) + "00\n";
-		out += "DTSTART;TZID=" + timeZone + ":" + cl.edate[2] + padMinutes(cl.edate[0]) + padMinutes(cl.edate[1]) + "T" + padMinutes(cl.stime[0]) + padMinutes(cl.stime[1]) + "00\n";
+		date.setDate(date.getDate() + sdateOffset);
+		
+		out += "DTEND;TZID=" + timeZone + ":" + date.getFullYear() + padMinutes(date.getMonth()+1) + padMinutes(date.getDate()) + "T" + padMinutes(cl.etime[0]) + padMinutes(cl.etime[1]) + "00\n";
+		out += "DTSTART;TZID=" + timeZone + ":" + date.getFullYear() + padMinutes(date.getMonth()+1) + padMinutes(date.getDate()) + "T" + padMinutes(cl.stime[0]) + padMinutes(cl.stime[1]) + "00\n";
 		
 		out += "LOCATION:" + cl.location + "\n";
 		//recurrence
