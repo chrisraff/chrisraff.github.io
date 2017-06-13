@@ -127,7 +127,6 @@ function parseSchedule(text) {
 		i--;
 		var nc = new Class();
 		nc.major = carryOver;
-		console.log(carryOver);
 		var line = lines[i++].split(' ');
 		nc.number = line[1];
 		nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
@@ -197,15 +196,14 @@ function parseSchedule(text) {
 }
 
 function parseAndUpdate(text) {
-	console.log('beginning');
-	globalClasses = parseSchedule(text);
-	console.log('completed--------------');
-	//for (var i = 0; i < cl.length; i++) {
-	//	cl[i].log();
-	//}
-	//console.log(cl);
-	updateCanvas(document.getElementById('image'), globalClasses);
-	
+	try{
+		globalClasses = parseSchedule(text);
+		updateCanvas(document.getElementById('image'), globalClasses);
+		document.getElementById("output").innerHTML = "";
+	}
+	catch(err) {
+		document.getElementById("output").innerHTML = "Schedule failed to parse, make sure you copied the entire schedule and nothing else";
+	}
 	return false;
 }
 
@@ -299,10 +297,8 @@ function updateCanvas(canvas, classes) {
 		var stime = c.stime[0] + (c.stime[1]/60); //start time
 		var dur = c.etime[0] + (c.etime[1]/60) - stime; //duration
 		
-		console.log(c.days);
 		for (d = 0; d < c.days.length; d++) {
 			if (c.days[d]) {
-				console.log(d);
 				ctx.fillStyle = c.displayColor;
 				
 				ctx.fillRect(gX + d*gsX + 1, gY + (stime*gsY - 8*gsY), gsX - 2, (dur*gsY));
@@ -332,7 +328,7 @@ function updateCanvas(canvas, classes) {
 	}, false);	
 }
 
-//http://jsfiddle.net/wboykinm/fL0q2uce/
+//jsfiddle.net/wboykinm/fL0q2uce/
 function downloadCanvas(link, canvasId, filename) {
     link.href = document.getElementById(canvasId).toDataURL();
     link.download = filename;

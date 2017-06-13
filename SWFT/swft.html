@@ -6,7 +6,11 @@
 <form onsubmit="return false;">
   <input type="text" id="filename" name="filename" value="Schedule"/>
   <textarea rows="15" cols="140" id="classPaste" name="text" style="margin: 10px 65.2px 10px 10px; max-width: 98%; white-space: nowrap;" onChange="parseAndUpdate(document.getElementById('classPaste').value); return false;"></textarea>
-  <input type="submit" value="Submit">
+  
+  <input type="submit" value="Submit"/>
+  <input type="button" value="Clear" onclick="document.getElementById('classPaste').value = '';"/>
+  
+  <div id="output"></div>
   <input id="downloadCalendar" type="button" value="Download Calendar" onclick="download(document.getElementById('filename').value + '.ics', getIcalString(globalClasses)); return false;"/>
 </form>
 <a id="downloadImage">
