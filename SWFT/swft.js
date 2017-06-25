@@ -122,75 +122,81 @@ function parseSchedule(text) {
 	var lines = text.split('\n');
 	var carryOver = lines[0].split(' ', 1)[0];
 	
-	var i = 1;
-	while (i < lines.length) {
-		i--;
-		var nc = new Class();
-		nc.major = carryOver;
-		var line = lines[i++].split(' ');
-		nc.number = line[1];
-		nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
-		i++;//skip the second line, it has no information
-		nc.enrolled = "Enrolled" == lines[i++];
-		nc.credits = lines[i++];
-		i += 4;
-		carryOver = lines[i++].split(' ', 1)[0];
-		//console.log(carryOver);
-		
-		var parentClass = 0;//null
-		var unParented = [];
-		while (!isNaN(carryOver) && carryOver != '') {//while carryOver is numeric
-			//console.log("carryOver:" + carryOver + " was numberic");
-			var toAdd = nc.clone();
+	if (lines[1] == 'Status	Units	Grading	Grade	Deadlines') { //check if full website version (as opposed to mobile)
+		console.log("desktop");
+		var i = 1;
+		while (i < lines.length) {
+			i--;
+			var nc = new Class();
+			nc.major = carryOver;
+			var line = lines[i++].split(' ');
+			nc.number = line[1];
+			nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
+			i++;//skip the second line, it has no information
+			nc.enrolled = "Enrolled" == lines[i++];
+			nc.credits = lines[i++];
+			i += 4;
+			carryOver = lines[i++].split(' ', 1)[0];
+			//console.log(carryOver);
 			
-			toAdd.classNumber = carryOver;
-			toAdd.section = lines[i++];
-			toAdd.type = lines[i++];
-			line = lines[i++].split(' ');
-			toAdd.days = parseDays(line[0]);
-			//console.log(line);
-			toAdd.stime = parseTime(line[1]);
-			toAdd.etime = parseTime(line[3]);//line[2] is '-'
-			toAdd.location = lines[i++];
-			toAdd.instructor = lines[i++];
-			while (toAdd.instructor.endsWith(", ")) {
-				toAdd.instructor += lines[i++];
-			}
-			toAdd.sdate[0] = +lines[i].substring(0,2);
-			toAdd.sdate[1] = +lines[i].substring(3,5);
-			toAdd.sdate[2] = +lines[i].substring(6,10);
-			toAdd.edate[0] = +lines[i].substring(13,15);
-			toAdd.edate[1] = +lines[i].substring(16,18);
-			toAdd.edate[2] = +lines[i].substring(19,23);
-			i++;
-			
-			if (toAdd.type == "Lecture") {
-				parentClass = toAdd;
+			var parentClass = 0;//null
+			var unParented = [];
+			while (!isNaN(carryOver) && carryOver != '') {//while carryOver is numeric
+				//console.log("carryOver:" + carryOver + " was numberic");
+				var toAdd = nc.clone();
 				
-				for (var c = 0; c < unParented.length; c++) {
-					parentClass.subClasses.push(unParented[c]);
+				toAdd.classNumber = carryOver;
+				toAdd.section = lines[i++];
+				toAdd.type = lines[i++];
+				line = lines[i++].split(' ');
+				toAdd.days = parseDays(line[0]);
+				//console.log(line);
+				toAdd.stime = parseTime(line[1]);
+				toAdd.etime = parseTime(line[3]);//line[2] is '-'
+				toAdd.location = lines[i++];
+				toAdd.instructor = lines[i++];
+				while (toAdd.instructor.endsWith(", ")) {
+					toAdd.instructor += lines[i++];
 				}
-				numParentClasses++;
-			} else if (parentClass != 0) {
-				parentClass.subClasses.push(toAdd);
-			} else {
-				unParented.push(toAdd);
-			}
-			
-			classes.push(toAdd);
-			
-			while (i < lines.length) {
-				carryOver = lines[i++].split(' ', 1)[0];
+				toAdd.sdate[0] = +lines[i].substring(0,2);
+				toAdd.sdate[1] = +lines[i].substring(3,5);
+				toAdd.sdate[2] = +lines[i].substring(6,10);
+				toAdd.edate[0] = +lines[i].substring(13,15);
+				toAdd.edate[1] = +lines[i].substring(16,18);
+				toAdd.edate[2] = +lines[i].substring(19,23);
+				i++;
 				
-				if (carryOver != "URL" && carryOver != "") {
-					break;
+				if (toAdd.type == "Lecture") {
+					parentClass = toAdd;
+					
+					for (var c = 0; c < unParented.length; c++) {
+						parentClass.subClasses.push(unParented[c]);
+					}
+					numParentClasses++;
+				} else if (parentClass != 0) {
+					parentClass.subClasses.push(toAdd);
+				} else {
+					unParented.push(toAdd);
 				}
+				
+				classes.push(toAdd);
+				
+				while (i < lines.length) {
+					carryOver = lines[i++].split(' ', 1)[0];
+					
+					if (carryOver != "URL" && carryOver != "") {
+						break;
+					}
+				}
+				if (i >= lines.length) {
+					carryOver = "I'm not a number";
+				}
+				//console.log(i +": " + carryOver);
 			}
-			if (i >= lines.length) {
-				carryOver = "I'm not a number";
-			}
-			//console.log(i +": " + carryOver);
 		}
+	}
+	else {
+		console.log("mobile");
 	}
 	return classes;
 }
@@ -203,6 +209,7 @@ function parseAndUpdate(text) {
 	}
 	catch(err) {
 		document.getElementById("output").innerHTML = "Schedule failed to parse, make sure you copied the entire schedule and nothing else";
+		console.log(err);
 	}
 	return false;
 }
@@ -523,7 +530,7 @@ function getIcalString(classes) {
 		}
 		days = days.substring(0, days.length - 1);//shave off final comma
 		out += "RRULE:FREQ=WEEKLY;UNTIL=" + cl.edate[2] + padMinutes(cl.edate[0]) + padMinutes(cl.edate[1] + 1) + "T045959Z;BYDAY=" + days + "\n";
-		//sequence could go here, set it to 0, I guess
+		//sequence could go here - set it to 0, I guess (this is an ical thing present in some of the files I looked at, but it works fine without it)
 		out += "SUMMARY:" + cl.major + " " + cl.number + " - " + cl.name + ", " + cl.type + "\n";
 		out += "TRANSP:OPAQUE\n"; //this seems to indicate that the event is "busy" aka not free time
 		var uidTail = cl.major + "-" + cl.number + "-" + cl.name + "-" + cl.type;
