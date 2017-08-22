@@ -123,7 +123,6 @@ function parseSchedule(text) {
 	var carryOver = lines[0].split(' ', 1)[0];
 	
 	if (lines[1] == 'Status	Units	Grading	Grade	Deadlines') { //check if full website version (as opposed to mobile)
-		console.log("desktop");
 		var i = 1;
 		while (i < lines.length) {
 			i--;
@@ -195,8 +194,79 @@ function parseSchedule(text) {
 			}
 		}
 	}
-	else {
-		console.log("mobile");
+	else { //mobile version
+		var i = 1;
+		while (i < lines.length) {
+			i--;
+			var nc = new Class();
+			nc.major = carryOver;
+			var line = lines[i++].split(' ');
+			nc.number = line[1];
+			nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
+			i+=5;//skip white space and "Status" label
+			nc.enrolled = "Enrolled" == lines[i++];
+			i++;
+			nc.credits = lines[i++];
+			console.log(nc.credits);
+			i += 4;
+			carryOver = lines[i++].split(' ', 1)[0];
+			//console.log(carryOver);
+			
+			var parentClass = 0;//null
+			var unParented = [];
+			while (!isNaN(carryOver) && carryOver != '') {//while carryOver is numeric
+				//console.log("carryOver:" + carryOver + " was numberic");
+				var toAdd = nc.clone();
+				
+				toAdd.classNumber = carryOver;
+				toAdd.section = lines[i++];
+				toAdd.type = lines[i++];
+				line = lines[i++].split(' ');
+				toAdd.days = parseDays(line[0]);
+				//console.log(line);
+				toAdd.stime = parseTime(line[1]);
+				toAdd.etime = parseTime(line[3]);//line[2] is '-'
+				toAdd.location = lines[i++];
+				toAdd.instructor = lines[i++];
+				while (toAdd.instructor.endsWith(", ")) {
+					toAdd.instructor += lines[i++];
+				}
+				toAdd.sdate[0] = +lines[i].substring(0,2);
+				toAdd.sdate[1] = +lines[i].substring(3,5);
+				toAdd.sdate[2] = +lines[i].substring(6,10);
+				toAdd.edate[0] = +lines[i].substring(13,15);
+				toAdd.edate[1] = +lines[i].substring(16,18);
+				toAdd.edate[2] = +lines[i].substring(19,23);
+				i++;
+				
+				if (toAdd.type == "Lecture") {
+					parentClass = toAdd;
+					
+					for (var c = 0; c < unParented.length; c++) {
+						parentClass.subClasses.push(unParented[c]);
+					}
+					numParentClasses++;
+				} else if (parentClass != 0) {
+					parentClass.subClasses.push(toAdd);
+				} else {
+					unParented.push(toAdd);
+				}
+				
+				classes.push(toAdd);
+				
+				while (i < lines.length) {
+					carryOver = lines[i++].split(' ', 1)[0];
+					
+					if (carryOver != "URL" && carryOver != "") {
+						break;
+					}
+				}
+				if (i >= lines.length) {
+					carryOver = "I'm not a number";
+				}
+				//console.log(i +": " + carryOver);
+			}
+		}
 	}
 	return classes;
 }
