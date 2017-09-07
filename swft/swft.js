@@ -304,7 +304,7 @@ function updateCanvas(canvas, classes) {
 				ctx.fillRect(gX + d*gsX + 1, gY + (stime*gsY - 8*gsY), gsX - 2, (dur*gsY));
 				
 				//shadow text
-				ctx.fillStyle = '#bbb';
+				ctx.fillStyle = '#222';
 				var sOffX = 1, sOffY = 1;
 				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + (stime*gsY - 8*gsY) + sOffY);
 				ctx.font = '12px sans-serif';
