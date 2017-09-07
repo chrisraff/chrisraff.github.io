@@ -1,0 +1,20 @@
+<head>
+<link rel="stylesheet" type="text/css" href="swft.css">
+<script type="text/javascript" src="swft.js"></script>
+</head>
+<!--<form onsubmit="download(this['name'].value, this['text'].value)">-->
+<form onsubmit="return false;">
+  <input type="text" id="filename" name="filename" value="Schedule"/>
+  <textarea rows="15" cols="140" id="classPaste" name="text" style="margin: 10px 65.2px 10px 10px; max-width: 98%; white-space: nowrap;" onChange="parseAndUpdate(document.getElementById('classPaste').value); return false;"></textarea>
+  
+  <input type="submit" value="Submit"/>
+  <input type="button" value="Clear" onclick="document.getElementById('classPaste').value = '';"/>
+  
+  <div id="output"></div>
+  <input id="downloadCalendar" type="button" value="Download Calendar" onclick="download(document.getElementById('filename').value + '.ics', getIcalString(globalClasses)); return false;"/>
+</form>
+<a id="downloadImage">
+  <canvas width="1050" height="650" id="image" style="max-width: 100%">Your browser doesn't seem to support canvases, please consider a newer browser</canvas>
+  <br/>
+  <input type="button" value="Download Weekly Calendar Image"/>
+</a>
