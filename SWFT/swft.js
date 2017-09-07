@@ -220,7 +220,7 @@ function hueToRed(hue) {
 //v from -1 to 1
 function hueVal(h, v) {
 	var r = hueToRed(h);
-	var g = hueToRed(h-1/3);
+	var g = hueToRed(h-1/3) * 0.8;
 	var b = hueToRed(h-2/3);
 	if (v < 0) {
 		r *= 1+v;
