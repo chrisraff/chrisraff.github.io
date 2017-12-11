@@ -130,7 +130,13 @@ function parseSchedule(text) {
 		var line = lines[i++].split(' ');
 		nc.number = line[1];
 		nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
-		i++;//skip the second line, it has no information
+		
+		// skip whitespace that may or may not exist due to Safari's table copying
+		while (lines[i] != "Status	Units	Grading	Grade	Deadlines") {
+			i++;
+		}
+		i++;//skip the line "Status	Units	Grading	Grade	Deadlines"
+		// console.log(nc.name);
 		nc.enrolled = "Enrolled" == lines[i++];
 		nc.credits = lines[i++];
 		i += 4;
