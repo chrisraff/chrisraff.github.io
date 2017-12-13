@@ -119,11 +119,20 @@ function parseSchedule(text) {
 	var numParentClasses = 0;
 	
 	var lines = text.split('\n');
-	var carryOver = lines[0].split(' ', 1)[0];
 
 	var emptyRegex = new RegExp("^[ |\t|" + String.fromCharCode(160) + "]*$"); // Apple uses char 160 in it's table copying
 	
-	var i = 1;
+	var i = 0;
+
+	// skip leading whitespace, shows up in iPhone copies
+	while (emptyRegex.test(lines[i])) {
+		i++;
+	}
+	
+	var carryOver = lines[i].split(' ', 1)[0];
+
+	i++;
+
 	while (i < lines.length) {
 		i--;
 		var nc = new Class();
