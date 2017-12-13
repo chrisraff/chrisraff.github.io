@@ -1,6 +1,5 @@
+//Last tested on Safari 10.1.12, Chrome 62.0.3202.89 (Official Build) (64-bit) as of 12/13/2017
 var globalClasses = []
-//var numParentClasses = 0;
-
 
 function download(filename, text) {
   var element = document.createElement('a');
@@ -121,22 +120,22 @@ function parseSchedule(text) {
 	
 	var lines = text.split('\n');
 	var carryOver = lines[0].split(' ', 1)[0];
+
+	var emptyRegex = new RegExp("^[ |\t|" + String.fromCharCode(160) + "]*$"); // Apple uses char 160 in it's table copying
 	
 	var i = 1;
 	while (i < lines.length) {
 		i--;
 		var nc = new Class();
 		nc.major = carryOver;
+
 		var line = lines[i++].split(' ');
 		nc.number = line[1];
 		nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
 		
-		// skip whitespace that may or may not exist due to Safari's table copying
-		while (lines[i] != "Status	Units	Grading	Grade	Deadlines") {
-			i++;
-		}
-		i++;//skip the line "Status	Units	Grading	Grade	Deadlines"
-		// console.log(nc.name);
+		// skip whitespace that may or may not exist due to Safari's table copying, then skip the line "Status	Units	Grading	Grade	Deadlines"
+		while (emptyRegex.test(lines[i++])) {}
+
 		nc.enrolled = "Enrolled" == lines[i++];
 		nc.credits = lines[i++];
 		i += 4;
@@ -145,8 +144,9 @@ function parseSchedule(text) {
 		
 		var parentClass = 0;//null
 		var unParented = [];
-		while (!isNaN(carryOver) && carryOver != '') {//while carryOver is numeric
-			//console.log("carryOver:" + carryOver + " was numberic");
+		while (!isNaN(carryOver) && !emptyRegex.test(carryOver)) {//while carryOver is numeric
+			// console.log("carryOver:" + carryOver + " was numeric");
+			
 			var toAdd = nc.clone();
 			
 			toAdd.classNumber = carryOver;
@@ -154,7 +154,6 @@ function parseSchedule(text) {
 			toAdd.type = lines[i++];
 			line = lines[i++].split(' ');
 			toAdd.days = parseDays(line[0]);
-			//console.log(line);
 			toAdd.stime = parseTime(line[1]);
 			toAdd.etime = parseTime(line[3]);//line[2] is '-'
 			toAdd.location = lines[i++];
@@ -188,14 +187,14 @@ function parseSchedule(text) {
 			while (i < lines.length) {
 				carryOver = lines[i++].split(' ', 1)[0];
 				
-				if (carryOver != "URL" && carryOver != "") {
+				if (carryOver != "URL" && !emptyRegex.test(carryOver)) {
 					break;
 				}
 			}
 			if (i >= lines.length) {
 				carryOver = "I'm not a number";
 			}
-			//console.log(i +": " + carryOver);
+			// console.log(i +": " + carryOver);
 		}
 	}
 	return classes;
@@ -208,6 +207,7 @@ function parseAndUpdate(text) {
 		document.getElementById("output").innerHTML = "";
 	}
 	catch(err) {
+		console.log(err)
 		document.getElementById("output").innerHTML = "Schedule failed to parse, make sure you copied the entire schedule and nothing else";
 	}
 	return false;
