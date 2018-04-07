@@ -1,4 +1,6 @@
 form * {
-  display: block;
   margin: 10px;
+}
+form textarea, p, #filename {
+  display: block;
 }
