@@ -1,4 +1,4 @@
-//Last tested on Safari 10.1.12, Chrome 62.0.3202.89 (Official Build) (64-bit) as of 12/13/2017
+//Last tested on Chrome 65, Edge 41. Previously tested on Safari 10.1.12
 var globalClasses = []
 
 function download(filename, text) {
@@ -121,7 +121,8 @@ function parseSchedule(text) {
 	var lines = text.split('\n');
 
 	var emptyRegex = new RegExp("^[ |\t|" + String.fromCharCode(160) + "]*$"); // Apple uses char 160 in it's table copying
-	
+	var classNumberRegex = new RegExp("^[0-9]+$");
+
 	var i = 0;
 
 	// skip leading whitespace, shows up in iPhone copies
@@ -142,13 +143,22 @@ function parseSchedule(text) {
 		nc.number = line[1];
 		nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
 		
-		// skip whitespace that may or may not exist due to Safari's table copying, then skip the line "Status	Units	Grading	Grade	Deadlines"
-		while (emptyRegex.test(lines[i++])) {}
+		// skip past the "Status	Units	Grading Grade	Deadlines" part. This gets copied differently in different broswers
+		while ( !lines[i++].includes("Deadlines") ) {
+			if (i >= lines.length)
+				throw "caught in loop while trying to pass \"Deadlines\"";
+		}
 
 		nc.enrolled = "Enrolled" == lines[i++];
-		nc.credits = lines[i++];
-		i += 4;
-		carryOver = lines[i++].split(' ', 1)[0];
+		nc.credits = lines[i++].trim();
+
+		// skip past table headers to the class number
+		while ( !classNumberRegex.test(lines[++i].trim()) ) {
+			if (i >= lines.length)
+				throw "caught in loop while trying to find class number";
+		}
+
+		carryOver = lines[i++].trim().split(' ', 1)[0];
 		//console.log(carryOver);
 		
 		var parentClass = 0;//null
@@ -159,13 +169,16 @@ function parseSchedule(text) {
 			var toAdd = nc.clone();
 			
 			toAdd.classNumber = carryOver;
-			toAdd.section = lines[i++];
-			toAdd.type = lines[i++];
+			toAdd.section = lines[i++].trim();
+			toAdd.type = lines[i++].trim();
+
 			line = lines[i++].split(' ');
 			toAdd.days = parseDays(line[0]);
 			toAdd.stime = parseTime(line[1]);
-			toAdd.etime = parseTime(line[3]);//line[2] is '-'
-			toAdd.location = lines[i++];
+			//line[2] is '-'
+			toAdd.etime = parseTime(line[3]);
+			
+			toAdd.location = lines[i++].trim();
 			toAdd.instructor = lines[i++];
 			while (toAdd.instructor.endsWith(", ")) {
 				toAdd.instructor += lines[i++];
