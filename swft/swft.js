@@ -357,9 +357,17 @@ function updateCanvas(canvas, classes) {
 }
 
 //jsfiddle.net/wboykinm/fL0q2uce/
+//https://stackoverflow.com/questions/21860633/download-canvas-to-image-in-ie-using-javascript
 function downloadCanvas(link, canvasId, filename) {
-    link.href = document.getElementById(canvasId).toDataURL();
-    link.download = filename;
+	var canvas = document.getElementById(canvasId);
+
+	if (canvas.msToBlob) { // internet explorer, edge
+		var blob = canvas.msToBlob();
+		window.navigator.msSaveBlob(blob, filename);
+	} else { // good browsers
+	    link.href = document.getElementById(canvasId).toDataURL();
+	    link.download = filename;
+	}
 }
 
 function getIcalString(classes) {
