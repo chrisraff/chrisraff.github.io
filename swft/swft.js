@@ -134,6 +134,11 @@ function parseSchedule(text) {
 	while (emptyRegex.test(lines[i])) {
 		i++;
 	}
+
+	// check if it's just empty
+	if (i >= lines.length) {
+		return classes;
+	}
 	
 	var carryOver = lines[i].split(' ', 1)[0];
 
