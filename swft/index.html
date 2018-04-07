@@ -18,11 +18,12 @@
   <input type="submit" value="Submit"/>
   <input type="button" value="Clear" onclick="document.getElementById('classPaste').value = '';"/>
   
+  <!-- this div is where the parser can tell you if something went wrong -->
   <div id="output"></div>
+
   <input id="downloadCalendar" type="button" value="Download As iCalendar" onclick="download(document.getElementById('filename').value + '.ics', getIcalString(globalClasses)); return false;"/>
-</form>
-<a id="downloadImage">
-  <canvas width="1050" height="650" id="image" style="max-width: 100%">Weekly Calendar Image</canvas>
-  <br/>
-  <input type="button" value="Download Weekly Calendar Image"/>
+  <a id="downloadImage">
+    <input type="button" value="Download Weekly Calendar Image"/>
+    <canvas width="1050" height="650" id="image" style="max-width: 100%; margin: 0px;">Weekly Calendar Image</canvas>
 </a>
+</form>
