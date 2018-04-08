@@ -1,6 +1,6 @@
 form * {
   margin: 10px;
 }
-form textarea, p, #filename {
+form textarea, p, #filename, canvas {
   display: block;
 }
