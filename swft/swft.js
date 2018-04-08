@@ -1,5 +1,6 @@
 //Last tested on Chrome 65, Edge 41. Previously tested on Safari 10.1.12
-var globalClasses = []
+var globalClasses = [];
+var randomHue = Math.random();
 
 function download(filename, text) {
 	if (window.Blob && window.navigator.msSaveOrOpenBlob) {
@@ -285,7 +286,8 @@ function updateCanvas(canvas, classes) {
 	var ctx = canvas.getContext('2d');
 	
 	//evenly space colors between parent classes
-	var hue = Math.random(); //random number
+	var slider =  document.getElementById("colorSlider");
+	var hue = randomHue + (slider.value / slider.max);
 	
 	var parentClasses = [];
 	for (var i = 0; i < classes.length; i++) {
@@ -360,10 +362,13 @@ function updateCanvas(canvas, classes) {
 		}
 	}
 	
-	
 	document.getElementById('downloadImage').addEventListener('click', function() {
 		downloadCanvas(this, 'image', document.getElementById('filename').value + '.png');
 	}, false);	
+}
+// for convenience
+function updateCanvasImage() {
+	updateCanvas(document.getElementById('image'), globalClasses);
 }
 
 //jsfiddle.net/wboykinm/fL0q2uce/
