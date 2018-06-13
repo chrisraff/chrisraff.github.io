@@ -1,12 +1,12 @@
-//Last tested on Chrome 65, Edge 41. Previously tested on Safari 10.1.12
+// Last tested on Chrome 65, Edge 41. Previously tested on Safari 10.1.12
 var globalClasses = [];
-var randomHue = Math.random();
+var randomHue = Math.random(); // used to keep hue persitent during updates
 
 function download(filename, text) {
 	if (window.Blob && window.navigator.msSaveOrOpenBlob) {
 		var blob = new Blob([text]);
 		window.navigator.msSaveBlob(blob, filename);
-    } else {
+	} else {
 		var element = document.createElement('a');
 		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
 		element.setAttribute('download', filename);
@@ -17,7 +17,7 @@ function download(filename, text) {
 		element.click();
 
 		document.body.removeChild(element);
-    }
+	}
 }
 
 class Time {
@@ -110,7 +110,7 @@ class Class {
 		}
 		newClass.enrolled = this.enrolled;
 		newClass.credits = this.credits;
-		//subclasses are not cloned
+		// subclasses are not cloned
 		return newClass;
 	}
 	log() {
@@ -152,7 +152,7 @@ function parseSchedule(text) {
 
 		var line = lines[i++].split(' ');
 		nc.number = line[1];
-		nc.name = line.splice(3).join(' ');//the name of the class, minus the major, number and dash from the line
+		nc.name = line.splice(3).join(' '); // the name of the class, minus the major, number and dash from the line
 		
 		// skip past the "Status	Units	Grading Grade	Deadlines" part. This gets copied differently in different broswers
 		while ( !lines[i++].includes("Deadlines") ) {
@@ -170,11 +170,11 @@ function parseSchedule(text) {
 		}
 
 		carryOver = lines[i++].trim().split(' ', 1)[0];
-		//console.log(carryOver);
+		// console.log(carryOver);
 		
-		var parentClass = 0;//null
+		var parentClass = 0; // null
 		var unParented = [];
-		while (!isNaN(carryOver) && !emptyRegex.test(carryOver)) {//while carryOver is numeric
+		while (!isNaN(carryOver) && !emptyRegex.test(carryOver)) { // while carryOver is numeric
 			// console.log("carryOver:" + carryOver + " was numeric");
 			
 			var toAdd = nc.clone();
@@ -186,7 +186,7 @@ function parseSchedule(text) {
 			line = lines[i++].split(' ');
 			toAdd.days = parseDays(line[0]);
 			toAdd.stime = parseTime(line[1]);
-			//line[2] is '-'
+			// line[2] is just '-'
 			toAdd.etime = parseTime(line[3]);
 			
 			toAdd.location = lines[i++].trim();
@@ -237,6 +237,7 @@ function parseAndUpdate(text) {
 	try{
 		globalClasses = parseSchedule(text);
 		updateCanvas(document.getElementById('image'), globalClasses);
+
 		document.getElementById("output").innerHTML = "";
 	}
 	catch(err) {
@@ -246,17 +247,17 @@ function parseAndUpdate(text) {
 	return false;
 }
 
-//hue is out of 1
+// hue is out of 1
 function hueToRed(hue) {
 	hue += 1/3;
 	hue %= 1;
 	while (hue < 0) {
 		hue += 1;
 	}
-	//return Math.floor(255*Math.max(0, 3*(Math.abs(0.5-hue)-1/6)));
+	// return Math.floor(255*Math.max(0, 3*(Math.abs(0.5-hue)-1/6)));
 	return Math.floor(255* Math.max(0, Math.min(1, 2 - Math.abs(2 - hue * 6) ) ) );
 }
-//v from -1 to 1
+// v from -1 to 1
 function hueVal(h, v) {
 	var r = hueToRed(h);
 	var g = hueToRed(h-1/3) * 0.8;
@@ -285,7 +286,7 @@ function updateCanvas(canvas, classes) {
 	var gX = 25, gY = 10, gsX = 200, gsY = 50;
 	var ctx = canvas.getContext('2d');
 	
-	//evenly space colors between parent classes
+	// evenly space colors between parent classes
 	var slider =  document.getElementById("colorSlider");
 	var hue = randomHue + (slider.value / slider.max);
 	
@@ -299,7 +300,7 @@ function updateCanvas(canvas, classes) {
 		var c = parentClasses[i];
 		if (c.type == "Lecture") {
 			c.displayColor = hueVal(hue, 0);
-			//go through subclasses, same hue but 0.3 or something for the val
+			// go through subclasses, same hue but 0.3 or something for the val
 			for (var j = 0; j < c.subClasses.length; j++) {
 				c.subClasses[j].displayColor = hueVal(hue, 0.6);
 			}
@@ -310,12 +311,12 @@ function updateCanvas(canvas, classes) {
 	ctx.fillStyle = '#fff';
 	ctx.fillRect(0,0, canvas.width, canvas.height);
 	
-	//background grid
+	// background grid
 	ctx.font = '16px sans-serif';
 	ctx.textAlign = 'right';
-    ctx.fillStyle = '#888';
+	ctx.fillStyle = '#888';
 	ctx.strokeStyle = '#888';
-    ctx.beginPath();
+	ctx.beginPath();
 	for (var i = 0; i < 6; i++) {
 		ctx.moveTo(gX + i*gsX, gY);
 		ctx.lineTo(gX + i*gsX, gY + hours*gsY);
@@ -327,15 +328,15 @@ function updateCanvas(canvas, classes) {
 			ctx.fillText(i + 8, gX - 4, gY + gsY*i + 5);
 		}
 	}
-    ctx.stroke();
+	ctx.stroke();
 	
 	ctx.textAlign = 'left';
 	
 	for (var i = 0; i < classes.length; i++) {
 		var c = classes[i];
 		
-		var stime = c.stime[0] + (c.stime[1]/60); //start time
-		var dur = c.etime[0] + (c.etime[1]/60) - stime; //duration
+		var stime = c.stime[0] + (c.stime[1]/60); // start time
+		var dur = c.etime[0] + (c.etime[1]/60) - stime; // duration
 		
 		for (d = 0; d < c.days.length; d++) {
 			if (c.days[d]) {
@@ -343,7 +344,7 @@ function updateCanvas(canvas, classes) {
 				
 				ctx.fillRect(gX + d*gsX + 1, gY + (stime*gsY - 8*gsY), gsX - 2, (dur*gsY));
 				
-				//shadow text
+				// shadow text
 				ctx.fillStyle = '#222';
 				var sOffX = 1, sOffY = 1;
 				ctx.fillText(c.major + ' ' + c.number, gX + gsX/30 + gsX*d + sOffX, gY + gsY/10 + 10 + (stime*gsY - 8*gsY) + sOffY);
@@ -371,8 +372,8 @@ function updateCanvasImage() {
 	updateCanvas(document.getElementById('image'), globalClasses);
 }
 
-//jsfiddle.net/wboykinm/fL0q2uce/
-//https://stackoverflow.com/questions/21860633/download-canvas-to-image-in-ie-using-javascript
+// jsfiddle.net/wboykinm/fL0q2uce/
+// https://stackoverflow.com/questions/21860633/download-canvas-to-image-in-ie-using-javascript
 function downloadCanvas(link, canvasId, filename) {
 	var canvas = document.getElementById(canvasId);
 
@@ -380,8 +381,8 @@ function downloadCanvas(link, canvasId, filename) {
 		var blob = canvas.msToBlob();
 		window.navigator.msSaveBlob(blob, filename);
 	} else { // good browsers
-	    link.href = document.getElementById(canvasId).toDataURL();
-	    link.download = filename;
+		link.href = document.getElementById(canvasId).toDataURL();
+		link.download = filename;
 	}
 }
 
@@ -392,7 +393,7 @@ function getIcalString(classes) {
 				+ "PRODID:-//SpireWithFewerTears//IcalExport Version 0.9.2//EN\n"
 				+ "METHOD:PUBLISH\n";
 	
-	//time zone
+	// time zone
 	out += "BEGIN:VTIMEZONE\n"
 				+ "TZID:America/New_York\n"
 				+ "X-LIC-LOCATION:America/New_York\n"
@@ -541,14 +542,14 @@ function getIcalString(classes) {
 		var timeZone = "America/New_York";
 		
 		var out = "BEGIN:VEVENT\n"
-				+ "DESCRIPTION:Instructor: " + cl.instructor + "\\n" //the description becomes the notes section
+				+ "DESCRIPTION:Instructor: " + cl.instructor + "\\n" // the description becomes the notes section
 					+ "Credits: " + cl.credits + "\\n"
 					+ "Section number: " + cl.section + "\\n"
 					+ "Class number: " + cl.classNumber + "\\n"
 					+ "\\nGenerated by Spire With Fewer Tears\n"; 
 			
-		//Date(year, month, day, hours, minutes, seconds, milliseconds);
-		//first occurrence of event - must find the first day the class occurs, not the first day of the semester
+		// Date(year, month, day, hours, minutes, seconds, milliseconds);
+		// first occurrence of event - must find the first day the class occurs, not the first day of the semester
 		var date = new Date(cl.sdate[2], cl.sdate[0] - 1, cl.sdate[1], cl.stime[0], cl.stime[1], 0, 0);
 		var day = date.getDay();
 		var sdateOffset = 0;
@@ -564,7 +565,7 @@ function getIcalString(classes) {
 		out += "DTSTART;TZID=" + timeZone + ":" + date.getFullYear() + padMinutes(date.getMonth()+1) + padMinutes(date.getDate()) + "T" + padMinutes(cl.stime[0]) + padMinutes(cl.stime[1]) + "00\n";
 		
 		out += "LOCATION:" + cl.location + "\n";
-		//recurrence
+		// weekly recurrence
 		var days = "";
 		var dayMap = ["MO", "TU", "WE", "TH", "FR"];
 		for (var i = 0; i < 5; i++) {
@@ -572,15 +573,15 @@ function getIcalString(classes) {
 				days += dayMap[i] + ",";
 			}
 		}
-		days = days.substring(0, days.length - 1);//shave off final comma
+		days = days.substring(0, days.length - 1); // shave off final comma
 		out += "RRULE:FREQ=WEEKLY;UNTIL=" + cl.edate[2] + padMinutes(cl.edate[0]) + padMinutes(cl.edate[1] + 1) + "T045959Z;BYDAY=" + days + "\n";
-		//sequence could go here, set it to 0, I guess
+		// If I wanted to include 'sequence', it could go here, and could probably be set to 0
 		out += "SUMMARY:" + cl.major + " " + cl.number + " - " + cl.name + ", " + cl.type + "\n";
-		out += "TRANSP:OPAQUE\n"; //this seems to indicate that the event is "busy" aka not free time
+		out += "TRANSP:OPAQUE\n"; // this seems to indicate that the event is "busy" aka not free time
 		var uidTail = cl.major + "-" + cl.number + "-" + cl.name + "-" + cl.type;
-		uidTail = uidTail.split(' ').join('-');//replace spaces
+		uidTail = uidTail.split(' ').join('-'); // replace spaces
 		out += "UID:SWFT-" + cl.sdate[0]+"-"+cl.sdate[1]+"-"+cl.sdate[2] + "-" + uidTail + "\n";
-		//date stamp
+		// date stamp
 		var cal = new Date();
 		out += "DTSTAMP:" + cal.getFullYear() + "" + padMinutes(cal.getMonth() + 1) + "" + padMinutes(cal.getDate()) + "T" + padMinutes(cal.getHours()) + padMinutes(cal.getMinutes()) + padMinutes(cal.getSeconds()) + "\n";
 		
