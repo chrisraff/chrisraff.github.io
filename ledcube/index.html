@@ -6,7 +6,7 @@
 <h2>LED Cube</h2>
 
 <div style="overflow:hidden;" >
-	<img src='https://lh5.googleusercontent.com/gTjVfjMZuCzR8Qk6xN5SIFjQZfUD2qIJYgaJg9o5XJGMtWetXZR71nQexMlX7tU9l5Xh8e0ViH8RneWr7TYXJhqjRmwvx2Fh11MvjwrFe4THIA-59kdW=w1175' alt='LED Cube viewed from corner' style='max-width:150%; margin-left: 50%; transform: translateX(-50%);'/>
+	<img src='cube_corner.jpg' alt='LED Cube viewed from corner' style='max-width:150%; margin-left: 50%; transform: translateX(-50%);'/>
 </div>
 
 <p>I built this with Alex Lamson for my the CICS 290m class, a class that was new at the time which exposes computer science students to working with hardware and microcontrollers. This project certainly went beyond the requirements for the final project. Since it's completion, we have demoed the cube several times at CS events and we continue to program new patterns and visualizations for it.</p>
@@ -16,7 +16,7 @@
 <h4>Revolutionary Wiring Scheme</h4>
 <p>When looking around at how other people built LED cubes, it was commonplace to deliver power to the LEDs by running one 5V and one G wire per column of LEDs. Since one column of LEDs requires wire of about 20 cm from base to top and there are 64 columns, this would've meant 2 * 64 * 20 cm = 25.6 meters of wire! I was able to come up with a wiring scheme that used only one wire per column by alternating 5V and G and having LEDs bridge from their column to a neighbouring column on one axis. This halved the material required while also reducing visual clutter, weight and construction time. Here is a rough first sketch of the power delivery solution:</p>
 <img src='cube_power.png' alt='Alternating 5V and G' style='max-width: 100%; max-height: 500pt'/>
-<p>As demonstrated on the right side, things do get a bit cluttered at one edge (to the point that I failed to draw a connection) but I believe this one draw back is worth it and it didn't actually create much of a problem when building.</p>
+<p>As demonstrated on the right side, things do get a bit cluttered at one edge (to the point that I failed to draw a connection) but I believe this one drawback is worth it and it didn't actually create much of a problem when building.</p>
 
 <h4>Programming</h4>
 <p>An arduino chip drives the cube, specifically a Wemos R1 mini. This chip is a great chip all around - it's clock speed is fast by default and can go up to 160Mhz, it has a lot of memory which is critcal since 512 colors need to be in memory at the very least, and it's tiny. Some of the demos run on data delivered over serial to the arduino, but I find this is ineffective for streaming the entire image to the cube since it's slow and prone to corruption. I prefer to do as much of the work as possible on the arduino side to keep it fast and independent.</p>
