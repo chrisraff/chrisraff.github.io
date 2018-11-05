@@ -125,6 +125,8 @@ function parseSchedule(text) {
 	var numParentClasses = 0;
 	
 	var lines = text.split('\n');
+	
+	lines = lines.filter(line => line != String.fromCharCode(9)) // Firefox has blank lines in between each row
 
 	var emptyRegex = new RegExp("^[ |\t|" + String.fromCharCode(160) + "]*$"); // Apple uses char 160 in it's table copying
 	var classNumberRegex = new RegExp("^[0-9]+$");
