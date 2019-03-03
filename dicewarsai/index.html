@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dice Wars | Chris Raff</title>
+	<meta name="description" content="A dicewars game, modified to have improved AI players"/>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120805992-1"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-120805992-1');
+	</script>
+</head>
+
+<body>
+
+<h1>
+	<a href='../'>
+		Chris Raff
+	</a>
+</h1>
+
+<h2>Dice Wars with Improved AI</h2>
+
+<h3>
+	<a href='../dicewars'>Play my version here!</a>
+</h3>
+
+<p>Dice Wars is a turn-based board game built by <a href='https://gamedesign.jp' target='_blank'>gamedesign.jp</a>. I thought the game was fun but the AI was too weak and the matches became boring. Since they had made a javascript version of the game, I downloaded the source code and modified it to allow multiple types of AI player and tried my hand at creating a better AI. I can still usually beat the one I made, but mine regularly outlasts the original AI so it is a slight improvement. If you play my version, my slightly better AI are the pink, green and lime players.</p>
+
+<div style="overflow:hidden;" >
+	<img src='gameboard.png' alt='An example of the game board' style='margin-left: 5pt; max-width: 100%; max-height: 250pt'/>
+</div>
+
+<p>If you'd like to try making your own AI for this game, take a look at my <a href='https://github.com/chrisraff/dicewarsjs' target="_blank">GitHub repo</a> for it. It includes instructions to get you started. Let me know if you make any interesting AI!</p>
+
+<p>I hope to eventually add components to make AI creation easier for this game, like playing the AI against eachother quickly so you can analyze the performance of different AI.</p>
