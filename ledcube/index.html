@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>LED cube | Chris Raff</title>
+	<meta name="description" content="LED Cube: how it was built and programmed."
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120805992-1"></script>
@@ -35,20 +36,22 @@
 <p>When looking around at how other people built LED cubes, it was commonplace to deliver power to the LEDs by running one 5V and one G wire per column of LEDs. Since one column of LEDs requires wire of about 20 cm from base to top and there are 64 columns, this would've meant 2 * 64 * 20 cm = 25.6 meters of wire! I was able to come up with a wiring scheme that used only one wire per column by alternating 5V and G and having LEDs bridge from their column to a neighbouring column on one axis. This halved the material required while also reducing visual clutter, weight and construction time. Here is a rough first sketch of the power delivery solution:</p>
 <img src='cube_power.png' alt='Alternating 5V and G' style='max-width: 100%; max-height: 500pt'/>
 <p>As demonstrated on the right side, things do get a bit cluttered at one edge (to the point that I failed to draw a connection) but I believe this one drawback is worth it and it didn't actually create much of a problem when building.</p>
+<p>There is one small disclaimer to make about this wire scheme, which is that it seems to be creating some voltage spike problems that can corrupt the data signal that drives the neopixels. This seems to be the reason that the final layer of LEDs sometimes flashes, a problem that had no clear source until now. When I have more time, I hope to explore solutions. The data sheet for the LEDs says you're supposed to include a small capacitor in parallel with each LED, a step that we were eager to ignore when building the cube. It apparently doesn't suffice to just put a large capacitor in parallel with the whole thing.</p>
 
 <h4>Programming</h4>
-<p>An arduino chip drives the cube, specifically a Wemos R1 mini. This chip is a great chip all around - it's clock speed is fast by default and can go up to 160Mhz, it has a lot of memory which is critcal since 512 colors need to be in memory at the very least, and it's tiny. Some of the demos run on data delivered over serial to the arduino, but I find this is ineffective for streaming the entire image to the cube since it's slow and prone to corruption. I prefer to do as much of the work as possible on the arduino side to keep it fast and independent.</p>
+<p>An arduino chip drives the cube, specifically a Wemos R1 mini. This chip is a great chip all around - it's based on the ESP8266 so it's clock speed is fast by default and can go up to 160Mhz, it has a lot of memory which is critcal since 512 colors need to be in memory at the very least, and it's tiny. Some of the demos run on data delivered over serial to the arduino, but I find this is ineffective for streaming the entire image to the cube since it's slow and prone to corruption. I prefer to do as much of the work as possible on the arduino side to keep it fast and independent.</p>
+<p>I aquired several ESP32 chips, which is an improved version of the ESP8266. It has 2 cores, and fancy hardware for faster floating point operations. Sadly, I haven't been able to get it to work with the cube yet since the signal it produces to drive the lights seems much more prone to corruption. By default, it tries to drive all four LED data pins at once (which would be really impressive if it worked) but it seems that this creates some odd voltage spikes. The framerate is really impressive, though, and I hope to get it working eventually.</p>
 <p>The FastLED library is superior to Adafruits neopixel library in many ways, and I can't endorse it enough. It lets you access the array of pixels in memory directly which is quite handy, it lets you specify colors by hue in addition to RGB, and it includes many convenient and efficient math functions.</p>
 <p>It took quite a while to get all the demos to run smoothly, but the main take aways are:
 	<ul>
 		<li>
-			Trig operations like cosine and sine are extremely slow. FastLED fortunately includes approximations that run much faster and serve just as well in nearly all cases, so this is an easy problem to solve.
+			Trigonometry operations like cosine and sine are extremely slow. FastLED fortunately includes approximations that run much faster and serve just as well in nearly all cases, so this is an easy problem to solve.
 		</li>
 		<li>
 			Square roots are also very slow. Whenever possible, my code avoids square roots unless they are absolutely necessary. In the case of a comparison, for instance, this can by done by replacing <code>a &gt sqrt(value)</code> with <code>a * a &gt value</code>.
 		</li>
 		<li>
-			Float division is surprisingly slow. This can be hard to believe, but a lot of preformance can be gained by taking float division out of loops. This can be done by changing <code>a * b</code> to <code>b_inv = 1.0 / b; a * b_inv;</code> if <code>b</code> is used as a denomenator more than once.
+			Float division is surprisingly slow. This can be hard to believe, but a lot of preformance can be gained by taking float division out of loops. This can be done by changing <code>a / b</code> to <code>b_inv = 1.0 / b; a * b_inv;</code> if <code>b</code> is used as a denomenator more than once.
 		</li>
 	</ul>
 
