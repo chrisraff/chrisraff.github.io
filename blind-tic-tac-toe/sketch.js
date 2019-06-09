@@ -112,7 +112,7 @@ function draw() {
       for (var i = 0; i < 9; i++) {
         if (board[i] != 0) {
           let x = i % 3, y = int(i/3);
-          text("here", x * windowSize / 3, messageHeight + y * windowSize / 3);
+          drawX(i);
         }
       }
 
@@ -130,4 +130,17 @@ function windowResized() {
   windowSize = min(windowWidth - windowPadding, minWindowSize);
   
   resizeCanvas(windowSize, windowSize + messageHeight);
+}
+
+function drawX(cellId) {
+  let i = cellId % 3, j = int(cellId / 3);
+
+  let centerX = i * windowSize / 3 + windowSize / 6, centerY = messageHeight + j * windowSize / 3 + windowSize / 6;
+  let radius = windowSize / 6 - 20;
+
+  strokeWeight(8);
+  fill(color(0, 0, 200));
+  
+  line(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
+  line(centerX - radius, centerY + radius, centerX + radius, centerY - radius);
 }
