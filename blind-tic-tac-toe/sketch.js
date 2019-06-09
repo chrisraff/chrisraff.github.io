@@ -66,7 +66,7 @@ function mouseReleased() {
     return;
 
   // is the click in the board?
-  if (mouseY < messageHeight)
+  if (mouseY < messageHeight || mouseY > height || mouseX < 0 || mouseX > width)
     return;
 
   // is it the player's turn?
@@ -93,7 +93,6 @@ function draw() {
     case 0:
       // menu - currently unused
 
-      
       rect(80, 80, 40, 30);
       
       break;
@@ -130,5 +129,5 @@ function draw() {
 function windowResized() {
   windowSize = min(windowWidth - windowPadding, minWindowSize);
   
-  resizeCanvas(windowSize, windowSize + messageSize);
+  resizeCanvas(windowSize, windowSize + messageHeight);
 }
