@@ -101,7 +101,7 @@ function draw() {
       // in game
 
       // draw the board
-      fill(80);
+      stroke(80);
       strokeWeight(4);
 
       for (var i = 1; i < 3; i++) {
@@ -139,7 +139,7 @@ function drawX(cellId) {
   let radius = windowSize / 6 - 20;
 
   strokeWeight(8);
-  fill(color(0, 0, 200));
+  stroke(color(0, 0, 220));
   
   line(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
   line(centerX - radius, centerY + radius, centerX + radius, centerY - radius);
