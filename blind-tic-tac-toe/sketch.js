@@ -1,6 +1,8 @@
 let canvas;
 let minWindowSize = 800;
 let windowPadding = 20;
+let messageHeight = 40;
+var windowSize;
 
 var strategyDict;
 var state = 1; // 0: picking player, 1 playing game
@@ -49,9 +51,9 @@ function preload() {
 
 
 function setup() {
-  var windowSize = min(windowWidth - windowPadding, minWindowSize);
+  windowSize = min(windowWidth - windowPadding, minWindowSize);
   
-  canvas = createCanvas(windowSize, windowSize);
+  canvas = createCanvas(windowSize, windowSize + messageHeight);
 
   // Attach the canvas to div
   canvas.parent('sketch-div');
@@ -63,11 +65,15 @@ function mouseReleased() {
   if (state != 1)
     return;
 
+  // is the click in the board?
+  if (mouseY < messageHeight)
+    return;
+
   // is it the player's turn?
   if ((humanMovesFirst && turn == 1) || (!humanMovesFirst && turn == 2)) {
     // get the cell that the player clicked on
-    var i = int((mouseX / width) * 3);
-    var j = int((mouseY / height) * 3);
+    var i = int((mouseX / windowSize) * 3);
+    var j = int(((mouseY - messageHeight) / windowSize) * 3);
     var index = i + 3*j;
     
     // check if the cell is occupied
@@ -100,14 +106,14 @@ function draw() {
       strokeWeight(4);
 
       for (var i = 1; i < 3; i++) {
-        line(width * i / 3, 10, width * i / 3, height - 10);
-        line(10, height * i / 3, width - 10, height * i / 3);
+        line(windowSize * i / 3, messageHeight + 10, windowSize * i / 3, height - 10);
+        line(10, messageHeight + windowSize * i / 3, windowSize - 10, messageHeight + windowSize * i / 3);
       }
 
       for (var i = 0; i < 9; i++) {
         if (board[i] != 0) {
           let x = i % 3, y = int(i/3);
-          text("here", x * width / 3, y * height / 3);
+          text("here", x * windowSize / 3, messageHeight + y * windowSize / 3);
         }
       }
 
@@ -122,7 +128,7 @@ function draw() {
 
 
 function windowResized() {
-  var windowSize = min(windowWidth - windowPadding, minWindowSize);
+  windowSize = min(windowWidth - windowPadding, minWindowSize);
   
-  resizeCanvas(windowSize, windowSize);
+  resizeCanvas(windowSize, windowSize + messageSize);
 }
