@@ -193,12 +193,9 @@ function checkWin(boardArray) {
   // if we checked every configuration, and the board is full, it is a tie
   for (var i = 0; i < 9; i++) {
     if (boardArray[i] == 0)
-      return 0; // the board is not full, so no one has won yet
+      return -1; // the board is not full, so no one has won yet
   }
-  return 4; // tie
-
-  // otherwise, no one has won yet
-  return 0;
+  return 0; // tie
 }
 
 function boardHash(boardArray) {
