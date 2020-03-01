@@ -7,9 +7,10 @@ var windowSize;
 var strategyDict;
 var state = 1; // 0: picking player, 1 playing game
 var humanMovesFirst = true;
-var turn = 1; // whose turn is it (p1, p2)
+var turn = 1; // whose turn is it (1: p1, 2: p2)
+var message = "";
 
-var board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+var board = [2, 0, 2, 0, 2, 0, 0, 2, 0];
 
 
 class Button {
@@ -80,6 +81,7 @@ function mouseReleased() {
 
     // make the move
     board[index] = turn;
+    message = "" + checkWin(board);
     
     // set next turn
   }
@@ -110,8 +112,10 @@ function draw() {
       }
 
       for (var i = 0; i < 9; i++) {
-        if (board[i] != 0) {
-          let x = i % 3, y = int(i/3);
+        if (board[i] == 1) {
+          drawX(i);
+        }
+        if (board[i] == 2) {
           drawO(i);
         }
       }
@@ -121,10 +125,7 @@ function draw() {
 
   strokeWeight(1);
   stroke(color(0, 0, 0));
-  text(boardHash(board), 10, 10);
-  // text(canvas.x, 10, 30);
-  // text(canvas.y, 10, 50);
-
+  text(message, 10, 10);
 }
 
 
@@ -160,6 +161,44 @@ function drawO(cellId) {
   stroke(color(220, 0, 0));
   
   ellipse(centerX, centerY, radius * 2);
+}
+
+function checkWin(boardArray) {
+  for (var p = 1; p <= 2; p++) {
+    // check straight lines
+    for (var i = 0; i < 3; i++) {
+      var win_vert = true, win_hori = true
+      for (var j = 0; j < 3; j++) {
+        if (boardArray[i + j*3] != p)
+          win_vert = false;
+        if (boardArray[i*3 + j] != p)
+          win_hori = false;
+      }
+      if (win_hori || win_vert)
+        return p;
+    }
+
+    // check for diagonals
+    var diag_m = true, diag_o = true;
+    for (var i = 0; i < 3; i++) {
+      if (boardArray[i + i*3] != p)
+        diag_m = false;
+      if (boardArray[i + (2 - i)*3] != p)
+        diag_o = false;
+    }
+    if (diag_m || diag_o)
+      return p;
+  }
+
+  // if we checked every configuration, and the board is full, it is a tie
+  for (var i = 0; i < 9; i++) {
+    if (boardArray[i] == 0)
+      return 0; // the board is not full, so no one has won yet
+  }
+  return 4; // tie
+
+  // otherwise, no one has won yet
+  return 0;
 }
 
 function boardHash(boardArray) {
