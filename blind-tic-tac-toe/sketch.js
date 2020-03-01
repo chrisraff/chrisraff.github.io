@@ -119,7 +119,9 @@ function draw() {
       break;
   }
 
-  // text(strategyDict["0.0"], 10, 10);
+  strokeWeight(1);
+  stroke(color(0, 0, 0));
+  text(boardHash(board), 10, 10);
   // text(canvas.x, 10, 30);
   // text(canvas.y, 10, 50);
 
@@ -157,4 +159,11 @@ function drawO(cellId) {
   noFill();
   
   ellipse(centerX, centerY, radius * 2);
+}
+
+function boardHash(boardArray) {
+  var total = 0;
+  for (var i = 0; i < 9; i++)
+    total += Math.pow(3, i) * boardArray[i];
+  return total;
 }
