@@ -6,12 +6,18 @@ var windowSize;
 
 var strategyDict;
 var state = 1; // 0: picking player, 1 playing game
-var humanMovesFirst = true;
+
+// vars set at menu
+var humanMovesFirst = false;
+
+// vars set at game start
 var turn = 1; // whose turn is it (1: p1, 2: p2)
+var winner = -1;
 var message = "";
 
-var board = [2, 0, 2, 0, 2, 0, 0, 2, 0];
-
+var board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+var humanBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+var cpuBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 class Button {
   constructor(x, y, width, height, text, func) {
@@ -42,7 +48,17 @@ class Button {
 
 function startGame() {
   state = 1;
+
+  turn = 1;
+  winner = -1;
+
   board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  displayBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  cpuBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  if (!humanMovesFirst) {
+    cpuMove();
+  }
 }
 
 
@@ -58,6 +74,9 @@ function setup() {
 
   // Attach the canvas to div
   canvas.parent('sketch-div');
+
+  // TODO set up the menu, don't start the game
+  startGame();
 }
 
 
@@ -71,7 +90,7 @@ function mouseReleased() {
     return;
 
   // is it the player's turn?
-  if ((humanMovesFirst && turn == 1) || (!humanMovesFirst && turn == 2)) {
+  if (winner == -1 && (humanMovesFirst && turn == 1) || (!humanMovesFirst && turn == 2)) {
     // get the cell that the player clicked on
     var i = int((mouseX / windowSize) * 3);
     var j = int(((mouseY - messageHeight) / windowSize) * 3);
@@ -80,10 +99,25 @@ function mouseReleased() {
     // check if the cell is occupied
 
     // make the move
-    board[index] = turn;
-    message = "" + checkWin(board);
-    
-    // set next turn
+    var pid = turn;
+
+    var moved = make_move(index);
+
+    // update local board
+    if (moved) {
+      humanBoard[index] = pid;
+    } else {
+      humanBoard[index] = 3 - pid;
+    }
+
+    message = "" + turn;
+
+    // if the player's turn ended, tell the AI to move
+    if (moved && winner == -1) {
+      cpuMove();
+    }
+
+    message = "" + turn;
   }
 }
 
@@ -136,6 +170,52 @@ function windowResized() {
 }
 
 
+function cpuMove() {
+  var moved = false;
+  while (!moved) {
+    // just pick random moves for now
+    move = Math.floor(Math.random() * 9);
+
+    console.log(move);
+
+    var pid = turn;
+
+    moved = make_move(move);
+
+    // update private board
+    if (moved) {
+      cpuBoard[move] = pid;
+    } else {
+      if (cpuBoard[move] != 0)
+        cpuBoard[move] = 3 - pid;
+    }
+  }
+}
+
+
+function make_move(move) {
+  if (board[move] == 0) {
+    // this move is valid
+    board[move] = turn;
+
+    // check if the game is over
+    winner = checkWin(board);
+
+    if (winner != -1) {
+      // TODO update everything, give player a reset button
+    } else {
+      // swap turn
+      turn = 3 - turn;
+    }
+
+    return true;
+  } else {
+    // this move was invalid
+    return false;
+  }
+}
+
+
 function drawX(cellId) {
   let i = cellId % 3, j = int(cellId / 3);
 
@@ -162,6 +242,7 @@ function drawO(cellId) {
   
   ellipse(centerX, centerY, radius * 2);
 }
+
 
 function checkWin(boardArray) {
   for (var p = 1; p <= 2; p++) {
@@ -197,6 +278,7 @@ function checkWin(boardArray) {
   }
   return 0; // tie
 }
+
 
 function boardHash(boardArray) {
   var total = 0;
