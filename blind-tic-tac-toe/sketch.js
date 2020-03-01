@@ -157,6 +157,7 @@ function drawO(cellId) {
 
   strokeWeight(8);
   noFill();
+  stroke(color(220, 0, 0));
   
   ellipse(centerX, centerY, radius * 2);
 }
