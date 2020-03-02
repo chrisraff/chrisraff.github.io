@@ -53,7 +53,7 @@ function startGame() {
   winner = -1;
 
   board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-  displayBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+  humanBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   cpuBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   var num = (humanMovesFirst ? "first" : "second");
@@ -152,11 +152,13 @@ function draw() {
         line(10, messageHeight + windowSize * i / 3, windowSize - 10, messageHeight + windowSize * i / 3);
       }
 
+      var displayBoard = winner == -1 ? humanBoard : board;
+
       for (var i = 0; i < 9; i++) {
-        if (board[i] == 1) {
+        if (displayBoard[i] == 1) {
           drawX(i);
         }
-        if (board[i] == 2) {
+        if (displayBoard[i] == 2) {
           drawO(i);
         }
       }
