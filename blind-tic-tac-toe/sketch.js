@@ -92,7 +92,7 @@ function mouseReleased() {
   // is the click in the board?
   if (mouseY < messageHeight || mouseY > height || mouseX < 0 || mouseX > width)
     return;
-    
+
   // if the game is over, any click can reset it (for now)
   if (winner != -1) {
     startGame();
@@ -119,7 +119,7 @@ function mouseReleased() {
       humanBoard[index] = pid;
     } else {
       message = "Can't move there, move again";
-      humanBoard[index] = 3 - pid;
+      humanBoard[index] = board[index];
     }
 
     // if the player's turn ended, tell the AI to move
