@@ -88,6 +88,11 @@ function mouseReleased() {
   if (state != 1)
     return;
 
+
+  // is the click in the board?
+  if (mouseY < messageHeight || mouseY > height || mouseX < 0 || mouseX > width)
+    return;
+    
   // if the game is over, any click can reset it (for now)
   if (winner != -1) {
     startGame();
@@ -95,10 +100,6 @@ function mouseReleased() {
     // don't let this click do anything else
     return;
   }
-
-  // is the click in the board?
-  if (mouseY < messageHeight || mouseY > height || mouseX < 0 || mouseX > width)
-    return;
 
   // is it the player's turn?
   if (winner == -1 && (humanMovesFirst && turn == 1) || (!humanMovesFirst && turn == 2)) {
