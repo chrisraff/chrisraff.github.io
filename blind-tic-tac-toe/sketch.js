@@ -56,6 +56,9 @@ function startGame() {
   displayBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
   cpuBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+  var num = (humanMovesFirst ? "first" : "second");
+  message = "You're moving " + num + ", click to move";
+
   if (!humanMovesFirst) {
     cpuMove();
   }
@@ -85,6 +88,14 @@ function mouseReleased() {
   if (state != 1)
     return;
 
+  // if the game is over, any click can reset it (for now)
+  if (winner != -1) {
+    startGame();
+
+    // don't let this click do anything else
+    return;
+  }
+
   // is the click in the board?
   if (mouseY < messageHeight || mouseY > height || mouseX < 0 || mouseX > width)
     return;
@@ -95,29 +106,25 @@ function mouseReleased() {
     var i = int((mouseX / windowSize) * 3);
     var j = int(((mouseY - messageHeight) / windowSize) * 3);
     var index = i + 3*j;
-    
-    // check if the cell is occupied
 
     // make the move
     var pid = turn;
 
+    message = "";
     var moved = make_move(index);
 
     // update local board
     if (moved) {
       humanBoard[index] = pid;
     } else {
+      message = "Can't move there, move again";
       humanBoard[index] = 3 - pid;
     }
-
-    message = "" + turn;
 
     // if the player's turn ended, tell the AI to move
     if (moved && winner == -1) {
       cpuMove();
     }
-
-    message = "" + turn;
   }
 }
 
@@ -176,8 +183,6 @@ function cpuMove() {
     // just pick random moves for now
     move = Math.floor(Math.random() * 9);
 
-    console.log(move);
-
     var pid = turn;
 
     moved = make_move(move);
@@ -202,7 +207,18 @@ function make_move(move) {
     winner = checkWin(board);
 
     if (winner != -1) {
-      // TODO update everything, give player a reset button
+      var result = "";
+      if (winner == 0) {
+        result = "tied";
+      } else if (
+          (winner == 1 && humanMovesFirst) || (winner == 2 && !humanMovesFirst)
+        ) {
+        result = "won";
+      } else {
+        result = "lost";
+      }
+
+      message = "You " + result + "! Click to play again";
     } else {
       // swap turn
       turn = 3 - turn;
