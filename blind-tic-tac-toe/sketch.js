@@ -4,11 +4,11 @@ let windowPadding = 20;
 let messageHeight = 40;
 var windowSize;
 
-var strategyDict;
+var strategies;
 var state = 1; // 0: picking player, 1 playing game
 
 // vars set at menu
-var humanMovesFirst = false;
+var humanMovesFirst = true;
 
 // vars set at game start
 var turn = 1; // whose turn is it (1: p1, 2: p2)
@@ -66,7 +66,7 @@ function startGame() {
 
 
 function preload() {
-  strategyDict = loadJSON('strategy.json');
+  strategies = loadJSON('strategy.json');
 }
 
 
@@ -154,6 +154,7 @@ function draw() {
       }
 
       var displayBoard = winner == -1 ? humanBoard : board;
+      // var displayBoard = winner == -1 ? cpuBoard : board; // useful for debugging AI
 
       for (var i = 0; i < 9; i++) {
         if (displayBoard[i] == 1) {
@@ -181,23 +182,139 @@ function windowResized() {
 
 
 function cpuMove() {
-  var moved = false;
+  var strategy = strategies[ int(humanMovesFirst) ];
+
+  var attempts = 0;
+  
+  // move until a valid move is found
   while (!moved) {
-    // just pick random moves for now
-    move = Math.floor(Math.random() * 9);
+
+    // rotate the board to look up a strategy
+    var move = -1;
+    var rotations = 0, flipped = false;
+    var currBoard = cpuBoard.slice();
+
+    while (move == -1) {
+      var hash = boardHash(currBoard).toFixed(1);
+
+      // prevent trying the same thing over and over
+      if (attempts > 10)
+        hash = "no";
+
+      if (hash in strategy) {
+        var outcomes = strategy[hash];
+
+        // pick a move - softmax
+        var distribution = outcomes.slice();
+        var largest_outcome = max(outcomes);
+        for (var i = 0; i < 9; i++) {
+          distribution[i] = Math.exp(50 * (outcomes[i] - largest_outcome));
+        }
+        // turn into cumulative sums
+        for (var i = 1; i < 9; i++) {
+          distribution[i] += distribution[i - 1];
+        }
+        
+        // pick one according to the distribution
+        var rand = Math.random() * distribution[8];
+        for (var i = 0; i < 9; i++) {
+          if (rand < distribution[i]) {
+            move = i;
+            break;
+          }
+        }
+
+        console.log("r" + rotations + " f " + flipped + " rb " + currBoard);
+        console.log(outcomes);
+        console.log("raw move: " + move);
+
+        // Map the move back to world space
+        // unrotate
+        var move_x = move%3, move_y = int(move/3);
+        for (var i = 0; i < rotations; i++) {
+          var new_move_x = 2 - move_y;
+          var new_move_y = move_x;
+
+          move_x = new_move_x;
+          move_y = new_move_y;
+        }
+
+        // untransform
+        if (flipped) {
+          var new_move_x = move_y;
+          move_y = move_x;
+          move_x = new_move_y;
+        }
+
+        move = move_x + move_y*3;
+        console.log("move: " + move);
+        break;
+      }
+
+      rotations += 1;
+      currBoard = rotateBoard(currBoard);
+
+      if (rotations >= 4 || hash == "no") {
+        rotations = 0;
+
+        if (flipped || hash == "no") {
+          // this board has never been seen before
+          // this shouldn't happen, but if it does then return a random move
+          move = Math.floor(Math.random() * 9);
+          if (hash != "no")
+            console.log('never seen this board before');
+        }
+
+        flipped = true;
+        currBoard = transposeBoard(cpuBoard);
+      }
+    }
 
     var pid = turn;
 
-    moved = make_move(move);
+    var moved = make_move(move);
 
     // update private board
     if (moved) {
       cpuBoard[move] = pid;
     } else {
-      if (cpuBoard[move] != 0)
+      if (cpuBoard[move] == 0)
         cpuBoard[move] = 3 - pid;
+      
+      attempts += 1;
     }
   }
+}
+
+
+function rotateBoard(boardArray) {
+  var rotated_board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  for (var i = 0; i < 3; i++) {
+    for (var j = 0; j < 3; j++) {
+      var x = i - 1;
+      var y = j - 1;
+
+      rx = y  + 1;
+      ry = -x + 1;
+      rotated_board[rx + ry*3] = boardArray[i + j*3];
+    }
+  }
+
+  return rotated_board;
+}
+
+
+function transposeBoard(boardArray) {
+  var transposed_board = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  for (var i = 0; i < 3; i++) {
+    for (var j = 0; j < 3; j++) {
+      transposed_board[j + i*3] = boardArray[i + j*3];
+    }
+  }
+
+  return transposed_board;
 }
 
 
