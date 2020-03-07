@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta name="description" content="LED Cube: how it was built and programmed."/>
-	
+
 	<title>LED cube | Chris Raff</title>
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -29,7 +29,7 @@
 	<img src='cube_corner.jpg' alt='LED Cube viewed from corner' style='max-width:150%; margin-left: 50%; transform: translateX(-50%);'/>
 </div>
 
-<p>I built this with Alex Lamson for my the CICS 290m class, a class that was new at the time which exposes computer science students to working with hardware and microcontrollers. This project certainly went beyond the requirements for the final project. Since it's completion, we have demoed the cube several times at CS events and we continue to program new patterns and visualizations for it.</p>
+<p>I built this with Alex Lamson for the CICS 290m class, a class that was new at the time which exposes computer science students to working with hardware and microcontrollers. This project certainly went beyond the requirements for the final project. Since it's completion, we have demoed the cube several times at CS events and we continue to program new patterns and visualizations for it.</p>
 <p>This <a href='https://sites.google.com/umass.edu/ledcube/home' target="_blank">website</a> documents the construction of the cube (open with caution, it's a very large webpage)</p>
 <p>You can also view the <a href='https://github.com/AlexLamson/ledcube' target="_blank">GitHub repo</a> for the code that drives the visualizations on the cube</p>
 
@@ -40,19 +40,19 @@
 <p>There is one small disclaimer to make about this wire scheme, which is that it seems to be creating some voltage spike problems that can corrupt the data signal that drives the neopixels. This seems to be the reason that the final layer of LEDs sometimes flashes, a problem that had no clear source until now. When I have more time, I hope to explore solutions. The data sheet for the LEDs says you're supposed to include a small capacitor in parallel with each LED, a step that we were eager to ignore when building the cube. It apparently doesn't suffice to just put a large capacitor in parallel with the whole thing.</p>
 
 <h4>Programming</h4>
-<p>An arduino chip drives the cube, specifically a Wemos R1 mini. This chip is a great chip all around - it's based on the ESP8266 so it's clock speed is fast by default and can go up to 160Mhz, it has a lot of memory which is critcal since 512 colors need to be in memory at the very least, and it's tiny. Some of the demos run on data delivered over serial to the arduino, but I find this is ineffective for streaming the entire image to the cube since it's slow and prone to corruption. I prefer to do as much of the work as possible on the arduino side to keep it fast and independent.</p>
-<p>I aquired several ESP32 chips, which is an improved version of the ESP8266. It has 2 cores, and fancy hardware for faster floating point operations. Sadly, I haven't been able to get it to work with the cube yet since the signal it produces to drive the lights seems much more prone to corruption. By default, it tries to drive all four LED data pins at once (which would be really impressive if it worked) but it seems that this creates some odd voltage spikes. The framerate is really impressive, though, and I hope to get it working eventually.</p>
-<p>The FastLED library is superior to Adafruits neopixel library in many ways, and I can't endorse it enough. It lets you access the array of pixels in memory directly which is quite handy, it lets you specify colors by hue in addition to RGB, and it includes many convenient and efficient math functions.</p>
-<p>It took quite a while to get all the demos to run smoothly, but the main take aways are:
+<p>An arduino chip drives the cube, specifically a Wemos R1 mini. This chip is a great chip all around - it's based on the ESP8266 so it's clock speed is fast by default and can go up to 160Mhz, it has a lot of memory which is critical since 512 colors need to be in memory at the very least, and it's tiny. Some of the demos run on data delivered over serial to the arduino, but I find this is ineffective for streaming the entire image to the cube since it's slow and prone to corruption. I prefer to do as much of the work as possible on the arduino side to keep it fast and independent.</p>
+<p>I acquired several ESP32 chips, which is an improved version of the ESP8266. It has 2 cores, and fancy hardware for faster floating point operations. Sadly, I haven't been able to get it to work with the cube yet since the signal it produces to drive the lights seems much more prone to corruption. By default, it tries to drive all four LED data pins at once (which would be really impressive if it worked) but it seems that this creates some odd voltage spikes. The framerate is really impressive, though, and I hope to get it working eventually.</p>
+<p>The FastLED library is superior to Adafruit's neopixel library in many ways, and I can't endorse it enough. It lets you access the array of pixels in memory directly which is quite handy, it lets you specify colors by hue in addition to RGB, and it includes many convenient and efficient math functions.</p>
+<p>It took quite a while to get all the demos to run smoothly, but the main takeaways are:
 	<ul>
 		<li>
 			Trigonometry operations like cosine and sine are extremely slow. FastLED fortunately includes approximations that run much faster and serve just as well in nearly all cases, so this is an easy problem to solve.
 		</li>
 		<li>
-			Square roots are also very slow. Whenever possible, my code avoids square roots unless they are absolutely necessary. In the case of a comparison, for instance, this can by done by replacing <code>a &gt sqrt(value)</code> with <code>a * a &gt value</code>.
+			Square roots are also very slow. Whenever possible, my code avoids square roots unless they are absolutely necessary. In the case of a comparison, for instance, this can be done by replacing <code>a &gt sqrt(value)</code> with <code>a * a &gt value</code>.
 		</li>
 		<li>
-			Float division is surprisingly slow. This can be hard to believe, but a lot of preformance can be gained by taking float division out of loops. This can be done by changing <code>a / b</code> to <code>b_inv = 1.0 / b; a * b_inv;</code> if <code>b</code> is used as a denomenator more than once.
+			Float division is surprisingly slow. This can be hard to believe, but a lot of performance can be gained by taking float division out of loops. This can be done by changing <code>a / b</code> to <code>b_inv = 1.0 / b; a * b_inv;</code> if <code>b</code> is used as a denominator more than once.
 		</li>
 	</ul>
 
