@@ -246,8 +246,8 @@ function cpuMove() {
           move_x = new_move_y;
         }
 
-        move = move_x + move_y*3;
         console.log("move: " + move);
+        move = move_x*3 + move_y;
         break;
       }
 
