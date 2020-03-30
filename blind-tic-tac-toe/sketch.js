@@ -189,10 +189,17 @@ function cpuMove() {
   // move until a valid move is found
   while (!moved) {
 
+    // console.log('------------ begin cpu move');
+
     // rotate the board to look up a strategy
     var move = -1;
     var rotations = 0, flipped = false;
     var currBoard = cpuBoard.slice();
+
+    var pid = turn;
+
+    // if there is a winning move available, take it
+    move = findWinningMove(pid, currBoard);
 
     while (move == -1) {
       var hash = boardHash(currBoard).toFixed(1);
@@ -224,9 +231,9 @@ function cpuMove() {
           }
         }
 
-        console.log("r" + rotations + " f " + flipped + " rb " + currBoard);
-        console.log(outcomes);
-        console.log("raw move: " + move);
+        // console.log("r" + rotations + " f " + flipped + " rb " + currBoard);
+        // console.log(outcomes);
+        // console.log("raw move: " + move);
 
         // Map the move back to world space
         // unrotate
@@ -246,8 +253,8 @@ function cpuMove() {
           move_x = new_move_y;
         }
 
-        console.log("move: " + move);
         move = move_x*3 + move_y;
+        // console.log("move: " + move);
         break;
       }
 
@@ -269,8 +276,6 @@ function cpuMove() {
         currBoard = transposeBoard(cpuBoard);
       }
     }
-
-    var pid = turn;
 
     var moved = make_move(move);
 
@@ -413,6 +418,66 @@ function checkWin(boardArray) {
       return -1; // the board is not full, so no one has won yet
   }
   return 0; // tie
+}
+
+
+function findWinningMove(p, boardArray) {
+  // rowCoords is a list of coords in boardArray
+  function findMoveInLine(rowCoords) {
+    var total = 0;
+    var move = -1;
+    for (var i = 0; i < 3; i++) {
+      var coord = rowCoords[i];
+      var cell = boardArray[coord];
+
+      if (cell == p)
+        total += 1;
+      else if (cell == 3 - p) // is it blocked?
+        return -1;
+      else if (cell == 0)
+        move = coord;
+    }
+    if (total == 2 && move != -1)
+      return move;
+
+    return -1;
+  }
+
+  // check straight lines
+  for (var i = 0; i < 3; i++) {
+    var row = [0, 0, 0];
+    var col = [0, 0, 0];
+    for (var j = 0; j < 3; j++) {
+      var row_coord = i + j*3;
+      var col_coord = i*3 + j;
+
+      row[j] = row_coord;
+      col[j] = col_coord;
+    }
+
+    var move = findMoveInLine(row);
+    if (move == -1) 
+      move = findMoveInLine(col);
+
+    if (move != -1)
+      return move;
+  }
+
+  // check for diagonals
+  var diag_m = [0, 0, 0], diag_o = [0, 0, 0];
+  for (var i = 0; i < 3; i++) {
+    var main_coord = i + i*3;
+    var other_coord = i + (2 - i)*3;
+
+    diag_m[i] = main_coord;
+    diag_o[i] = other_coord;
+  }
+
+  var move = findMoveInLine(diag_m);
+  if (move == -1) 
+    move = findMoveInLine(diag_o);
+
+  return move;
 }
 
 
