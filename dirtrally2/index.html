@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <canvas id="graph" width="400" height="400"></canvas>
 <script src="Chart.bundle.min.js"></script>
 <script src="dirtrallycharts.js"></script>
+
+<br/>
+<select id="category" oninput="categoryUpdate()">
+    <option value="none">None</option>
+    <option value="vehicleType">Car</option>
+    <option value="platform">Platform</option>
+    <option value="wheel">Wheel / Controller</option>
+</select>
 </html>

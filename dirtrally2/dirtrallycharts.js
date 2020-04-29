@@ -1,4 +1,5 @@
 var stageData = null;
+var category = "none";
 
 var chart = new Chart('graph', {
     type: 'scatter'
@@ -19,6 +20,12 @@ xhr.onload = function() {
 };
 xhr.send();
 
+function categoryUpdate() {
+    let e = document.getElementById("category");
+    category = e.options[e.selectedIndex].value;
+    console.log(category);
+}
+
 function getDistribution(times) {
     // assumes times are sorted
     var xmin = times[0]; // Math.min(...times)
@@ -29,7 +36,7 @@ function getDistribution(times) {
     xmax += buffer * diff;
     diff = xmax - xmin;
 
-    let resolution = 300;
+    let resolution = 150;
 
     let xs = new Array(resolution);
     let dist = new Array(resolution).fill(0);
