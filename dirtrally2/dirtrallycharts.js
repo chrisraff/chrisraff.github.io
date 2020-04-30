@@ -105,6 +105,15 @@ function safeDictionary(dictionary, key) {
     return key;
 }
 
+const convertHexToRGBA = (hex, opacity) => {
+    const tempHex = hex.replace('#', '');
+    const r = parseInt(tempHex.substring(0, 2), 16);
+    const g = parseInt(tempHex.substring(2, 4), 16);
+    const b = parseInt(tempHex.substring(4, 6), 16);
+  
+    return `rgba(${r},${g},${b},${opacity})`;
+};
+
 function getXValues(times, resolution=150) {
     // assumes times are sorted
     var xmin = times[0]; // Math.min(...times)
@@ -188,7 +197,7 @@ function plotData() {
                 borderColor: 'red',
                 borderWidth: 2,
                 showLine: true,
-                fill: false
+                backgroundColor: 'rgba(255, 0, 0, 0.1)'
             }]
         }
         
@@ -215,11 +224,11 @@ function plotData() {
                             .map(function(key) {
                 return {
                     label: safeDictionary(categoryNames[category], key),
-                    borderColor: colors[i++ % colors.length],
                     data: getDistribution(timeLists[key], xValues, normalization=="normal" ? 97 : null),
+                    borderColor: colors[i % colors.length],
                     borderWidth: 2,
                     showLine: true,
-                    fill: false
+                    backgroundColor: convertHexToRGBA(colors[i++ % colors.length], 0.1)
                 }
             })
         }
