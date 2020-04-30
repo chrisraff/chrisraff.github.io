@@ -1,6 +1,6 @@
 var stageData = null;
 var category = "vehicleName";
-var normalization = "relative";
+var chartType = "relative";
 var colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b', '#8549ba'];
 var chartDists = null;
 var chartCount = null;
@@ -94,9 +94,9 @@ function categoryUpdate() {
     plotData();
 }
 
-function normalizationUpdate() {
-    let e = document.getElementById("normalization");
-    normalization = e.options[e.selectedIndex].value;
+function chartTypeUpdate() {
+    let e = document.getElementById("chartType");
+    chartType = e.options[e.selectedIndex].value;
     plotData();
 }
 
@@ -215,22 +215,56 @@ function plotData() {
     } else {
         let timeLists = groupTimesByCategory(finishers, category);
 
-        let i = 0;
         let keys = Object.keys(timeLists);
         keys.sort();
 
-        chartDists.data = {
-            datasets: keys.filter((key) => timeLists[key].length >= 100)
-                            .map(function(key) {
-                return {
-                    label: safeDictionary(categoryNames[category], key),
-                    data: getDistribution(timeLists[key], xValues, normalization=="normal" ? 97 : null),
-                    borderColor: colors[i % colors.length],
-                    borderWidth: 2,
-                    showLine: true,
-                    backgroundColor: convertHexToRGBA(colors[i++ % colors.length], 0.1)
+        if (chartType == "stacked") {
+            chartDists.data.datasets = [];
+
+            for (var i = 0; i < keys.length; i++) {
+                let distribution = getDistribution(timeLists[keys[i]], xValues);
+
+                if (i == 0) {
+                    chartDists.data.datasets.push({
+                        label: safeDictionary(categoryNames[category], keys[i]),
+                        data: distribution,
+                        borderColor: colors[i % colors.length],
+                        borderWidth: 2,
+                        showLine: true,
+                        backgroundColor: colors[i % colors.length]
+                    })
+                } else {
+                    for (var j = 0; j < distribution.length; j++) {
+                        distribution[j].y += chartDists.data.datasets[i-1].data[j].y;
+                    }
+
+                    chartDists.data.datasets.push({
+                        label: safeDictionary(categoryNames[category], keys[i]),
+                        data: distribution,
+                        borderColor: colors[i % colors.length],
+                        borderWidth: 2,
+                        showLine: true,
+                        backgroundColor: colors[i % colors.length]
+                    })
                 }
-            })
+            }
+        } else {
+            let i = 0;
+
+            // simple distribution plot
+            chartDists.data = {
+                datasets: keys.filter((key) => timeLists[key].length >= 100)
+                                .map(function(key) {
+                    return {
+                        label: safeDictionary(categoryNames[category], key),
+                        data: getDistribution(timeLists[key], xValues, chartType=="normal" ? 97 : null),
+                        borderColor: colors[i % colors.length],
+                        borderWidth: 2,
+                        showLine: true,
+                        backgroundColor: convertHexToRGBA(colors[i++ % colors.length], 0.1)
+                    }
+                })
+            }
         }
 
         chartCount.data = {
