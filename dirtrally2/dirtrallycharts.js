@@ -9,7 +9,7 @@ var categoryNames = {
         "": "Car"
     },
     "wheel": {
-        "": "Wheel",
+        "": "Controller",
         "false": "Controller",
         "true": "Wheel"
     },
@@ -132,7 +132,7 @@ function groupTimesByCategory(times, category) {
     return timeLists;
 }
 
-function getDistribution(times, xValueArray) {
+function getDistribution(times, xValueArray, normalizationMax=null) {
     let dist = new Array(xValueArray.length).fill(0);
 
     let data = new Array(xValueArray.length);
@@ -146,13 +146,21 @@ function getDistribution(times, xValueArray) {
             numerator *= numerator;
             gauss_result = Math.exp(-numerator/(2*bandwidth*bandwidth));
             dist[i] += gauss_result;
-
-            data[i] = {
-                x: x,
-                y: dist[i]
-            }
         }
     });
+
+    let multiplier = 1;
+    if (normalizationMax !== null) {
+        multiplier = normalizationMax / Math.max(...dist);
+    }
+
+    // compile the final results into (x, y) points
+    for (var i = 0; i < data.length; i++) {
+        data[i] = {
+            x: xValueArray[i],
+            y: dist[i] * multiplier
+        }
+    }
 
     return data;
 }
@@ -200,7 +208,7 @@ function plotData() {
                             .map(function(key) {
                 return {
                     label: safeDictionary(categoryNames[category], key),
-                    data: getDistribution(timeLists[key], xValues),
+                    data: getDistribution(timeLists[key], xValues, 100),
                     borderColor: colors[i++ % colors.length],
                     borderWidth: 2,
                     showLine: true,
