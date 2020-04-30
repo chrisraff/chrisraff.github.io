@@ -1,5 +1,6 @@
 var stageData = null;
 var category = "vehicleName";
+var normalization = "relative";
 var colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b', '#8549ba'];
 var chartDists = null;
 var chartCount = null;
@@ -93,6 +94,12 @@ function categoryUpdate() {
     plotData();
 }
 
+function normalizationUpdate() {
+    let e = document.getElementById("normalization");
+    normalization = e.options[e.selectedIndex].value;
+    plotData();
+}
+
 function safeDictionary(dictionary, key) {
     if (dictionary[key] !== undefined) return dictionary[key];
     return key;
@@ -172,7 +179,7 @@ function plotData() {
     let xValues = getXValues(times);
 
     if (category == "none") {
-        let distribution = getDistribution(times, xValues);
+        let distribution = getDistribution(times, xValues, 97);
 
         chartDists.data = {
             datasets: [{
@@ -208,8 +215,8 @@ function plotData() {
                             .map(function(key) {
                 return {
                     label: safeDictionary(categoryNames[category], key),
-                    data: getDistribution(timeLists[key], xValues, 100),
                     borderColor: colors[i++ % colors.length],
+                    data: getDistribution(timeLists[key], xValues, normalization=="normal" ? 97 : null),
                     borderWidth: 2,
                     showLine: true,
                     fill: false
