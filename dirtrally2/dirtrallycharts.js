@@ -2,6 +2,24 @@ var stageData = null;
 var category = "none";
 var colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b', '#8549ba'];
 
+var categoryNames = {
+    "vehicleName": {},
+    "wheel": {
+        "false": "Controller",
+        "true": "Wheel"
+    },
+    "assist": {
+        "false": "No Assists",
+        "true": "Assists"
+    },
+    "platform": {
+        "Steam": "PC",
+        "MicrosoftLive": "Xbox One",
+        "PlaystationNetwork": "PS4",
+        "unknown": "Other"
+    }
+}
+
 var chart = new Chart('graph', {
     type: 'scatter'
 });
@@ -25,6 +43,11 @@ function categoryUpdate() {
     let e = document.getElementById("category");
     category = e.options[e.selectedIndex].value;
     plotData();
+}
+
+function safeDictionary(dictionary, key) {
+    if (dictionary[key] !== undefined) return dictionary[key];
+    return key;
 }
 
 function getXValues(times, resolution=150) {
@@ -107,12 +130,10 @@ function plotData() {
         let keys = Object.keys(timeLists);
         keys.sort();
 
-        console.log(keys);
-
         chart.data = {
             datasets: keys.map(function(key) {
                 return {
-                    label: key,
+                    label: safeDictionary(categoryNames[category], key),
                     data: getDistribution(timeLists[key], xValues),
                     borderColor: colors[i++ % colors.length],
                     borderWidth: 2,
