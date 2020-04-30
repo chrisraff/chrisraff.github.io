@@ -70,6 +70,20 @@ function getXValues(times, resolution=150) {
     return xs;
 }
 
+function groupTimesByCategory(times, category) {
+    let timeLists = {};
+
+    times.forEach(function(entry) {
+        let categoryValue = entry[category].toString();
+        if (!Object.keys(timeLists).includes(categoryValue)) {
+            timeLists[categoryValue] = [];
+        }
+        timeLists[categoryValue].push(entry['totalTime']);
+    })
+
+    return timeLists;
+}
+
 function getDistribution(times, xValueArray) {
     let dist = new Array(xValueArray.length).fill(0);
 
@@ -106,7 +120,7 @@ function plotData() {
     if (category == "none") {
         let distribution = getDistribution(times, xValues);
 
-        chart.data = {
+        chartDist.data = {
             datasets: [{
                 label: 'Distribution',
                 data: distribution,
@@ -117,14 +131,7 @@ function plotData() {
             }]
         }
     } else {
-        timeLists = {};
-        finishers.forEach(function(entry) {
-            let categoryValue = entry[category].toString();
-            if (!Object.keys(timeLists).includes(categoryValue)) {
-                timeLists[categoryValue] = [];
-            }
-            timeLists[categoryValue].push(entry['totalTime']);
-        })
+        let timeLists = groupTimesByCategory(finishers, category);
 
         let i = 0;
         let keys = Object.keys(timeLists);
