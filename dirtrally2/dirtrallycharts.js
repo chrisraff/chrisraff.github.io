@@ -5,22 +5,28 @@ var chartDists = null;
 var chartCount = null;
 
 var categoryNames = {
-    "vehicleName": {},
+    "vehicleName": {
+        "": "Car"
+    },
     "wheel": {
+        "": "Wheel",
         "false": "Controller",
         "true": "Wheel"
     },
     "assist": {
+        "": "Assists",
         "false": "No Assists",
         "true": "Assists"
     },
     "platform": {
+        "": "Platform",
         "Steam": "PC",
         "MicrosoftLive": "Xbox One",
         "PlaystationNetwork": "PS4",
         "unknown": "Other"
     },
     "dnf": {
+        "": "DNF",
         "false": "Finished",
         "true": "DNF"
     },
@@ -152,8 +158,6 @@ function getDistribution(times, xValueArray) {
 }
 
 function plotData() {
-    chartDists.options.title.text = 'Stage Times'
-
     let finishers = stageData['entries'].filter((entry) => !entry['dnf']);
     let times = finishers.map((entry) => entry['totalTime']);
 
@@ -214,10 +218,15 @@ function plotData() {
         }
     }
 
+    let titleDist = "Distribution of Stage Times";
+    if (category != "none") {
+        titleDist += " by " + categoryNames[category][""];
+    }
+
     chartDists.options = {
         title: {
             display: true,
-            text: 'Distribution of Stage Times'
+            text: titleDist
         },
         legend: {
             display: category != "none"
