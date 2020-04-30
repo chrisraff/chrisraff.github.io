@@ -131,7 +131,8 @@ function plotData() {
         keys.sort();
 
         chart.data = {
-            datasets: keys.map(function(key) {
+            datasets: keys.filter((key) => timeLists[key].length >= 100)
+                            .map(function(key) {
                 return {
                     label: safeDictionary(categoryNames[category], key),
                     data: getDistribution(timeLists[key], xValues),
