@@ -26,7 +26,7 @@ function categoryUpdate() {
     console.log(category);
 }
 
-function getDistribution(times) {
+function getXValues(times, resolution=150) {
     // assumes times are sorted
     var xmin = times[0]; // Math.min(...times)
     var xmax = times[Math.floor(times.length * 0.99)];
@@ -36,35 +36,39 @@ function getDistribution(times) {
     xmax += buffer * diff;
     diff = xmax - xmin;
 
-    let resolution = 150;
-
     let xs = new Array(resolution);
-    let dist = new Array(resolution).fill(0);
 
-    let data = new Array(resolution);
+    for (let i = 0; i < resolution; i++) {
+        let x = xmin + diff * (i / (resolution - 1));
+        xs[i] = x;
+    }
+
+    return xs;
+}
+
+function getDistribution(times, xValueArray) {
+    let dist = new Array(xValueArray.length).fill(0);
+
+    let data = new Array(xValueArray.length);
 
     let bandwidth = 5;
 
     times.forEach(function(time) {
-        for (var i = 0; i < resolution; i++) {
-            let x_ = xmin + diff * (i / (resolution-1));
-            xs[i] = x_;
-            let numerator = (x_ - time);
+        for (var i = 0; i < xValueArray.length; i++) {
+            let x = xValueArray[i];
+            let numerator = (x - time);
             numerator *= numerator;
             gauss_result = Math.exp(-numerator/(2*bandwidth*bandwidth));
             dist[i] += gauss_result;
 
             data[i] = {
-                x: x_,
+                x: x,
                 y: dist[i]
             }
         }
     });
 
     return {
-        xmin: xmin,
-        xmax: xmax,
-        xlabels: xs,
         data: data
     }
 }
@@ -75,7 +79,9 @@ function plotData() {
     let finishers = stageData['entries'].filter((entry) => !entry['dnf']);
     let times = finishers.map((entry) => entry['totalTime']);
 
-    let distribution = getDistribution(times);
+    let xValues = getXValues(times);
+
+    let distribution = getDistribution(times, xValues);
 
     chart.data = {
         datasets: [{
@@ -115,8 +121,8 @@ function plotData() {
             },
             ticks: {
                 stepSize: 30,
-                min: distribution.xmin,
-                max: distribution.xmax,
+                min: xValues[0],
+                max: xValues[xValues.length - 1],
                 callback: function(value) {
                     if (value % 30 == 0) {
                         let padded_seconds = ("0" + value%60).slice(-2);
