@@ -1,6 +1,8 @@
 var stageData = null;
 var category = "none";
 var colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b', '#8549ba'];
+var chartDists = null;
+var chartCount = null;
 
 var categoryNames = {
     "vehicleName": {},
@@ -17,12 +19,31 @@ var categoryNames = {
         "MicrosoftLive": "Xbox One",
         "PlaystationNetwork": "PS4",
         "unknown": "Other"
-    }
+    },
+    "dnf": {
+        "false": "Finished",
+        "true": "DNF"
+    },
 }
 
-var chart = new Chart('graph', {
-    type: 'scatter'
-});
+window.onload = function() {
+    chartDists = new Chart('distributions', {
+        type: 'scatter'
+    });
+    chartCount = new Chart('counts', {
+        type: 'bar',
+        options: {
+            legend: {display: false},
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+}
 
 // fetch the stage data
 var xhr = new XMLHttpRequest();
@@ -110,7 +131,7 @@ function getDistribution(times, xValueArray) {
 }
 
 function plotData() {
-    chart.options.title.text = 'Stage Times'
+    chartDists.options.title.text = 'Stage Times'
 
     let finishers = stageData['entries'].filter((entry) => !entry['dnf']);
     let times = finishers.map((entry) => entry['totalTime']);
@@ -120,7 +141,7 @@ function plotData() {
     if (category == "none") {
         let distribution = getDistribution(times, xValues);
 
-        chartDist.data = {
+        chartDists.data = {
             datasets: [{
                 label: 'Distribution',
                 data: distribution,
@@ -130,6 +151,18 @@ function plotData() {
                 fill: false
             }]
         }
+        
+        // show DNFs on the count chart
+        let timeLists = groupTimesByCategory(stageData["entries"], "dnf");
+        let keys = Object.keys(timeLists);
+        keys.sort();
+        chartCount.data = {
+            labels: keys.map((key) => safeDictionary(categoryNames["dnf"], key)),
+            datasets: [{
+                backgroundColor: colors.slice(0,keys.length),
+                data: keys.map((key) => timeLists[key].length)
+            }]
+        }
     } else {
         let timeLists = groupTimesByCategory(finishers, category);
 
@@ -137,7 +170,7 @@ function plotData() {
         let keys = Object.keys(timeLists);
         keys.sort();
 
-        chart.data = {
+        chartDists.data = {
             datasets: keys.filter((key) => timeLists[key].length >= 100)
                             .map(function(key) {
                 return {
@@ -150,12 +183,20 @@ function plotData() {
                 }
             })
         }
+
+        chartCount.data = {
+            labels: keys.map((key) => safeDictionary(categoryNames[category], key)),
+            datasets: [{
+                backgroundColor: colors.slice(0,keys.length),
+                data: keys.map((key) => timeLists[key].length)
+            }]
+        }
     }
 
-    chart.options = {
+    chartDists.options = {
         title: {
             display: true,
-            test: 'Distribution of Stage Times'
+            text: 'Distribution of Stage Times'
         },
         legend: {
             display: category != "none"
@@ -171,7 +212,7 @@ function plotData() {
         }
     }
 
-    chart.options.scales = {
+    chartDists.options.scales = {
         xAxes: [{
             scaleType: 'linear',
             scaleLabel: {
@@ -202,5 +243,6 @@ function plotData() {
         }]
     };
 
-    chart.update();
+    chartDists.update();
+    chartCount.update();
 }
