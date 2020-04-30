@@ -1,5 +1,6 @@
 var stageData = null;
 var category = "none";
+var colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b', '#8549ba'];
 
 var chart = new Chart('graph', {
     type: 'scatter'
@@ -23,7 +24,7 @@ xhr.send();
 function categoryUpdate() {
     let e = document.getElementById("category");
     category = e.options[e.selectedIndex].value;
-    console.log(category);
+    plotData();
 }
 
 function getXValues(times, resolution=150) {
@@ -68,9 +69,7 @@ function getDistribution(times, xValueArray) {
         }
     });
 
-    return {
-        data: data
-    }
+    return data;
 }
 
 function plotData() {
@@ -81,16 +80,47 @@ function plotData() {
 
     let xValues = getXValues(times);
 
-    let distribution = getDistribution(times, xValues);
+    if (category == "none") {
+        let distribution = getDistribution(times, xValues);
 
-    chart.data = {
-        datasets: [{
-            label: 'Distribution',
-            data: distribution.data,
-            borderColor: 'red',
-            borderWidth: 1,
-            showLine: true
-        }]
+        chart.data = {
+            datasets: [{
+                label: 'Distribution',
+                data: distribution,
+                borderColor: 'red',
+                borderWidth: 2,
+                showLine: true,
+                fill: false
+            }]
+        }
+    } else {
+        timeLists = {};
+        finishers.forEach(function(entry) {
+            let categoryValue = entry[category].toString();
+            if (!Object.keys(timeLists).includes(categoryValue)) {
+                timeLists[categoryValue] = [];
+            }
+            timeLists[categoryValue].push(entry['totalTime']);
+        })
+
+        let i = 0;
+        let keys = Object.keys(timeLists);
+        keys.sort();
+
+        console.log(keys);
+
+        chart.data = {
+            datasets: keys.map(function(key) {
+                return {
+                    label: key,
+                    data: getDistribution(timeLists[key], xValues),
+                    borderColor: colors[i++ % colors.length],
+                    borderWidth: 2,
+                    showLine: true,
+                    fill: false
+                }
+            })
+        }
     }
 
     chart.options = {
@@ -99,7 +129,7 @@ function plotData() {
             test: 'Distribution of Stage Times'
         },
         legend: {
-            display: false // true for multicategory
+            display: category != "none"
         },
         elements: {
             line: {
