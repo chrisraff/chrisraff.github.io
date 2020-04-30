@@ -28,7 +28,28 @@ var categoryNames = {
 
 window.onload = function() {
     chartDists = new Chart('distributions', {
-        type: 'scatter'
+        type: 'scatter',
+        options: {
+            scales: {
+                xAxes: [{
+                    scaleType: 'linear',
+                    scaleLabel: {
+                        labelString: 'Time',
+                        display: true
+                    },
+                }],
+                yAxes: [{
+                    scaleType: 'linear',
+                    scaleLabel: {
+                        labelString: 'Frequency',
+                        display: true
+                    },
+                    ticks: {
+                        display: false
+                    }
+                }]
+            }
+        }
     });
     chartCount = new Chart('counts', {
         type: 'bar',
