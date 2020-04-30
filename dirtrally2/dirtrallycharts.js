@@ -222,6 +222,7 @@ function plotData() {
     if (category != "none") {
         titleDist += " by " + categoryNames[category][""];
     }
+    let titleCount = "Entries by " + categoryNames[category == "none" ? "dnf" : category][""];
 
     chartDists.options = {
         title: {
@@ -272,6 +273,11 @@ function plotData() {
             }
         }]
     };
+
+    chartCount.options.title = {
+        display: true,
+        text: titleCount
+    }
 
     chartDists.update();
     chartCount.update();
