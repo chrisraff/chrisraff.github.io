@@ -73,9 +73,19 @@ window.onload = function() {
     });
 }
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+var stage = 'none'
+var dataUrl = 'http://127.0.0.1:8003/'
+if (urlParams.has('stage')) {
+    stage = urlParams.get('stage');
+    console.log(stage);
+}
+
 // fetch the stage data
 var xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://www.chrisraff.com/dirtrally2-event-data/test.json', true);
+// xhr.open('GET', 'https://www.chrisraff.com/dirtrally2-event-data/test.json', true);
+xhr.open('GET', dataUrl + stage + '.json', true);
 xhr.responseType = 'json';
 xhr.onload = function() {
     var status = xhr.status;
