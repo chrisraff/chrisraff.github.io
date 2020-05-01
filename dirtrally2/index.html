@@ -14,26 +14,22 @@
 
     <div class="w3-row">
         <div class="w3-col w3-padding" style="width:fit-content">
-            <p>
-                Group by:
-                <select id="category" oninput="categoryUpdate()">
-                    <option value="none">None</option>
-                    <option value="vehicleName" selected>Car</option>
-                    <option value="platform">Platform</option>
-                    <option value="wheel">Controller</option>
-                    <option value="assist">Assists</option>
-                </select>
-            </p>
+            <label for="category">Group by:</label>
+            <select id="category" oninput="categoryUpdate()">
+                <option value="none">None</option>
+                <option value="vehicleName" selected>Car</option>
+                <option value="platform">Platform</option>
+                <option value="wheel">Controller</option>
+                <option value="assist">Assists</option>
+            </select>
         </div>
         <div class="w3-col w3-padding" style="width:fit-content">
-            <p>
-                Distributions:
-                <select id="chartType" oninput="chartTypeUpdate()">
-                    <option value="stacked">Stacked</option>
-                    <option value="relative">Absolute</option>
-                    <option value="normal">Normalized</option>
-                </select>
-            </p>
+            <label for="chartType">Distributions:</label>
+            <select id="chartType" oninput="chartTypeUpdate()">
+                <option value="stacked">Stacked</option>
+                <option value="relative">Absolute</option>
+                <option value="normal">Normalized</option>
+            </select>
         </div>
     </div>
     <div class="w3-half">
