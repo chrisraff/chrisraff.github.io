@@ -8,7 +8,7 @@ var chartCount = null;
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 var stage = 'none';
-var dataUrl = 'http://127.0.0.1:8003/'
+var dataUrl = 'https://www.chrisraff.com/dirtrally2-event-data/'
 if (urlParams.has('stage')) {
     stage = urlParams.get('stage') + '.json';
 }
@@ -95,7 +95,6 @@ window.onload = function() {
 
 function getStageData(stage) {
     var xhrStageData = new XMLHttpRequest();
-    // xhrStageData.open('GET', 'https://www.chrisraff.com/dirtrally2-event-data/test.json', true);
     xhrStageData.open('GET', dataUrl + stage, true);
     xhrStageData.responseType = 'json';
     xhrStageData.onload = function() {
