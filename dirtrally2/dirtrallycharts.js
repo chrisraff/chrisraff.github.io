@@ -401,10 +401,10 @@ function plotData() {
                 return {
                     label: safeDictionary(categoryNames[category], key),
                     data: getDistribution(timeLists[key], xValues, chartType=='normal' ? 97 : null),
-                    borderColor: colors[i % colors.length],
+                    borderColor: colorMap[key],
                     borderWidth: 2,
                     showLine: true,
-                    backgroundColor: convertHexToRGBA(colors[i++ % colors.length], chartType == 'stacked' ? 1 : 0.1)
+                    backgroundColor: convertHexToRGBA(colorMap[key], chartType == 'stacked' ? 1 : 0.1)
                 }
             })
         }
