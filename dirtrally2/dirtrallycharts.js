@@ -5,6 +5,14 @@ var colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', 
 var chartDists = null;
 var chartCount = null;
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+var stage = 'none'
+var dataUrl = 'http://127.0.0.1:8003/'
+if (urlParams.has('stage')) {
+    stage = urlParams.get('stage') + '.json';
+}
+
 var categoryNames = {
     'vehicleName': {
         '': 'Car'
@@ -72,6 +80,8 @@ window.onload = function() {
         }
     });
 
+    this.getStageData(stage);
+
     // pressing enter triggers user search
     document.getElementById('username').addEventListener('keydown', function(event) {
         if (event.keyCode == 13) {
@@ -80,35 +90,29 @@ window.onload = function() {
     })
 }
 
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-var stage = 'none'
-var dataUrl = 'http://127.0.0.1:8003/'
-if (urlParams.has('stage')) {
-    stage = urlParams.get('stage');
-}
-
-// fetch the stage data
-var xhrStageData = new XMLHttpRequest();
-// xhrStageData.open('GET', 'https://www.chrisraff.com/dirtrally2-event-data/test.json', true);
-xhrStageData.open('GET', dataUrl + stage + '.json', true);
-xhrStageData.responseType = 'json';
-xhrStageData.onload = function() {
-    var status = xhrStageData.status;
-    if (status === 200) {
-        stageData = xhrStageData.response;
-        document.getElementById('stageInfo').innerHTML = `${stageData.challengeName}: ${stageData.stageName} - ${stageData.eventName}`;
-        let dateStr = stageData.entryWindow.start;
-        document.getElementById('stageDate').innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
-        plotData();
-    } else {
+function getStageData(stage) {
+    var xhrStageData = new XMLHttpRequest();
+    // xhrStageData.open('GET', 'https://www.chrisraff.com/dirtrally2-event-data/test.json', true);
+    xhrStageData.open('GET', dataUrl + stage, true);
+    xhrStageData.responseType = 'json';
+    xhrStageData.onload = function() {
+        var status = xhrStageData.status;
+        if (status === 200) {
+            stageData = xhrStageData.response;
+            document.getElementById('stageInfo').innerHTML = `${stageData.challengeName}: ${stageData.stageName} - ${stageData.eventName}`;
+            let dateStr = stageData.entryWindow.start;
+            document.getElementById('stageDate').innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
+            window.scrollTo(0,0);
+            plotData();
+        } else {
+            document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
+        }
+    };
+    xhrStageData.onerror = function() {
         document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
     }
-};
-xhrStageData.onerror = function() {
-    document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
+    xhrStageData.send();
 }
-xhrStageData.send();
 
 // fetch available stages
 var xhrStages = new XMLHttpRequest();
@@ -146,9 +150,9 @@ xhrStages.onload = function() {
                 row.appendChild(cell);
             });
             row.classList.add("w3-hover-dark-grey");
-            row.addEventListener('onclick', function() {
-                // load stage
-            });
+            row.onclick =  function() {
+                getStageData('daily/2020/' + stage['name']);
+            };
             table.appendChild(row);
         });
     } else {
