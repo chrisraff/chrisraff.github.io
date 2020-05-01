@@ -7,11 +7,13 @@ var chartCount = null;
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-var stage = 'none'
+var stage = 'none';
 var dataUrl = 'http://127.0.0.1:8003/'
 if (urlParams.has('stage')) {
     stage = urlParams.get('stage') + '.json';
 }
+var selectorYear = 2020;
+var selectorCategory = 'daily';
 
 var categoryNames = {
     'vehicleName': {
@@ -80,7 +82,8 @@ window.onload = function() {
         }
     });
 
-    this.getStageData(stage);
+    if (stage != 'none')
+        this.getStageData(stage);
 
     // pressing enter triggers user search
     document.getElementById('username').addEventListener('keydown', function(event) {
@@ -116,7 +119,7 @@ function getStageData(stage) {
 
 // fetch available stages
 var xhrStages = new XMLHttpRequest();
-xhrStages.open('GET', dataUrl + 'daily/2020/info.json');
+xhrStages.open('GET', dataUrl + `${selectorCategory}/${selectorYear}/info.json`);
 xhrStages.responseType = 'json';
 xhrStages.onload = function() {
     var status = xhrStages.status;
@@ -128,6 +131,10 @@ xhrStages.onload = function() {
         while (table.rows.length > 1)
             table.deleteRow(1);
 
+        if (stage == 'none') {
+            let currUrl = window.location.href.split('?')[0];
+            window.location.replace(currUrl + `?stage=${selectorCategory}/${selectorYear}/` + stages.files[0].name.slice(0,-5));
+        }
         
         let displayFields = ['date', 'vehicleClass', 'eventName', 'stageName', 'country', 'challengeName'];
 
@@ -152,7 +159,7 @@ xhrStages.onload = function() {
             row.classList.add("w3-hover-dark-grey");
             row.onclick =  function() {
                 let currUrl = window.location.href.split('?')[0];
-                window.location.replace(currUrl + '?stage=daily/2020/' + stage['name'].slice(0,-5));
+                window.location.replace(currUrl + `?stage=${selectorCategory}/${selectorYear}/` + stage['name'].slice(0,-5));
             };
             table.appendChild(row);
         });
