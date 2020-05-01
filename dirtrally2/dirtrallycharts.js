@@ -323,56 +323,22 @@ function plotData() {
             colorMap[key] = colors[Object.keys(colorMap).length % colors.length];
         });
 
-        if (chartType == 'stacked') {
-            chartDists.data.datasets = [];
+        let i = 0;
 
-            for (var i = keys.length - 1; i >= 0; i--) {
-                if (timeLists[keys[i]].length < 100) continue;
-
-                let distribution = getDistribution(timeLists[keys[i]], xValues);
-
-                if (chartDists.data.datasets.length == 0) {
-                    chartDists.data.datasets.push({
-                        label: safeDictionary(categoryNames[category], keys[i]),
-                        data: distribution,
-                        borderColor: colorMap[keys[i]],
-                        borderWidth: 2,
-                        showLine: true,
-                        backgroundColor: colorMap[keys[i]]
-                    })
-                } else {
-                    for (var j = 0; j < distribution.length; j++) {
-                        let lastDataset = chartDists.data.datasets[ chartDists.data.datasets.length - 1 ];
-                        distribution[j].y += lastDataset.data[j].y;
-                    }
-
-                    chartDists.data.datasets.push({
-                        label: safeDictionary(categoryNames[category], keys[i]),
-                        data: distribution,
-                        borderColor: colorMap[keys[i]],
-                        borderWidth: 2,
-                        showLine: true,
-                        backgroundColor: colorMap[keys[i]]
-                    })
+        // simple distribution plot
+        chartDists.data = {
+            datasets: (chartType == 'stacked' ? keys.slice().reverse() : keys)
+                    .filter((key) => timeLists[key].length >= 100)
+                    .map(function(key) {
+                return {
+                    label: safeDictionary(categoryNames[category], key),
+                    data: getDistribution(timeLists[key], xValues, chartType=='normal' ? 97 : null),
+                    borderColor: colors[i % colors.length],
+                    borderWidth: 2,
+                    showLine: true,
+                    backgroundColor: convertHexToRGBA(colors[i++ % colors.length], chartType == 'stacked' ? 1 : 0.1)
                 }
-            }
-        } else {
-            let i = 0;
-
-            // simple distribution plot
-            chartDists.data = {
-                datasets: keys.filter((key) => timeLists[key].length >= 100)
-                                .map(function(key) {
-                    return {
-                        label: safeDictionary(categoryNames[category], key),
-                        data: getDistribution(timeLists[key], xValues, chartType=='normal' ? 97 : null),
-                        borderColor: colors[i % colors.length],
-                        borderWidth: 2,
-                        showLine: true,
-                        backgroundColor: convertHexToRGBA(colors[i++ % colors.length], 0.1)
-                    }
-                })
-            }
+            })
         }
 
         chartCount.data = {
