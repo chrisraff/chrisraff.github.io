@@ -138,8 +138,7 @@ xhrStages.onload = function() {
             table.deleteRow(1);
 
         if (stage == 'none') {
-            let currUrl = window.location.href.split('?')[0];
-            window.location.replace(currUrl + `?stage=${selectorCategory}/${selectorYear}/` + stages.files[0].name.slice(0,-5));
+            getStageData(`${selectorCategory}/${selectorYear}/${stages.files[0].name}`);
         }
         
         let displayFields = ['date', 'vehicleClass', 'eventName', 'stageName', 'country', 'challengeName'];
@@ -164,8 +163,7 @@ xhrStages.onload = function() {
             });
             row.classList.add("w3-hover-dark-grey");
             row.onclick =  function() {
-                let currUrl = window.location.href.split('?')[0];
-                window.location.replace(currUrl + `?stage=${selectorCategory}/${selectorYear}/` + stage['name'].slice(0,-5));
+                getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
             };
             table.appendChild(row);
         });
