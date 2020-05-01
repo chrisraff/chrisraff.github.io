@@ -105,6 +105,14 @@ function safeDictionary(dictionary, key) {
     return key;
 }
 
+function sortByKey(array, key){
+ return array.sort(function(a, b)
+ {
+  var x = key(a); var y = key(b);
+  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+ });
+}
+
 const convertHexToRGBA = (hex, opacity) => {
     const tempHex = hex.replace('#', '');
     const r = parseInt(tempHex.substring(0, 2), 16);
@@ -204,7 +212,7 @@ function plotData() {
         // show DNFs on the count chart
         let timeLists = groupTimesByCategory(stageData["entries"], "dnf");
         let keys = Object.keys(timeLists);
-        keys.sort();
+        keys = sortByKey(keys, (key) => -timeLists[key].length);
         chartCount.data = {
             labels: keys.map((key) => safeDictionary(categoryNames["dnf"], key)),
             datasets: [{
@@ -216,35 +224,43 @@ function plotData() {
         let timeLists = groupTimesByCategory(finishers, category);
 
         let keys = Object.keys(timeLists);
-        keys.sort();
+        keys = sortByKey(keys, (key) => -timeLists[key].length);
+
+        let colorMap = {};
+        keys.forEach(function(key) {
+            colorMap[key] = colors[Object.keys(colorMap).length % colors.length];
+        });
 
         if (chartType == "stacked") {
             chartDists.data.datasets = [];
 
-            for (var i = 0; i < keys.length; i++) {
+            for (var i = keys.length - 1; i >= 0; i--) {
+                if (timeLists[keys[i]].length < 100) continue;
+
                 let distribution = getDistribution(timeLists[keys[i]], xValues);
 
-                if (i == 0) {
+                if (chartDists.data.datasets.length == 0) {
                     chartDists.data.datasets.push({
                         label: safeDictionary(categoryNames[category], keys[i]),
                         data: distribution,
-                        borderColor: colors[i % colors.length],
+                        borderColor: colorMap[keys[i]],
                         borderWidth: 2,
                         showLine: true,
-                        backgroundColor: colors[i % colors.length]
+                        backgroundColor: colorMap[keys[i]]
                     })
                 } else {
                     for (var j = 0; j < distribution.length; j++) {
-                        distribution[j].y += chartDists.data.datasets[i-1].data[j].y;
+                        let lastDataset = chartDists.data.datasets[ chartDists.data.datasets.length - 1 ];
+                        distribution[j].y += lastDataset.data[j].y;
                     }
 
                     chartDists.data.datasets.push({
                         label: safeDictionary(categoryNames[category], keys[i]),
                         data: distribution,
-                        borderColor: colors[i % colors.length],
+                        borderColor: colorMap[keys[i]],
                         borderWidth: 2,
                         showLine: true,
-                        backgroundColor: colors[i % colors.length]
+                        backgroundColor: colorMap[keys[i]]
                     })
                 }
             }
