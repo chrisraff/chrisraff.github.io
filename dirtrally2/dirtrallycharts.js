@@ -151,7 +151,8 @@ xhrStages.onload = function() {
             });
             row.classList.add("w3-hover-dark-grey");
             row.onclick =  function() {
-                getStageData('daily/2020/' + stage['name']);
+                let currUrl = window.location.href.split('?')[0];
+                window.location.replace(currUrl + '?stage=daily/2020/' + stage['name'].slice(0,-5));
             };
             table.appendChild(row);
         });
