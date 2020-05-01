@@ -164,11 +164,11 @@ xhrStages.onload = function() {
             table.appendChild(row);
         });
     } else {
-        document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
+        document.getElementById('stage-selector').hidden = true;
     }
 };
 xhrStages.onerror = function() {
-    document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
+    document.getElementById('stage-selector').style.display = 'none';
 }
 xhrStages.send();
 
