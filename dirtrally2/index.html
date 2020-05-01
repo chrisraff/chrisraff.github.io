@@ -4,30 +4,35 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <div class="w3-row w3-padding">
+    <div class="w3-row">
+        <div class="w3-col w3-padding" style="width:fit-content">
+            <p>
+                Group by:
+                <select id="category" oninput="categoryUpdate()">
+                    <option value="none">None</option>
+                    <option value="vehicleName" selected>Car</option>
+                    <option value="platform">Platform</option>
+                    <option value="wheel">Controller</option>
+                    <option value="assist">Assists</option>
+                </select>
+            </p>
+        </div>
+        <div class="w3-col w3-padding" style="width:fit-content">
+            <p>
+                Distributions:
+                <select id="chartType" oninput="chartTypeUpdate()">
+                    <option value="stacked">Stacked</option>
+                    <option value="relative">Absolute</option>
+                    <option value="normal">Normalized</option>
+                </select>
+            </p>
+        </div>
+    </div>
     <div class="w3-half">
         <div class="w3-container">
             <canvas id="distributions" width="100" height=90></canvas>
         </div>
 
-        <br/>
-        <p>
-            Group by:
-            <select id="category" oninput="categoryUpdate()">
-                <option value="none">None</option>
-                <option value="vehicleName" selected>Car</option>
-                <option value="platform">Platform</option>
-                <option value="wheel">Controller</option>
-                <option value="assist">Assists</option>
-            </select>
-        </p>
-        <p>
-            Distributions:
-            <select id="chartType" oninput="chartTypeUpdate()">
-                <option value="stacked">Stacked</option>
-                <option value="relative">Absolute</option>
-                <option value="normal">Normalized</option>
-            </select>
-        </p>
     </div>
     <div class="w3-half">
         <div class="w3-container">
