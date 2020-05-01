@@ -79,7 +79,6 @@ var stage = 'none'
 var dataUrl = 'http://127.0.0.1:8003/'
 if (urlParams.has('stage')) {
     stage = urlParams.get('stage');
-    console.log(stage);
 }
 
 // fetch the stage data
@@ -96,9 +95,12 @@ xhr.onload = function() {
         document.getElementById("stageDate").innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
         plotData();
     } else {
-        document.getElementById("stageInfo").innerHTML = "Couldn't load stage";
+        document.getElementById("stageInfo").innerHTML = "Failed to load stage";
     }
 };
+xhr.onerror = function() {
+    document.getElementById("stageInfo").innerHTML = "Failed to load stage";
+}
 xhr.send();
 
 function categoryUpdate() {
