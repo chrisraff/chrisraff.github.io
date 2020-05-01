@@ -35,7 +35,7 @@ var categoryNames = {
 
 window.onload = function() {
     chartDists = new Chart('distributions', {
-        type: 'scatter',
+        type: 'line',
         options: {
             scales: {
                 xAxes: [{
@@ -411,7 +411,7 @@ function plotData() {
 
     chartDists.options.scales = {
         xAxes: [{
-            scaleType: 'linear',
+            type: 'linear',
             scaleLabel: {
                 labelString: 'Time',
                 display: true
@@ -427,7 +427,8 @@ function plotData() {
             }
         }],
         yAxes: [{
-            scaleType: 'linear',
+            type: 'linear',
+            stacked: chartType == 'stacked',
             scaleLabel: {
                 labelString: 'Frequency',
                 display: true
