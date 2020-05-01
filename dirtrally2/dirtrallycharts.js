@@ -81,9 +81,12 @@ xhr.onload = function() {
     var status = xhr.status;
     if (status === 200) {
         stageData = xhr.response;
+        document.getElementById("stageInfo").innerHTML = `${stageData.challengeName}: ${stageData.stageName} - ${stageData.eventName}`;
+        let dateStr = stageData.entryWindow.start;
+        document.getElementById("stageDate").innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
         plotData();
     } else {
-        console.log('couldn\'t get data');
+        document.getElementById("stageInfo").innerHTML = "Couldn't load stage";
     }
 };
 xhr.send();
