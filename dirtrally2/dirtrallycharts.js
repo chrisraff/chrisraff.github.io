@@ -1,6 +1,6 @@
 var stageData = null;
 var category = "vehicleName";
-var chartType = "relative";
+var chartType = "stacked";
 var colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b', '#8549ba'];
 var chartDists = null;
 var chartCount = null;
