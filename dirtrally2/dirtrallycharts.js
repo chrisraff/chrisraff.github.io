@@ -110,6 +110,9 @@ function getStageData(stage) {
 
             document.title = `${stageData.stageName} - DR2 Graphed | Chris Raff`;
 
+            let currUrl = window.location.href.split('?')[0];
+            document.getElementById('stageLink').href = `${currUrl}?stage=${stage.slice(0, -5)}`;
+
             window.scrollTo(0,0);
 
             plotData();
