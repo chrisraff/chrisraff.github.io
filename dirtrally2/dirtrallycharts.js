@@ -142,6 +142,8 @@ function userUpdate() {
             table.deleteRow(1);
 
         stageData.entries.forEach(function(entry) {
+            if (matches.length > 5) return;
+            
             let name = entry["name"];
             if (name == "DiRT Player") return;
             let match = name.toLowerCase().includes(searchTerm);
