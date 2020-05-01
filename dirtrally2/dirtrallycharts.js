@@ -71,6 +71,13 @@ window.onload = function() {
             }
         }
     });
+
+    // pressing enter triggers user search
+    document.getElementById("username").addEventListener("keydown", function(event) {
+        if (event.keyCode == 13) {
+            userUpdate();
+        }
+    })
 }
 
 const queryString = window.location.search;
@@ -113,6 +120,68 @@ function chartTypeUpdate() {
     let e = document.getElementById("chartType");
     chartType = e.options[e.selectedIndex].value;
     plotData();
+}
+
+function userUpdate() {
+    let input = document.getElementById("username");
+    let container = document.getElementById("userInfoContainer");
+    let table = document.getElementById("userTable");
+    let searchWarning = document.getElementById("userNotFound");
+    
+    if (input.value == "") {
+        container.hidden = true;
+    } else {
+        let searchTerm = input.value.toLowerCase();
+
+        let matches = []
+        
+        let displayFields = ["rank", "name", "vehicleName", "totalTime"]
+
+        // clear table
+        while (table.rows.length > 1)
+            table.deleteRow(1);
+
+        stageData.entries.forEach(function(entry) {
+            let name = entry["name"];
+            if (name == "DiRT Player") return;
+            let match = name.toLowerCase().includes(searchTerm);
+
+            if (match) {
+                matches.push(entry);
+
+                // add to table
+                let row = document.createElement("tr");
+                displayFields.forEach(function(field) {
+                    let cell = document.createElement("td");
+                    let text = "";
+                    if (field == "totalTime") {
+                        if (entry["dnf"]) {
+                            text = "DNF";
+                        } else {
+                            text = entry[field];
+                        }
+                    } else {
+                        text = entry[field];
+                    }
+
+                    cell.appendChild(
+                        document.createTextNode(text)
+                    );
+                    row.appendChild(cell);
+                })
+                table.appendChild(row);
+            }
+        });
+
+        container.hidden = false;
+        if (matches.length == 0) {
+            searchWarning.hidden = false;
+            table.style.display = 'none';
+        } else {
+            searchWarning.hidden = true;
+            table.style.display = 'table';
+        }
+    }
 }
 
 function safeDictionary(dictionary, key) {
