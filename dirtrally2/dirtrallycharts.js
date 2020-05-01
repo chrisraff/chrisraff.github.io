@@ -1,35 +1,35 @@
 var stageData = null;
-var category = "vehicleName";
-var chartType = "stacked";
+var category = 'vehicleName';
+var chartType = 'stacked';
 var colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b', '#8549ba'];
 var chartDists = null;
 var chartCount = null;
 
 var categoryNames = {
-    "vehicleName": {
-        "": "Car"
+    'vehicleName': {
+        '': 'Car'
     },
-    "wheel": {
-        "": "Controller",
-        "false": "Controller",
-        "true": "Wheel"
+    'wheel': {
+        '': 'Controller',
+        'false': 'Controller',
+        'true': 'Wheel'
     },
-    "assist": {
-        "": "Assists",
-        "false": "No Assists",
-        "true": "Assists"
+    'assist': {
+        '': 'Assists',
+        'false': 'No Assists',
+        'true': 'Assists'
     },
-    "platform": {
-        "": "Platform",
-        "Steam": "PC",
-        "MicrosoftLive": "Xbox One",
-        "PlaystationNetwork": "PS4",
-        "unknown": "Other"
+    'platform': {
+        '': 'Platform',
+        'Steam': 'PC',
+        'MicrosoftLive': 'Xbox One',
+        'PlaystationNetwork': 'PS4',
+        'unknown': 'Other'
     },
-    "dnf": {
-        "": "DNF",
-        "false": "Finished",
-        "true": "DNF"
+    'dnf': {
+        '': 'DNF',
+        'false': 'Finished',
+        'true': 'DNF'
     },
 }
 
@@ -73,7 +73,7 @@ window.onload = function() {
     });
 
     // pressing enter triggers user search
-    document.getElementById("username").addEventListener("keydown", function(event) {
+    document.getElementById('username').addEventListener('keydown', function(event) {
         if (event.keyCode == 13) {
             userUpdate();
         }
@@ -97,45 +97,45 @@ xhr.onload = function() {
     var status = xhr.status;
     if (status === 200) {
         stageData = xhr.response;
-        document.getElementById("stageInfo").innerHTML = `${stageData.challengeName}: ${stageData.stageName} - ${stageData.eventName}`;
+        document.getElementById('stageInfo').innerHTML = `${stageData.challengeName}: ${stageData.stageName} - ${stageData.eventName}`;
         let dateStr = stageData.entryWindow.start;
-        document.getElementById("stageDate").innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
+        document.getElementById('stageDate').innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
         plotData();
     } else {
-        document.getElementById("stageInfo").innerHTML = "Failed to load stage";
+        document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
     }
 };
 xhr.onerror = function() {
-    document.getElementById("stageInfo").innerHTML = "Failed to load stage";
+    document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
 }
 xhr.send();
 
 function categoryUpdate() {
-    let e = document.getElementById("category");
+    let e = document.getElementById('category');
     category = e.options[e.selectedIndex].value;
     plotData();
 }
 
 function chartTypeUpdate() {
-    let e = document.getElementById("chartType");
+    let e = document.getElementById('chartType');
     chartType = e.options[e.selectedIndex].value;
     plotData();
 }
 
 function userUpdate() {
-    let input = document.getElementById("username");
-    let container = document.getElementById("userInfoContainer");
-    let table = document.getElementById("userTable");
-    let searchWarning = document.getElementById("userNotFound");
+    let input = document.getElementById('username');
+    let container = document.getElementById('userInfoContainer');
+    let table = document.getElementById('userTable');
+    let searchWarning = document.getElementById('userNotFound');
     
-    if (input.value == "") {
+    if (input.value == '') {
         container.hidden = true;
     } else {
         let searchTerm = input.value.toLowerCase();
 
         let matches = []
         
-        let displayFields = ["rank", "name", "vehicleName", "totalTime"]
+        let displayFields = ['rank', 'name', 'vehicleName', 'totalTime']
 
         // clear table
         while (table.rows.length > 1)
@@ -143,22 +143,22 @@ function userUpdate() {
 
         stageData.entries.forEach(function(entry) {
             if (matches.length > 5) return;
-            
-            let name = entry["name"];
-            if (name == "DiRT Player") return;
+
+            let name = entry['name'];
+            if (name == 'DiRT Player') return;
             let match = name.toLowerCase().includes(searchTerm);
 
             if (match) {
                 matches.push(entry);
 
                 // add to table
-                let row = document.createElement("tr");
+                let row = document.createElement('tr');
                 displayFields.forEach(function(field) {
-                    let cell = document.createElement("td");
-                    let text = "";
-                    if (field == "totalTime") {
-                        if (entry["dnf"]) {
-                            text = "DNF";
+                    let cell = document.createElement('td');
+                    let text = '';
+                    if (field == 'totalTime') {
+                        if (entry['dnf']) {
+                            text = 'DNF';
                         } else {
                             text = entry[field];
                         }
@@ -192,21 +192,20 @@ function safeDictionary(dictionary, key) {
 }
 
 function sortByKey(array, key){
- return array.sort(function(a, b)
- {
-  var x = key(a); var y = key(b);
-  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
- });
+    return array.sort(function(a, b) {
+        var x = key(a); var y = key(b);
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
 }
 
-const convertHexToRGBA = (hex, opacity) => {
+function convertHexToRGBA(hex, opacity) {
     const tempHex = hex.replace('#', '');
     const r = parseInt(tempHex.substring(0, 2), 16);
     const g = parseInt(tempHex.substring(2, 4), 16);
     const b = parseInt(tempHex.substring(4, 6), 16);
   
     return `rgba(${r},${g},${b},${opacity})`;
-};
+}
 
 function getXValues(times, resolution=150) {
     // assumes times are sorted
@@ -281,7 +280,7 @@ function plotData() {
 
     let xValues = getXValues(times);
 
-    if (category == "none") {
+    if (category == 'none') {
         let distribution = getDistribution(times, xValues, 97);
 
         chartDists.data = {
@@ -296,11 +295,11 @@ function plotData() {
         }
         
         // show DNFs on the count chart
-        let timeLists = groupTimesByCategory(stageData["entries"], "dnf");
+        let timeLists = groupTimesByCategory(stageData['entries'], 'dnf');
         let keys = Object.keys(timeLists);
         keys = sortByKey(keys, (key) => -timeLists[key].length);
         chartCount.data = {
-            labels: keys.map((key) => safeDictionary(categoryNames["dnf"], key)),
+            labels: keys.map((key) => safeDictionary(categoryNames['dnf'], key)),
             datasets: [{
                 backgroundColor: colors.slice(0,keys.length),
                 data: keys.map((key) => timeLists[key].length)
@@ -317,7 +316,7 @@ function plotData() {
             colorMap[key] = colors[Object.keys(colorMap).length % colors.length];
         });
 
-        if (chartType == "stacked") {
+        if (chartType == 'stacked') {
             chartDists.data.datasets = [];
 
             for (var i = keys.length - 1; i >= 0; i--) {
@@ -359,7 +358,7 @@ function plotData() {
                                 .map(function(key) {
                     return {
                         label: safeDictionary(categoryNames[category], key),
-                        data: getDistribution(timeLists[key], xValues, chartType=="normal" ? 97 : null),
+                        data: getDistribution(timeLists[key], xValues, chartType=='normal' ? 97 : null),
                         borderColor: colors[i % colors.length],
                         borderWidth: 2,
                         showLine: true,
@@ -378,11 +377,11 @@ function plotData() {
         }
     }
 
-    let titleDist = "Distribution of Stage Times";
-    if (category != "none") {
-        titleDist += " by " + categoryNames[category][""];
+    let titleDist = 'Distribution of Stage Times';
+    if (category != 'none') {
+        titleDist += ' by ' + categoryNames[category][''];
     }
-    let titleCount = "Entries by " + categoryNames[category == "none" ? "dnf" : category][""];
+    let titleCount = 'Entries by ' + categoryNames[category == 'none' ? 'dnf' : category][''];
 
     chartDists.options = {
         title: {
@@ -390,7 +389,7 @@ function plotData() {
             text: titleDist
         },
         legend: {
-            display: category != "none"
+            display: category != 'none'
         },
         elements: {
             line: {
