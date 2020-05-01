@@ -89,14 +89,14 @@ if (urlParams.has('stage')) {
 }
 
 // fetch the stage data
-var xhr = new XMLHttpRequest();
-// xhr.open('GET', 'https://www.chrisraff.com/dirtrally2-event-data/test.json', true);
-xhr.open('GET', dataUrl + stage + '.json', true);
-xhr.responseType = 'json';
-xhr.onload = function() {
-    var status = xhr.status;
+var xhrStageData = new XMLHttpRequest();
+// xhrStageData.open('GET', 'https://www.chrisraff.com/dirtrally2-event-data/test.json', true);
+xhrStageData.open('GET', dataUrl + stage + '.json', true);
+xhrStageData.responseType = 'json';
+xhrStageData.onload = function() {
+    var status = xhrStageData.status;
     if (status === 200) {
-        stageData = xhr.response;
+        stageData = xhrStageData.response;
         document.getElementById('stageInfo').innerHTML = `${stageData.challengeName}: ${stageData.stageName} - ${stageData.eventName}`;
         let dateStr = stageData.entryWindow.start;
         document.getElementById('stageDate').innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
@@ -105,10 +105,60 @@ xhr.onload = function() {
         document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
     }
 };
-xhr.onerror = function() {
+xhrStageData.onerror = function() {
     document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
 }
-xhr.send();
+xhrStageData.send();
+
+// fetch available stages
+var xhrStages = new XMLHttpRequest();
+xhrStages.open('GET', dataUrl + 'daily/2020/info.json');
+xhrStages.responseType = 'json';
+xhrStages.onload = function() {
+    var status = xhrStages.status;
+    if (status === 200) {
+        let stages = xhrStages.response;
+        let table = document.getElementById('challengeTable');
+        
+        // clear table
+        while (table.rows.length > 1)
+            table.deleteRow(1);
+
+        
+        let displayFields = ['date', 'vehicleClass', 'eventName', 'stageName', 'country', 'challengeName'];
+
+        // add to table
+        stages.files.forEach(function(stage) {
+            let row = document.createElement('tr');
+            displayFields.forEach(function(field) {
+                let cell = document.createElement('td');
+                let text = '';
+                if (field == 'date') {
+                    text = stage.entryWindow.start;
+                    text = `${text.slice(8, 10)}.${text.slice(5, 7)}.${text.slice(0, 4)}`;
+                } else {
+                    text = stage[field];
+                }
+
+                cell.appendChild(
+                    document.createTextNode(text)
+                );
+                row.appendChild(cell);
+            });
+            row.classList.add("w3-hover-dark-grey");
+            row.addEventListener('onclick', function() {
+                // load stage
+            });
+            table.appendChild(row);
+        });
+    } else {
+        document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
+    }
+};
+xhrStages.onerror = function() {
+    document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
+}
+xhrStages.send();
 
 function categoryUpdate() {
     let e = document.getElementById('category');

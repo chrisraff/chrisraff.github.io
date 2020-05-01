@@ -3,6 +3,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
+<script src="Chart.bundle.min.js"></script>
+<script src="dirtrallycharts.js"></script>
+
 <div class="w3-container w3-light-grey">
     <h2 >Community Event Viewer</h2>
     <h3 id="stageInfo"></h3>
@@ -61,6 +64,30 @@
     </div>
 
 </div>
-    <script src="Chart.bundle.min.js"></script>
-    <script src="dirtrallycharts.js"></script>
+
+<div class="w3-container w3-padding">
+    <!-- https://www.w3schools.com/w3css/w3css_tabulators.asp -->
+    <div class="w3-bar w3-black">
+        <button class="w3-bar-item w3-button tablink w3-light-blue" onclick="// make call to load other category">Daily</button>
+    </div>
+
+    <!-- TODO year selector? -->
+    
+    <div id="category-daily" class="w3-container w3-border w3-padding challenge-category" style="height:300px;overflow:auto">
+        <table id="challengeTable" class="w3-table-all">
+            <tr>
+                <th>Date</th>
+                <th>Class</th>
+                <th>Event</th>
+                <th>Stage</th>
+                <th>Country</th>
+                <th>Name</th>
+            </tr>
+            <tr>
+                <td>Loading...</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
 </html>
