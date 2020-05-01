@@ -102,10 +102,16 @@ function getStageData(stage) {
         var status = xhrStageData.status;
         if (status === 200) {
             stageData = xhrStageData.response;
+            
             document.getElementById('stageInfo').innerHTML = `${stageData.challengeName}: ${stageData.stageName} - ${stageData.eventName}`;
+            
             let dateStr = stageData.entryWindow.start;
             document.getElementById('stageDate').innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
+
+            document.title = `${stageData.stageName} - DR2 Graphed | Chris Raff`;
+
             window.scrollTo(0,0);
+
             plotData();
         } else {
             document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
