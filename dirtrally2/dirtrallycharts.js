@@ -160,7 +160,7 @@ function userUpdate() {
                         if (entry['dnf']) {
                             text = 'DNF';
                         } else {
-                            text = entry[field];
+                            text = timeToString(entry[field]);
                         }
                     } else {
                         text = entry[field];
@@ -205,6 +205,13 @@ function convertHexToRGBA(hex, opacity) {
     const b = parseInt(tempHex.substring(4, 6), 16);
   
     return `rgba(${r},${g},${b},${opacity})`;
+}
+
+function timeToString(value, precision=3) {
+    let seconds = (value % 60).toFixed(precision);
+    if (value % 60 < 10)
+        seconds = '0' + seconds;
+    return `${Math.floor(value / 60)}:${seconds}`;
 }
 
 function getXValues(times, resolution=150) {
@@ -413,11 +420,9 @@ function plotData() {
                 stepSize: 30,
                 min: xValues[0],
                 max: xValues[xValues.length - 1],
-                callback: function(value) {
-                    if (value % 30 == 0) {
-                        let padded_seconds = ("0" + value%60).slice(-2);
-                        return Math.floor(value / 60) + ":" + padded_seconds;
-                    }
+                callback: function(x) {
+                    if (x%30 == 0)
+                        return timeToString(x, 0);
                 }
             }
         }],
