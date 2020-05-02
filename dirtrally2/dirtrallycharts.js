@@ -1,19 +1,20 @@
 var stageData = null;
 var category = 'vehicleName';
 var chartType = 'stacked';
+var selectorYear = 2020;
+var selectorCategory = 'daily';
+var stage = 'none';
+var dataUrl = 'https://www.chrisraff.com/dirtrally2-event-data/'
+
 var colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b', '#8549ba'];
 var chartDists = null;
 var chartCount = null;
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-var stage = 'none';
-var dataUrl = 'https://www.chrisraff.com/dirtrally2-event-data/'
 if (urlParams.has('stage')) {
-    stage = urlParams.get('stage') + '.json';
+    stage = urlParams.get('stage') + '.json';0
 }
-var selectorYear = 2020;
-var selectorCategory = 'daily';
 
 var categoryNames = {
     'vehicleName': {
@@ -84,6 +85,31 @@ window.onload = function() {
 
     if (stage != 'none')
         this.getStageData(stage);
+    
+    if (urlParams.has('cat') && urlParams.get('cat')) {
+        let valid = false;
+        let e = document.getElementById('category');
+        Array.from(e.options).forEach(function(o) {
+            if (o.value == urlParams.get('cat'))
+                valid = true;
+        })
+        if (valid) {
+            category = urlParams.get('cat');
+            e.value = category;
+        }
+    }
+    if (urlParams.has('ctyp') && urlParams.get('ctyp')) {
+        let valid = false;
+        let e = document.getElementById('chartType');
+        Array.from(e.options).forEach(function(o) {
+            if (o.value == urlParams.get('ctyp'))
+                valid = true;
+        })
+        if (valid) {
+            chartType = urlParams.get('ctyp')
+            e.value = chartType;
+        }
+    }
 
     // pressing enter triggers user search
     document.getElementById('username').addEventListener('keydown', function(event) {
@@ -109,8 +135,7 @@ function getStageData(stage) {
 
             document.title = `${stageData.stageName} - DR2 Graphed | Chris Raff`;
 
-            let currUrl = window.location.href.split('?')[0];
-            document.getElementById('stageLink').href = `${currUrl}?stage=${stage.slice(0, -5)}`;
+            updateLink();
 
             window.scrollTo(0,0);
 
@@ -181,12 +206,14 @@ xhrStages.send();
 function categoryUpdate() {
     let e = document.getElementById('category');
     category = e.options[e.selectedIndex].value;
+    updateLink();
     plotData();
 }
 
 function chartTypeUpdate() {
     let e = document.getElementById('chartType');
     chartType = e.options[e.selectedIndex].value;
+    updateLink();
     plotData();
 }
 
@@ -252,6 +279,18 @@ function userUpdate() {
             table.style.display = 'table';
         }
     }
+}
+
+function updateLink() {
+    let currUrl = window.location.href.split('?')[0];
+    let extras = '';
+    let catSelector = document.getElementById('category');
+    let typSelector = document.getElementById('chartType');
+    if (catSelector.value != 'vehicleName')
+        extras += `&cat=${catSelector.value}`
+    if (typSelector.value != 'stacked')
+        extras += `&ctyp=${typSelector.value}`
+    document.getElementById('stageLink').href = `${currUrl}?stage=${stage.slice(0, -5)}${extras}`;
 }
 
 function safeDictionary(dictionary, key) {
