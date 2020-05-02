@@ -290,6 +290,19 @@ function getXValues(times, resolution=150) {
     let buffer = 0.05;
     xmin -= buffer * diff;
     xmax += buffer * diff;
+
+    // if within 5 seconds of a multiple of 30, take that multiple
+    let nearness = xmin % 30;
+    if (nearness <= 5)
+        xmin -= nearness;
+    else if (nearness >= 25)
+        xmin += nearness;
+    nearness = xmax % 30;
+    if (nearness <= 5)
+        xmax -= nearness;
+    else if (nearness >= 25)
+        xmax += nearness;
+
     diff = xmax - xmin;
 
     let xs = new Array(resolution);
@@ -380,7 +393,7 @@ function plotData() {
                 data: keys.map((key) => timeLists[key].length)
             }]
         }
-        
+
         document.getElementById('oculusInfo').hidden = true;
     } else {
         let timeLists = groupTimesByCategory(finishers, category);
@@ -461,7 +474,7 @@ function plotData() {
                 min: xValues[0],
                 max: xValues[xValues.length - 1],
                 callback: function(x) {
-                    if (x%30 == 0)
+                    if (x%5 == 0)
                         return timeToString(x, 0);
                 }
             }
