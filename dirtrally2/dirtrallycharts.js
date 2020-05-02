@@ -138,6 +138,7 @@ function getStageData(stageFName) {
             stage = stageFName;
 
             updateLink();
+            userUpdate();
 
             window.scrollTo(0,0);
 
@@ -197,7 +198,7 @@ xhrStages.onload = function() {
             table.appendChild(row);
         });
     } else {
-        document.getElementById('stage-selector').hidden = true;
+        document.getElementById('stage-selector').style.display = 'none';
     }
 };
 xhrStages.onerror = function() {
