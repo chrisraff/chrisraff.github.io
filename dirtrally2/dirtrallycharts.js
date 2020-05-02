@@ -440,6 +440,16 @@ function plotData() {
     } else {
         let timeLists = groupTimesByCategory(finishers, category);
 
+        // Oculus players are PC players, put them both in a PC category
+        if (Object.keys(timeLists).includes('Oculus')) {
+            if (!Object.keys(timeLists).includes('Steam')) {
+                timeLists['Steam'] = [];
+            }
+            timeLists['PC'] = timeLists['Steam'].concat(timeLists['Oculus']);
+            delete timeLists.Steam;
+            delete timeLists.Oculus;
+        }
+
         let keys = Object.keys(timeLists);
         keys = sortByKey(keys, (key) => -timeLists[key].length);
 
@@ -472,11 +482,6 @@ function plotData() {
             }]
         }
 
-        if (keys.includes('Oculus')) {
-            document.getElementById('oculusInfo').hidden = false;
-        } else {
-            document.getElementById('oculusInfo').hidden = true;
-        }
     }
 
     let titleDist = 'Distribution of Stage Times';
