@@ -435,8 +435,6 @@ function plotData() {
                 data: keys.map((key) => timeLists[key].length)
             }]
         }
-
-        document.getElementById('oculusInfo').hidden = true;
     } else {
         let timeLists = groupTimesByCategory(finishers, category);
 
