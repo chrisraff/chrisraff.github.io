@@ -119,9 +119,9 @@ window.onload = function() {
     })
 }
 
-function getStageData(stage) {
+function getStageData(stageFName) {
     var xhrStageData = new XMLHttpRequest();
-    xhrStageData.open('GET', dataUrl + stage, true);
+    xhrStageData.open('GET', dataUrl + stageFName, true);
     xhrStageData.responseType = 'json';
     xhrStageData.onload = function() {
         var status = xhrStageData.status;
@@ -134,6 +134,8 @@ function getStageData(stage) {
             document.getElementById('stageDate').innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
 
             document.title = `${stageData.stageName} - DR2 Graphed | Chris Raff`;
+
+            stage = stageFName;
 
             updateLink();
 
