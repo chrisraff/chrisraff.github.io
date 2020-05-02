@@ -380,6 +380,8 @@ function plotData() {
                 data: keys.map((key) => timeLists[key].length)
             }]
         }
+        
+        document.getElementById('oculusInfo').hidden = true;
     } else {
         let timeLists = groupTimesByCategory(finishers, category);
 
@@ -390,8 +392,6 @@ function plotData() {
         keys.forEach(function(key) {
             colorMap[key] = colors[Object.keys(colorMap).length % colors.length];
         });
-
-        let i = 0;
 
         // simple distribution plot
         chartDists.data = {
@@ -415,6 +415,12 @@ function plotData() {
                 backgroundColor: colors.slice(0,keys.length),
                 data: keys.map((key) => timeLists[key].length)
             }]
+        }
+
+        if (keys.includes('Oculus')) {
+            document.getElementById('oculusInfo').hidden = false;
+        } else {
+            document.getElementById('oculusInfo').hidden = true;
         }
     }
 
