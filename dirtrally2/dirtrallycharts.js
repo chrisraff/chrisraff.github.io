@@ -335,15 +335,18 @@ function getXValues(times, resolution=150) {
 
     // if within 5 seconds of a multiple of 30, take that multiple
     let nearness = xmin % 30;
-    if (nearness <= 5)
+    if (nearness <= 5) {
         xmin -= nearness;
-    else if (nearness >= 25)
-        xmin += nearness;
-    nearness = xmax % 30;
-    if (nearness <= 5)
+    }
+    else if (nearness >= 25) {
+        xmin += (30 - nearness);
+    }
+    if (nearness <= 5) {
         xmax -= nearness;
-    else if (nearness >= 25)
-        xmax += nearness;
+    }
+    else if (nearness >= 25) {
+        xmax += (30 - nearness);
+    }
 
     diff = xmax - xmin;
 
