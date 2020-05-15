@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<div class="w3-row w3-padding">
+<div class="w3-padding">
     <div class="w3-row">
         <div class="w3-col w3-padding" style="width:fit-content">
             <label for="category">Group by:</label>
@@ -79,20 +79,22 @@
     </div>
 
     <div class="w3-row">
-        <div class="w3-col w3-padding" style="width:fit-content">
+        <div class="w3-col w3-padding" style="width:fit-content" >
             <input id="username" onfocusout="userUpdate()" placeholder="Username" autocorrect="off">
             <p id="userNotFound" hidden>No matching username found</p>
         </div>
-        <div class="w3-container w3-col" style="width:fit-content">
-            <table id="userTable" class="w3-table-all">
-                <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Car</th>
-                    <th>Time</th>
-                    <th>Diff</th>
-                </tr>
-            </table>
+        <div class="w3-rest" style="min-width:70%">
+            <div class="w3-border" style="overflow-x:auto">
+                <table id="userTable" class="w3-table-all">
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Car</th>
+                        <th>Time</th>
+                        <th>Diff</th>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 </div>
