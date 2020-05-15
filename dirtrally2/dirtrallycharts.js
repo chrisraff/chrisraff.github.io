@@ -227,13 +227,14 @@ function userUpdate() {
 
     let searchTerm = input.value.toLowerCase();
 
-    let displayFields = ['rank', 'name', 'vehicleName', 'totalTime']
+    let displayFields = ['rank', 'name', 'vehicleName', 'totalTime', 'diff']
 
     // clear table
     while (table.rows.length > 1)
         table.deleteRow(1);
 
     let displayCount = 0;
+    let bestTime = 0;
 
     searchWarning.hidden = false;
 
@@ -251,6 +252,10 @@ function userUpdate() {
         if (match || entry['rank'] == 1) {
             displayCount += 1;
 
+            if (entry['rank'] == 1) {
+                bestTime = entry.totalTime;
+            }
+
             // add to table
             let row = document.createElement('tr');
             displayFields.forEach(function(field) {
@@ -261,6 +266,12 @@ function userUpdate() {
                         text = 'DNF';
                     } else {
                         text = timeToString(entry[field]);
+                    }
+                } else if (field == 'diff') {
+                    if (entry['dnf'] || entry['rank'] == 1) {
+                        text = '--';
+                    } else {
+                        text = `+${timeToString(entry.totalTime - bestTime)}`;
                     }
                 } else {
                     text = entry[field];
