@@ -222,66 +222,58 @@ function chartTypeUpdate() {
 
 function userUpdate() {
     let input = document.getElementById('username');
-    let container = document.getElementById('userInfoContainer');
     let table = document.getElementById('userTable');
     let searchWarning = document.getElementById('userNotFound');
-    
-    if (input.value == '') {
-        container.hidden = true;
-    } else {
-        let searchTerm = input.value.toLowerCase();
 
-        let matches = []
-        
-        let displayFields = ['rank', 'name', 'vehicleName', 'totalTime']
+    let searchTerm = input.value.toLowerCase();
 
-        // clear table
-        while (table.rows.length > 1)
-            table.deleteRow(1);
+    let displayFields = ['rank', 'name', 'vehicleName', 'totalTime']
 
-        stageData.entries.forEach(function(entry) {
-            if (matches.length > 5) return;
+    // clear table
+    while (table.rows.length > 1)
+        table.deleteRow(1);
 
-            let name = entry['name'];
-            if (name == 'DiRT Player') return;
-            let match = name.toLowerCase().includes(searchTerm);
+    let displayCount = 0;
 
-            if (match) {
-                matches.push(entry);
+    searchWarning.hidden = false;
 
-                // add to table
-                let row = document.createElement('tr');
-                displayFields.forEach(function(field) {
-                    let cell = document.createElement('td');
-                    let text = '';
-                    if (field == 'totalTime') {
-                        if (entry['dnf']) {
-                            text = 'DNF';
-                        } else {
-                            text = timeToString(entry[field]);
-                        }
-                    } else {
-                        text = entry[field];
-                    }
+    stageData.entries.forEach(function(entry) {
+        if (displayCount >= 5) return;
 
-                    cell.appendChild(
-                        document.createTextNode(text)
-                    );
-                    row.appendChild(cell);
-                })
-                table.appendChild(row);
-            }
-        });
+        let name = entry['name'];
+        if (name == 'DiRT Player' && searchTerm != '') return;
+        let match = name.toLowerCase().includes(searchTerm);
 
-        container.hidden = false;
-        if (matches.length == 0) {
-            searchWarning.hidden = false;
-            table.style.display = 'none';
-        } else {
+        if (match) {
             searchWarning.hidden = true;
-            table.style.display = 'table';
         }
-    }
+
+        if (match || entry['rank'] == 1) {
+            displayCount += 1;
+
+            // add to table
+            let row = document.createElement('tr');
+            displayFields.forEach(function(field) {
+                let cell = document.createElement('td');
+                let text = '';
+                if (field == 'totalTime') {
+                    if (entry['dnf']) {
+                        text = 'DNF';
+                    } else {
+                        text = timeToString(entry[field]);
+                    }
+                } else {
+                    text = entry[field];
+                }
+
+                cell.appendChild(
+                    document.createTextNode(text)
+                );
+                row.appendChild(cell);
+            })
+            table.appendChild(row);
+        }
+    });
 }
 
 function updateLink() {
