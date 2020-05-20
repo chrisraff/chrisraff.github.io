@@ -13,7 +13,7 @@ var chartCount = null;
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 if (urlParams.has('stage')) {
-    stage = urlParams.get('stage') + '.json';0
+    stage = urlParams.get('stage') + '.json';
 }
 
 var categoryNames = {
@@ -128,10 +128,11 @@ function getStageData(stageFName) {
         if (status === 200) {
             stageData = xhrStageData.response;
             
-            document.getElementById('stageInfo').innerHTML = `${stageData.challengeName}: ${stageData.stageName} - ${stageData.eventName}`;
+            document.getElementById('stageName').innerHTML = `${stageData.challengeName}: ${stageData.stageName} - ${stageData.eventName}`;
             
             let dateStr = stageData.entryWindow.start;
-            document.getElementById('stageDate').innerHTML = `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)}`;
+            document.getElementById('stageInfo').innerHTML =
+                    `${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.${dateStr.slice(0, 4)} &#x2022 ${stageData.entries.length} players`;
 
             document.title = `${stageData.stageName} - DR2 Graphed | Chris Raff`;
 
@@ -144,11 +145,11 @@ function getStageData(stageFName) {
 
             plotData();
         } else {
-            document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
+            document.getElementById('stageName').innerHTML = 'Failed to load stage';
         }
     };
     xhrStageData.onerror = function() {
-        document.getElementById('stageInfo').innerHTML = 'Failed to load stage';
+        document.getElementById('stageName').innerHTML = 'Failed to load stage';
     }
     xhrStageData.send();
 }
