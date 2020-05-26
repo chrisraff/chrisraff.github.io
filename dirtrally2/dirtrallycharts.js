@@ -150,6 +150,22 @@ function getStageData(stageFName) {
             window.scrollTo(0,0);
 
             plotData();
+
+            // update highlighted item in challenge table
+            // first, de-highlight the old one
+            Array.prototype.forEach.call(
+                document.getElementsByClassName('challenge-selected'),
+                function(e) {
+                    e.classList.remove('w3-light-blue');
+                    e.classList.remove('challenge-selected');
+                }
+            );
+            // then, highlight the new one
+            let challengeRow = document.getElementById(`challenge-${stageData.challengeId}`);
+            if (challengeRow != null) {
+                challengeRow.classList.add('w3-light-blue');
+                challengeRow.classList.add('challenge-selected');
+            } else {console.log('nope')}
         } else {
             document.getElementById('stageName').innerHTML = 'Failed to load stage';
         }
@@ -167,7 +183,7 @@ function getAvailableChallenges() {
 
     function onFail() {
         Array.prototype.forEach.call(
-            document.getElementsByClassName('dr2-challenge-table'),
+            document.getElementsByClassName('challenge-table'),
             function(e) {e.style.display = 'none';}
         );
         document.getElementById('challenge-failed').style.display = 'block';
@@ -209,10 +225,15 @@ function getAvailableChallenges() {
                     );
                     row.appendChild(cell);
                 });
+
+                row.id = `challenge-${stage.challengeId}`;
+
                 row.classList.add("w3-hover-dark-grey");
+
                 row.onclick =  function() {
                     getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
                 };
+
                 table.appendChild(row);
             });
 
