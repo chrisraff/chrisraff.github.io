@@ -45,6 +45,7 @@ var categoryNames = {
 }
 
 window.onload = function() {
+    // init charts
     chartDists = new Chart('distributions', {
         type: 'line',
         options: {
@@ -82,10 +83,8 @@ window.onload = function() {
             }
         }
     });
-
-    if (stage != 'none')
-        this.getStageData(stage);
     
+    // set up graph params if specified
     if (urlParams.has('cat') && urlParams.get('cat')) {
         let valid = false;
         let e = document.getElementById('category');
@@ -117,6 +116,13 @@ window.onload = function() {
             userUpdate();
         }
     })
+
+    // load stage if it was specified
+    if (stage != 'none')
+        this.getStageData(stage);
+
+    // populate the challenge selection list
+    this.getAvailableChallenges();
 }
 
 function getStageData(stageFName) {
@@ -154,58 +160,70 @@ function getStageData(stageFName) {
     xhrStageData.send();
 }
 
-// fetch available stages
-var xhrStages = new XMLHttpRequest();
-xhrStages.open('GET', dataUrl + `${selectorCategory}/${selectorYear}/info.json`);
-xhrStages.responseType = 'json';
-xhrStages.onload = function() {
-    var status = xhrStages.status;
-    if (status === 200) {
-        let stages = xhrStages.response;
-        let table = document.getElementById('challengeTable');
-        
-        // clear table
-        while (table.rows.length > 1)
-            table.deleteRow(1);
+function getAvailableChallenges() {
+    var xhrStages = new XMLHttpRequest();
+    xhrStages.open('GET', dataUrl + `${selectorCategory}/${selectorYear}/info.json`);
+    xhrStages.responseType = 'json';
 
-        if (stage == 'none') {
-            getStageData(`${selectorCategory}/${selectorYear}/${stages.files[0].name}`);
-        }
-        
-        let displayFields = ['date', 'vehicleClass', 'eventName', 'stageName', 'country', 'challengeName'];
-
-        // add to table
-        stages.files.forEach(function(stage) {
-            let row = document.createElement('tr');
-            displayFields.forEach(function(field) {
-                let cell = document.createElement('td');
-                let text = '';
-                if (field == 'date') {
-                    text = stage.entryWindow.start;
-                    text = `${text.slice(8, 10)}.${text.slice(5, 7)}.${text.slice(0, 4)}`;
-                } else {
-                    text = stage[field];
-                }
-
-                cell.appendChild(
-                    document.createTextNode(text)
-                );
-                row.appendChild(cell);
-            });
-            row.classList.add("w3-hover-dark-grey");
-            row.onclick =  function() {
-                getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
-            };
-            table.appendChild(row);
-        });
-    } else {
-        document.getElementById('challenge-selector').style.display = 'none';
+    function onFail() {
+        Array.prototype.forEach.call(
+            document.getElementsByClassName('dr2-challenge-table'),
+            function(e) {e.style.display = 'none';}
+        );
+        document.getElementById('challenge-failed').style.display = 'block';
     }
-};
-xhrStages.onerror = function() {
-    document.getElementById('challenge-selector').style.display = 'none';
+
+    xhrStages.onload = function() {
+        var status = xhrStages.status;
+        if (status === 200) {
+            let stages = xhrStages.response;
+            let table = document.getElementById(`${selectorCategory}-challenge-table`);
+
+            table.style.display = 'table';
+
+            // clear table
+            while (table.rows.length > 1)
+                table.deleteRow(1);
+
+            if (stage == 'none') {
+                getStageData(`${selectorCategory}/${selectorYear}/${stages.files[0].name}`);
+            }
+            
+            let displayFields = ['date', 'vehicleClass', 'eventName', 'stageName', 'country', 'challengeName'];
+
+            // add to table
+            stages.files.forEach(function(stage) {
+                let row = document.createElement('tr');
+                displayFields.forEach(function(field) {
+                    let cell = document.createElement('td');
+                    let text = '';
+                    if (field == 'date') {
+                        text = stage.entryWindow.start;
+                        text = `${text.slice(8, 10)}.${text.slice(5, 7)}.${text.slice(0, 4)}`;
+                    } else {
+                        text = stage[field];
+                    }
+
+                    cell.appendChild(
+                        document.createTextNode(text)
+                    );
+                    row.appendChild(cell);
+                });
+                row.classList.add("w3-hover-dark-grey");
+                row.onclick =  function() {
+                    getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
+                };
+                table.appendChild(row);
+            });
+
+            document.getElementById('challenge-failed').style.display = 'none';
+        } else {
+            onFail();
+        }
+    };
+    xhrStages.onerror = onFail;
+    xhrStages.send();
 }
-xhrStages.send();
 
 function categoryUpdate() {
     let e = document.getElementById('category');
