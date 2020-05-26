@@ -199,11 +199,11 @@ xhrStages.onload = function() {
             table.appendChild(row);
         });
     } else {
-        document.getElementById('stage-selector').style.display = 'none';
+        document.getElementById('challenge-selector').style.display = 'none';
     }
 };
 xhrStages.onerror = function() {
-    document.getElementById('stage-selector').style.display = 'none';
+    document.getElementById('challenge-selector').style.display = 'none';
 }
 xhrStages.send();
 
