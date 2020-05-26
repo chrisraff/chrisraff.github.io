@@ -260,6 +260,7 @@ function chartTypeUpdate() {
     plotData();
 }
 
+// update the user table
 function userUpdate() {
     let input = document.getElementById('username');
     let table = document.getElementById('userTable');
@@ -339,6 +340,38 @@ function updateLink() {
     document.getElementById('stageLink').href = `${currUrl}?stage=${stage.slice(0, -5)}${extras}`;
 }
 
+function updateCategoryTab(event, category) {
+    // go through all relevant tabgroup class things, hide them
+    // show the one tab that was selected
+    selectorCategory = category;
+
+    // update which table is showing
+    Array.prototype.forEach.call(
+        document.getElementsByClassName('category-tab-target'),
+        function(e) {
+            if (e.id == `${category}-challenge-table`) {
+                e.style.display = 'table';
+            } else {
+                e.style.display = 'none';
+            }
+        }
+    );
+    // populate the table
+    getAvailableChallenges();
+    
+    // update which tab link is highlighted
+    Array.prototype.forEach.call(
+        document.getElementsByClassName('category-tab-link'),
+        function(e) {
+            e.classList.remove('w3-light-blue');
+        }
+    );
+
+    event.currentTarget.classList.add('w3-light-blue');
+}
+
+// -------- convenience functions
+
 function safeDictionary(dictionary, key) {
     if (dictionary[key] !== undefined) return dictionary[key];
     return key;
@@ -366,6 +399,8 @@ function timeToString(value, precision=3) {
         seconds = '0' + seconds;
     return `${Math.floor(value / 60)}:${seconds}`;
 }
+
+// ------- functions related to graphing
 
 function getXValues(times, resolution=150) {
     // assumes times are sorted

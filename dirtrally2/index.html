@@ -103,13 +103,14 @@
 <div class="w3-container w3-padding">
     <!-- https://www.w3schools.com/w3css/w3css_tabulators.asp -->
     <div class="w3-bar w3-black">
-        <button class="w3-bar-item w3-button tablink w3-light-blue" onclick="// make call to load other category">Daily</button>
+        <button class="w3-bar-item w3-button category-tab-link w3-light-blue" onclick="updateCategoryTab(event, 'daily')">Daily</button>
+        <button class="w3-bar-item w3-button category-tab-link" onclick="updateCategoryTab(event, 'weekly')">Weekly</button>
     </div>
 
     <!-- TODO year selector? -->
     
     <div class="w3-container w3-border w3-padding challenge-category" style="height:400px;overflow:auto">
-        <table id="daily-challenge-table" class="w3-table-all challenge-table">
+        <table id="daily-challenge-table" class="w3-table-all category-tab-target">
             <tr>
                 <th>Date</th>
                 <th>Class</th>
@@ -123,8 +124,22 @@
             </tr>
         </table>
 
+        <table id="weekly-challenge-table" class="w3-table-all category-tab-target" style="display: none">
+            <tr>
+                <th>Date</th>
+                <th>Class</th>
+                <th>Event</th>
+                <th>Country</th>
+                <th>Stages</th> <!-- number of stages -->
+                <th>Name</th>
+            </tr>
+            <tr>
+                <td>Loading...</td>
+            </tr>
+        </table>
+
         <div id="challenge-failed" class="w3-text-red" style="display: none">
-            <h3>Failed to load challenges</h2>
+            <h3>Failed to load challenges</h3>
         </div>
     </div>
 
