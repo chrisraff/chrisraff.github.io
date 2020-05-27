@@ -248,12 +248,19 @@ function getAvailableChallenges() {
                         row.appendChild(cell);
                     });
 
-                    row.id = `challenge-row-${stage.challengeId}`;
-
                     row.classList.add("w3-hover-dark-grey");
 
+                    let currSelectorCategory = selectorCategory;
                     row.onclick =  function() {
                         getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
+
+                        let multistageSelector = document.getElementById('multistage-selector');
+                        if (currSelectorCategory == 'daily') {
+                            multistageSelector.style.display = 'none';
+                        } else {
+                            multistageSelector.style.display = 'block';
+                            updateMultistageTable(stage.challengeId);
+                        }
                     };
 
                     table.appendChild(row);
@@ -291,7 +298,7 @@ function userUpdate() {
 
     let searchTerm = input.value.toLowerCase();
 
-    let displayFields = ['rank', 'name', 'vehicleName', 'totalTime', 'diff']
+    let displayFields = ['rank', 'name', 'vehicleName', 'totalTime', 'diff'];
 
     // clear table
     while (table.rows.length > 1)
@@ -347,6 +354,48 @@ function userUpdate() {
                 row.appendChild(cell);
             })
             table.appendChild(row);
+        }
+    });
+}
+
+function updateMultistageTable(challengeId) {
+    let table = document.getElementById('multistage-table');
+
+    let displayFields = ['stageId', 'stageName', 'eventName'];
+
+    // clear table
+    while (table.rows.length > 1)
+        table.deleteRow(1);
+
+    selectorData.files.forEach(function(stage) {
+        if (stage.challengeId == challengeId) {
+            // add to table
+            let row = document.createElement('tr');
+            displayFields.forEach(function(field) {
+                let cell = document.createElement('td');
+                let text = '';
+                if (field == 'stageId') {
+                    text = stage.stageId + 1;
+                } else {
+                    text = stage[field];
+                }
+
+                cell.appendChild(
+                    document.createTextNode(text)
+                );
+                row.appendChild(cell);
+            });
+
+            row.id = `stage-row-${stage.challengeId}`;
+
+            row.classList.add("w3-hover-dark-grey");
+
+            let currSelectorCategory = selectorCategory;
+            row.onclick =  function() {
+                getStageData(`${currSelectorCategory}/${stage.entryWindow.start.slice(0,4)}/${stage.name}`);
+            };
+
+            table.children[0].insertBefore(row, table.children[0].children[1]);
         }
     });
 }
