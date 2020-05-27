@@ -3,6 +3,7 @@ var category = 'vehicleName';
 var chartType = 'stacked';
 var selectorYear = 2020;
 var selectorCategory = 'daily';
+var selectorData = null;
 var stage = 'none';
 var dataUrl = 'https://www.chrisraff.com/dirtrally2-event-data/'
 
@@ -161,11 +162,11 @@ function getStageData(stageFName) {
                 }
             );
             // then, highlight the new one
-            let challengeRow = document.getElementById(`challenge-${stageData.challengeId}`);
+            let challengeRow = document.getElementById(`challenge-row-${stageData.challengeId}`);
             if (challengeRow != null) {
                 challengeRow.classList.add('w3-light-blue');
                 challengeRow.classList.add('challenge-selected');
-            } else {console.log('nope')}
+            }
         } else {
             document.getElementById('stageName').innerHTML = 'Failed to load stage';
         }
@@ -192,7 +193,7 @@ function getAvailableChallenges() {
     xhrStages.onload = function() {
         var status = xhrStages.status;
         if (status === 200) {
-            let stages = xhrStages.response;
+            selectorData = xhrStages.response;
             let table = document.getElementById(`${selectorCategory}-challenge-table`);
 
             table.style.display = 'table';
@@ -202,39 +203,61 @@ function getAvailableChallenges() {
                 table.deleteRow(1);
 
             if (stage == 'none') {
-                getStageData(`${selectorCategory}/${selectorYear}/${stages.files[0].name}`);
+                getStageData(`${selectorCategory}/${selectorYear}/${selectorData.files[0].name}`);
             }
-            
-            let displayFields = ['date', 'vehicleClass', 'eventName', 'stageName', 'country', 'challengeName'];
+
+            let displayFields = {
+                'daily':    ['date', 'vehicleClass', 'eventName', 'stageName', 'country', 'challengeName'],
+                'weekly':   ['date', 'vehicleClass', 'eventName', 'country', 'stageCount'],
+            }[selectorCategory];
 
             // add to table
-            stages.files.forEach(function(stage) {
-                let row = document.createElement('tr');
-                displayFields.forEach(function(field) {
-                    let cell = document.createElement('td');
-                    let text = '';
-                    if (field == 'date') {
-                        text = stage.entryWindow.start;
-                        text = `${text.slice(8, 10)}.${text.slice(5, 7)}.${text.slice(0, 4)}`;
-                    } else {
-                        text = stage[field];
+            selectorData.files.forEach(function(stage) {
+                let challengeRow = document.getElementById(`challenge-row-${stage.challengeId}`);
+
+                // if the challenge already has a row, update necessary fields
+                if (challengeRow != null) {
+                    let stageCountCell = document.getElementById(`cell-${stage.challengeId}-stageCount`);
+                    if (stageCountCell != null) {
+                        stageCountCell.innerText = 1 + Number(stageCountCell.innerText);
                     }
+                } else {
+                    // otherwise, create the challenge row
+                    let row = document.createElement('tr');
+                    row.id = `challenge-row-${stage.challengeId}`;
+                    displayFields.forEach(function(field) {
+                        let cell = document.createElement('td');
+                        let text = '';
+                        switch (field) {
+                        case 'date':
+                            text = stage.entryWindow.start;
+                            text = `${text.slice(8, 10)}.${text.slice(5, 7)}.${text.slice(0, 4)}`;
+                            break;
+                        case 'stageCount':
+                            text = '1';
+                            break;
+                        default:
+                            text = stage[field];
+                        }
 
-                    cell.appendChild(
-                        document.createTextNode(text)
-                    );
-                    row.appendChild(cell);
-                });
+                        cell.id = `cell-${stage.challengeId}-${field}`;
 
-                row.id = `challenge-${stage.challengeId}`;
+                        cell.appendChild(
+                            document.createTextNode(text)
+                        );
+                        row.appendChild(cell);
+                    });
 
-                row.classList.add("w3-hover-dark-grey");
+                    row.id = `challenge-row-${stage.challengeId}`;
 
-                row.onclick =  function() {
-                    getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
-                };
+                    row.classList.add("w3-hover-dark-grey");
 
-                table.appendChild(row);
+                    row.onclick =  function() {
+                        getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
+                    };
+
+                    table.appendChild(row);
+                }
             });
 
             document.getElementById('challenge-failed').style.display = 'none';
@@ -341,8 +364,6 @@ function updateLink() {
 }
 
 function updateCategoryTab(event, category) {
-    // go through all relevant tabgroup class things, hide them
-    // show the one tab that was selected
     selectorCategory = category;
 
     // update which table is showing
@@ -358,7 +379,7 @@ function updateCategoryTab(event, category) {
     );
     // populate the table
     getAvailableChallenges();
-    
+
     // update which tab link is highlighted
     Array.prototype.forEach.call(
         document.getElementsByClassName('category-tab-link'),
