@@ -152,21 +152,7 @@ function getStageData(stageFName) {
 
             plotData();
 
-            // update highlighted item in challenge table
-            // first, de-highlight the old one
-            Array.prototype.forEach.call(
-                document.getElementsByClassName('challenge-selected'),
-                function(e) {
-                    e.classList.remove('w3-light-blue');
-                    e.classList.remove('challenge-selected');
-                }
-            );
-            // then, highlight the new one
-            let challengeRow = document.getElementById(`challenge-row-${stageData.challengeId}`);
-            if (challengeRow != null) {
-                challengeRow.classList.add('w3-light-blue');
-                challengeRow.classList.add('challenge-selected');
-            }
+            updateSelectorHighlighting();
         } else {
             document.getElementById('stageName').innerHTML = 'Failed to load stage';
         }
@@ -266,6 +252,8 @@ function getAvailableChallenges() {
                     table.appendChild(row);
                 }
             });
+
+            updateSelectorHighlighting();
 
             document.getElementById('challenge-failed').style.display = 'none';
         } else {
@@ -386,7 +374,7 @@ function updateMultistageTable(challengeId) {
                 row.appendChild(cell);
             });
 
-            row.id = `stage-row-${stage.challengeId}`;
+            row.id = `stage-row-${stage.stageId}`;
 
             row.classList.add("w3-hover-dark-grey");
 
@@ -398,6 +386,30 @@ function updateMultistageTable(challengeId) {
             table.children[0].insertBefore(row, table.children[0].children[1]);
         }
     });
+}
+
+function updateSelectorHighlighting() {
+    // first, de-highlight the old one
+    Array.prototype.forEach.call(
+        document.getElementsByClassName('challenge-selected'),
+        function(e) {
+            e.classList.remove('w3-light-blue');
+            e.classList.remove('challenge-selected');
+        }
+    );
+    // then, highlight the new one
+    if (stageData != undefined) {
+        let challengeRow = document.getElementById(`challenge-row-${stageData.challengeId}`);
+        if (challengeRow != null) {
+            challengeRow.classList.add('w3-light-blue');
+            challengeRow.classList.add('challenge-selected');
+        }
+        let stageRow = document.getElementById(`stage-row-${stageData.stageId}`);
+        if (stageRow != null) {
+            stageRow.classList.add('w3-light-blue');
+            stageRow.classList.add('challenge-selected');
+        }
+    }
 }
 
 function updateLink() {
