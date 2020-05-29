@@ -1,6 +1,7 @@
 var stageData = null;
 var category = 'vehicleName';
 var chartType = 'stacked';
+var timeField = 'totalTime';
 var selectorYear = 2020;
 var selectorCategory = 'daily';
 var selectorData = null;
@@ -155,8 +156,10 @@ function getStageData(stageFName) {
             // show / hide appropriate tables / columns for challenges with multiple stages
             let multistageSelector = document.getElementById('multistage-selector');
             let totalCols = document.getElementsByClassName('player-col-total');
+            let sortSelector = document.getElementById('multistageSortDiv');
             if (stageData.challengeType == 'daily') {
                 multistageSelector.style.display = 'none';
+                sortSelector.style.display = 'none';
                 Array.prototype.forEach.call(
                     totalCols,
                     function(e) {
@@ -165,6 +168,7 @@ function getStageData(stageFName) {
                 );
             } else {
                 multistageSelector.style.display = 'block';
+                sortSelector.style.display = 'block';
                 updateMultistageTable(stageData.challengeId);
                 Array.prototype.forEach.call(
                     totalCols,
@@ -291,6 +295,19 @@ function chartTypeUpdate() {
     plotData();
 }
 
+function multistageSortUpdate(multistageSort = null) {
+    if (multistageSort == null) {
+        let e = document.getElementById('multistageSort');
+        multistageSort = e.options[e.selectedIndex].value;
+    }
+
+    timeField = multistageSort;
+
+    updateLink();
+    userUpdate();
+    plotData();
+}
+
 // update the user table
 function userUpdate() {
     let input = document.getElementById('username');
@@ -310,11 +327,10 @@ function userUpdate() {
         table.deleteRow(1);
 
     let displayCount = 0;
-    let bestTime = 0;
 
     searchWarning.hidden = false;
 
-    let sortedStages = sortByKey([...stageData.entries], (e) => e['totalTime']);
+    let sortedStages = sortByKey([...stageData.entries], (e) => e[timeField]);
 
     let bestStageTime = Infinity;
     let bestTotalTime = Infinity;
@@ -345,10 +361,6 @@ function userUpdate() {
         if (match || i == 0) {
             displayCount += 1;
 
-            if (entry['rank'] == 1) {
-                bestTime = entry.totalTime;
-            }
-
             // add to table
             let row = document.createElement('tr');
             displayFields.forEach(function(field) {
@@ -369,14 +381,14 @@ function userUpdate() {
                         }
                         break;
                     case 'stageDiff':
-                        if (entry['dnf'] || i == 0) {
+                        if (entry['dnf'] || entry.stageTime == bestStageTime) {
                             text = '--';
                         } else {
                             text = `+${timeToString(entry.stageTime - bestStageTime)}`;
                         }
                         break;
                     case 'totalDiff':
-                        if (entry['dnf'] || i == 0) {
+                        if (entry['dnf'] || entry.totalTime == bestTotalTime) {
                             text = '--';
                         } else {
                             text = `+${timeToString(entry.totalTime - bestTotalTime)}`;
@@ -558,7 +570,7 @@ function timeToString(value, precision=3) {
 // ------- functions related to graphing
 
 function getXValues(times, resolution=150) {
-    // assumes times are sorted
+    times = sortByKey([...times], (t) => -t).reverse();
     var xmin = times[0]; // Math.min(...times)
     var xmax = times[Math.floor(times.length * 0.99)];
     let diff = xmax - xmin;
@@ -601,7 +613,7 @@ function groupTimesByCategory(times, category) {
         if (!Object.keys(timeLists).includes(categoryValue)) {
             timeLists[categoryValue] = [];
         }
-        timeLists[categoryValue].push(entry['totalTime']);
+        timeLists[categoryValue].push(entry[timeField]);
     })
 
     return timeLists;
@@ -642,7 +654,7 @@ function getDistribution(times, xValueArray, normalizationMax=null) {
 
 function plotData() {
     let finishers = stageData['entries'].filter((entry) => !entry['dnf']);
-    let times = finishers.map((entry) => entry['totalTime']);
+    let times = finishers.map((entry) => entry[timeField]);
 
     let xValues = getXValues(times);
 

@@ -62,6 +62,14 @@
                 <option value="normal">Normalized</option>
             </select>
         </div>
+
+        <div id="multistageSortDiv" class="w3-col w3-padding" style="width:fit-content; display: none">
+            <label for="multistageSort">Times:</label>
+            <select id="multistageSort" oninput="multistageSortUpdate()">
+                <option value="totalTime">Total Challenge</option>
+                <option value="stageTime">Stage</option>
+            </select>
+        </div>
     </div>
 
     <div class="w3-row">
