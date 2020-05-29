@@ -152,6 +152,28 @@ function getStageData(stageFName) {
 
             plotData();
 
+            // show / hide appropriate tables / columns for challenges with multiple stages
+            let multistageSelector = document.getElementById('multistage-selector');
+            let totalCols = document.getElementsByClassName('player-col-total');
+            if (stageData.challengeType == 'daily') {
+                multistageSelector.style.display = 'none';
+                Array.prototype.forEach.call(
+                    totalCols,
+                    function(e) {
+                        e.style.display = 'none';
+                    }
+                );
+            } else {
+                multistageSelector.style.display = 'block';
+                updateMultistageTable(stageData.challengeId);
+                Array.prototype.forEach.call(
+                    totalCols,
+                    function(e) {
+                        e.style.display = 'table-cell';
+                    }
+                );
+            }
+
             updateSelectorHighlighting();
         } else {
             document.getElementById('stageName').innerHTML = 'Failed to load stage';
@@ -236,32 +258,8 @@ function getAvailableChallenges() {
 
                     row.classList.add("w3-hover-dark-grey");
 
-                    let currSelectorCategory = selectorCategory;
                     row.onclick =  function() {
                         getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
-
-                        let multistageSelector = document.getElementById('multistage-selector');
-                        let totalCols = document.getElementsByClassName('player-col-total');
-                        if (currSelectorCategory == 'daily') {
-                            multistageSelector.style.display = 'none';
-                            console.log('should hide');
-                            Array.prototype.forEach.call(
-                                totalCols,
-                                function(e) {
-                                    console.log('hiding');
-                                    e.style.display = 'none';
-                                }
-                            );
-                        } else {
-                            multistageSelector.style.display = 'block';
-                            updateMultistageTable(stage.challengeId);
-                            Array.prototype.forEach.call(
-                                totalCols,
-                                function(e) {
-                                    e.style.display = 'table-cell';
-                                }
-                            );
-                        }
                     };
 
                     table.appendChild(row);
@@ -438,6 +436,29 @@ function updateMultistageTable(challengeId) {
             table.children[0].insertBefore(row, table.children[0].children[1]);
         }
     });
+}
+
+function updateMultistageElements() {
+    let multistageSelector = document.getElementById('multistage-selector');
+    let totalCols = document.getElementsByClassName('player-col-total');
+    if (stageData.challengeType) {
+        multistageSelector.style.display = 'none';
+        Array.prototype.forEach.call(
+            totalCols,
+            function(e) {
+                e.style.display = 'none';
+            }
+        );
+    } else {
+        multistageSelector.style.display = 'block';
+        updateMultistageTable(stageData.challengeId);
+        Array.prototype.forEach.call(
+            totalCols,
+            function(e) {
+                e.style.display = 'table-cell';
+            }
+        );
+    }
 }
 
 function updateSelectorHighlighting() {
