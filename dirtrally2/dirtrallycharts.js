@@ -241,11 +241,26 @@ function getAvailableChallenges() {
                         getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
 
                         let multistageSelector = document.getElementById('multistage-selector');
+                        let totalCols = document.getElementsByClassName('player-col-total');
                         if (currSelectorCategory == 'daily') {
                             multistageSelector.style.display = 'none';
+                            console.log('should hide');
+                            Array.prototype.forEach.call(
+                                totalCols,
+                                function(e) {
+                                    console.log('hiding');
+                                    e.style.display = 'none';
+                                }
+                            );
                         } else {
                             multistageSelector.style.display = 'block';
                             updateMultistageTable(stage.challengeId);
+                            Array.prototype.forEach.call(
+                                totalCols,
+                                function(e) {
+                                    e.style.display = 'table-cell';
+                                }
+                            );
                         }
                     };
 
@@ -286,7 +301,11 @@ function userUpdate() {
 
     let searchTerm = input.value.toLowerCase();
 
-    let displayFields = ['rank', 'name', 'vehicleName', 'totalTime', 'diff'];
+    let displayFields = ['rank', 'name', 'vehicleName', 'stageTime', 'stageDiff', 'totalTime', 'totalDiff'];
+
+    if (stageData.challengeType == 'daily') {
+        displayFields = displayFields.slice(0, -2);
+    }
 
     // clear table
     while (table.rows.length > 1)
@@ -297,18 +316,35 @@ function userUpdate() {
 
     searchWarning.hidden = false;
 
-    stageData.entries.forEach(function(entry) {
-        if (displayCount >= 5) return;
+    let sortedStages = sortByKey([...stageData.entries], (e) => e['totalTime']);
+
+    let bestStageTime = Infinity;
+    let bestTotalTime = Infinity;
+
+    sortedStages.forEach(function(entry) {
+        if (entry.stageTime < bestStageTime) {
+            bestStageTime = entry.stageTime;
+        }
+        if (entry.totalTime < bestTotalTime) {
+            bestTotalTime = entry.totalTime;
+        }
+    });
+
+    // sortedStages.forEach(function(entry) {
+    for (let i = 0; i < sortedStages.length; i++) {
+        entry = sortedStages[i];
+
+        if (displayCount >= 5) break;
 
         let name = entry['name'];
-        if (name == 'DiRT Player' && searchTerm != '') return;
+        if (name == 'DiRT Player' && searchTerm != '') continue;
         let match = name.toLowerCase().includes(searchTerm);
 
         if (match) {
             searchWarning.hidden = true;
         }
 
-        if (match || entry['rank'] == 1) {
+        if (match || i == 0) {
             displayCount += 1;
 
             if (entry['rank'] == 1) {
@@ -320,20 +356,36 @@ function userUpdate() {
             displayFields.forEach(function(field) {
                 let cell = document.createElement('td');
                 let text = '';
-                if (field == 'totalTime') {
-                    if (entry['dnf']) {
-                        text = 'DNF';
-                    } else {
-                        text = timeToString(entry[field]);
-                    }
-                } else if (field == 'diff') {
-                    if (entry['dnf'] || entry['rank'] == 1) {
-                        text = '--';
-                    } else {
-                        text = `+${timeToString(entry.totalTime - bestTime)}`;
-                    }
-                } else {
-                    text = entry[field];
+
+                // set the text value according to the field
+                switch (field) {
+                    case 'rank':
+                        text = i + 1;
+                        break;
+                    case 'stageTime':
+                    case 'totalTime':
+                        if (entry['dnf']) {
+                            text = 'DNF';
+                        } else {
+                            text = timeToString(entry[field]);
+                        }
+                        break;
+                    case 'stageDiff':
+                        if (entry['dnf'] || i == 0) {
+                            text = '--';
+                        } else {
+                            text = `+${timeToString(entry.stageTime - bestStageTime)}`;
+                        }
+                        break;
+                    case 'totalDiff':
+                        if (entry['dnf'] || i == 0) {
+                            text = '--';
+                        } else {
+                            text = `+${timeToString(entry.totalTime - bestTotalTime)}`;
+                        }
+                        break;
+                    default:
+                        text = entry[field];
                 }
 
                 cell.appendChild(
@@ -343,7 +395,7 @@ function userUpdate() {
             })
             table.appendChild(row);
         }
-    });
+    }
 }
 
 function updateMultistageTable(challengeId) {
