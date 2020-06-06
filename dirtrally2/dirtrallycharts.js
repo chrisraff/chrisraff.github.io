@@ -677,12 +677,10 @@ function groupTimesByCategory(times, category) {
     return timeLists;
 }
 
-function getDistribution(times, xValueArray, normalizationMax=null) {
+function getDistribution(times, xValueArray, normalizationMax=null, bandwidth=5) {
     let dist = new Array(xValueArray.length).fill(0);
 
     let data = new Array(xValueArray.length);
-
-    let bandwidth = 5;
 
     times.forEach(function(time) {
         for (var i = 0; i < xValueArray.length; i++) {
@@ -714,10 +712,12 @@ function plotData() {
     let finishers = stageData['entries'].filter((entry) => !entry['dnf']);
     let times = finishers.map((entry) => entry[timeField]);
 
+    let xDiff = Math.max(...times) - Math.min(...times);
+    let distBandwidth = 0.0075 * xDiff;
     let xValues = getXValues(times);
 
     if (category == 'none') {
-        let distribution = getDistribution(times, xValues, 97);
+        let distribution = getDistribution(times, xValues, 97, distBandwidth);
 
         chartDists.data = {
             datasets: [{
@@ -769,7 +769,7 @@ function plotData() {
                     .map(function(key) {
                 return {
                     label: safeDictionary(categoryNames[category], key),
-                    data: getDistribution(timeLists[key], xValues, chartType=='normal' ? 97 : null),
+                    data: getDistribution(timeLists[key], xValues, chartType=='normal' ? 97 : null, distBandwidth),
                     borderColor: colorMap[key],
                     borderWidth: 2,
                     showLine: true,
