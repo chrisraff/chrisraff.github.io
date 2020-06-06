@@ -296,9 +296,12 @@ function chartTypeUpdate() {
 }
 
 function multistageSortUpdate(multistageSort = null) {
+    let e = document.getElementById('multistageSort');
     if (multistageSort == null) {
-        let e = document.getElementById('multistageSort');
         multistageSort = e.options[e.selectedIndex].value;
+    } else {
+        // set the selector
+        e.value = multistageSort;
     }
 
     timeField = multistageSort;
@@ -310,6 +313,8 @@ function multistageSortUpdate(multistageSort = null) {
 
 // update the user table
 function userUpdate() {
+    updateTimeColumns();
+
     let input = document.getElementById('username');
     let table = document.getElementById('userTable');
     let searchWarning = document.getElementById('userNotFound');
@@ -470,6 +475,59 @@ function updateMultistageElements() {
                 e.style.display = 'table-cell';
             }
         );
+    }
+}
+
+function updateTimeColumns() {
+    let stageBorder = document.getElementById("multistageSortStageBorder");
+    let totalBorder = document.getElementById("multistageSortTotalBorder");
+
+    let stageArrow = document.getElementById("multistageSortStageArrow");
+    let totalArrow = document.getElementById("multistageSortTotalArrow");
+
+    let shownArrow = null;
+    let hiddenArrow = null;
+    if (timeField == 'stageTime' || stageData['challengeType'] == 'daily') {
+        shownArrow = stageArrow;
+        hiddenArrow = totalArrow;
+
+        stageBorder.onclick = null;
+        totalBorder.onclick = function() {
+            multistageSortUpdate('totalTime');
+        }
+    } else if (timeField == 'totalTime') {
+        shownArrow = totalArrow;
+        hiddenArrow = stageArrow;
+
+        stageBorder.onclick = function() {
+            multistageSortUpdate('stageTime');
+        }
+        totalBorder.onclick = null;
+    }
+
+    shownArrow.style = 'display: inline';
+    hiddenArrow.style = 'display: none';
+
+    if (stageData['challengeType'] != 'daily') {
+        stageBorder.classList.add('w3-border');
+        stageBorder.classList.add('w3-hover-gray');
+        totalBorder.classList.add('w3-border');
+        totalBorder.classList.add('w3-hover-gray');
+
+        stageBorder.style = 'width:fit-content; padding-left:3px; padding-right:3px;';
+        totalBorder.style = 'width:fit-content; padding-left:3px; padding-right:3px;';
+
+    } else {
+        stageBorder.classList.remove('w3-border');
+        stageBorder.classList.remove('w3-hover-gray');
+        totalBorder.classList.remove('w3-border');
+        totalBorder.classList.remove('w3-hover-gray');
+
+        stageBorder.style = 'width:fit-content;';
+        totalBorder.style = 'width:fit-content;';
+
+        stageBorder.onclick = null;
+        totalBorder.onclick = null;
     }
 }
 
