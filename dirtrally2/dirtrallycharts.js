@@ -142,10 +142,10 @@ window.onload = function() {
             'currentTarget': tabButton
         }
         this.updateCategoryTab(fakeEvent, challengeType);
+    } else {
+        // populate the challenge selection list
+        this.getAvailableChallenges();
     }
-
-    // populate the challenge selection list
-    this.getAvailableChallenges();
 
     // load stage if it was specified
     if (stage != 'none')
