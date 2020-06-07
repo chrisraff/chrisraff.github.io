@@ -548,7 +548,7 @@ function updateSelectorHighlighting() {
             challengeRow.classList.add('challenge-selected');
         }
         let stageRow = document.getElementById(`stage-row-${stageData.stageId}`);
-        if (stageRow != null) {
+        if (stageRow != null && stageData.challengeType != 'daily') {
             stageRow.classList.add('w3-light-blue');
             stageRow.classList.add('challenge-selected');
         }
