@@ -4,7 +4,10 @@ var chartType = 'stacked';
 var timeField = 'totalTime';
 var selectorYear = 2020;
 var selectorCategory = 'daily';
-var selectorData = null;
+var selectorData = {
+    'daily': null,
+    'weekly': null
+}
 var stage = 'none';
 var dataUrl = 'https://www.chrisraff.com/dirtrally2-event-data/'
 
@@ -169,7 +172,7 @@ function getStageData(stageFName) {
             } else {
                 multistageSelector.style.display = 'block';
                 sortSelector.style.display = 'block';
-                updateMultistageTable(stageData.challengeId);
+                updateMultistageTable(stageData.challengeId, stageData.challengeType);
                 Array.prototype.forEach.call(
                     totalCols,
                     function(e) {
@@ -205,7 +208,8 @@ function getAvailableChallenges() {
     xhrStages.onload = function() {
         var status = xhrStages.status;
         if (status === 200) {
-            selectorData = xhrStages.response;
+            let data = xhrStages.response;
+            selectorData[data.category] = data;
             let table = document.getElementById(`${selectorCategory}-challenge-table`);
 
             table.style.display = 'table';
@@ -215,7 +219,7 @@ function getAvailableChallenges() {
                 table.deleteRow(1);
 
             if (stage == 'none') {
-                getStageData(`${selectorCategory}/${selectorYear}/${selectorData.files[0].name}`);
+                getStageData(`${selectorCategory}/${selectorYear}/${data.files[0].name}`);
             }
 
             let displayFields = {
@@ -224,7 +228,7 @@ function getAvailableChallenges() {
             }[selectorCategory];
 
             // add to table
-            selectorData.files.forEach(function(stage) {
+            data.files.forEach(function(stage) {
                 let challengeRow = document.getElementById(`challenge-row-${stage.challengeId}`);
 
                 // if the challenge already has a row, update necessary fields
@@ -413,7 +417,7 @@ function userUpdate() {
     }
 }
 
-function updateMultistageTable(challengeId) {
+function updateMultistageTable(challengeId, category) {
     let table = document.getElementById('multistage-table');
 
     let displayFields = ['stageId', 'stageName', 'eventName'];
@@ -422,7 +426,7 @@ function updateMultistageTable(challengeId) {
     while (table.rows.length > 1)
         table.deleteRow(1);
 
-    selectorData.files.forEach(function(stage) {
+    selectorData[category].files.forEach(function(stage) {
         if (stage.challengeId == challengeId) {
             // add to table
             let row = document.createElement('tr');
@@ -445,9 +449,8 @@ function updateMultistageTable(challengeId) {
 
             row.classList.add("w3-hover-dark-grey");
 
-            let currSelectorCategory = selectorCategory;
             row.onclick =  function() {
-                getStageData(`${currSelectorCategory}/${stage.entryWindow.start.slice(0,4)}/${stage.name}`);
+                getStageData(`${category}/${stage.entryWindow.start.slice(0,4)}/${stage.name}`);
             };
 
             table.children[0].insertBefore(row, table.children[0].children[1]);
@@ -468,7 +471,7 @@ function updateMultistageElements() {
         );
     } else {
         multistageSelector.style.display = 'block';
-        updateMultistageTable(stageData.challengeId);
+        updateMultistageTable(stageData.challengeId, stageData.challengeType);
         Array.prototype.forEach.call(
             totalCols,
             function(e) {
