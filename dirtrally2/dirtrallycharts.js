@@ -88,7 +88,7 @@ window.onload = function() {
             }
         }
     });
-    
+
     // set up graph params if specified
     if (urlParams.has('cat') && urlParams.get('cat')) {
         let valid = false;
@@ -112,6 +112,18 @@ window.onload = function() {
         if (valid) {
             chartType = urlParams.get('ctyp')
             e.value = chartType;
+        }
+    }
+    if (urlParams.has('tsort') && urlParams.get('tsort')) {
+        let valid = false;
+        let e = document.getElementById('multistageSort');
+        Array.from(e.options).forEach(function(o) {
+            if (o.value == urlParams.get('tsort'))
+                valid = true;
+        })
+        if (valid) {
+            timefield = urlParams.get('ctyp')
+            e.value = timeField;
         }
     }
 
@@ -563,10 +575,13 @@ function updateLink() {
     let extras = '';
     let catSelector = document.getElementById('category');
     let typSelector = document.getElementById('chartType');
+    let tsortSelector = document.getElementById('multistageSort');
     if (catSelector.value != 'vehicleName')
-        extras += `&cat=${catSelector.value}`
+        extras += `&cat=${catSelector.value}`;
     if (typSelector.value != 'stacked')
-        extras += `&ctyp=${typSelector.value}`
+        extras += `&ctyp=${typSelector.value}`;
+    if (tsortSelector.value != 'totalTime' && stageData.challengeType != 'daily')
+        extras += `&tsort=${multistageSort.value}`;
     document.getElementById('stageLink').href = `${currUrl}?stage=${stage.slice(0, -5)}${extras}`;
 }
 
