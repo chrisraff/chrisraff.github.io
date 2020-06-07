@@ -134,12 +134,22 @@ window.onload = function() {
         }
     })
 
-    // load stage if it was specified
-    if (stage != 'none')
-        this.getStageData(stage);
+    if (stage != 'none') {
+        let challengeType = stage.split('/')[0];
+
+        let tabButton = document.getElementById(`${challengeType}-category-tab-button`);
+        let fakeEvent = {
+            'currentTarget': tabButton
+        }
+        this.updateCategoryTab(fakeEvent, challengeType);
+    }
 
     // populate the challenge selection list
     this.getAvailableChallenges();
+
+    // load stage if it was specified
+    if (stage != 'none')
+        this.getStageData(stage);
 }
 
 function getStageData(stageFName) {
