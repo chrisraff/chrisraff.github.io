@@ -141,15 +141,13 @@ window.onload = function() {
         let fakeEvent = {
             'currentTarget': tabButton
         }
-        this.updateCategoryTab(fakeEvent, challengeType);
+        this.updateCategoryTab(fakeEvent, challengeType)
+            // updating the tab causes the challenges to download so we don't call it explicitly
+            .then(function() {getStageData(stage)});
     } else {
         // populate the challenge selection list
         this.getAvailableChallenges();
     }
-
-    // load stage if it was specified
-    if (stage != 'none')
-        this.getStageData(stage);
 }
 
 function getStageData(stageFName) {
@@ -215,96 +213,102 @@ function getStageData(stageFName) {
 }
 
 function getAvailableChallenges() {
-    var xhrStages = new XMLHttpRequest();
-    xhrStages.open('GET', dataUrl + `${selectorCategory}/${selectorYear}/info.json`);
-    xhrStages.responseType = 'json';
+    return new Promise((resolve, reject) => {
+        var xhrStages = new XMLHttpRequest();
+        xhrStages.open('GET', dataUrl + `${selectorCategory}/${selectorYear}/info.json`);
+        xhrStages.responseType = 'json';
 
-    function onFail() {
-        Array.prototype.forEach.call(
-            document.getElementsByClassName('challenge-table'),
-            function(e) {e.style.display = 'none';}
-        );
-        document.getElementById('challenge-failed').style.display = 'block';
-    }
+        function onFail() {
+            Array.prototype.forEach.call(
+                document.getElementsByClassName('challenge-table'),
+                function(e) {e.style.display = 'none';}
+            );
+            document.getElementById('challenge-failed').style.display = 'block';
 
-    xhrStages.onload = function() {
-        var status = xhrStages.status;
-        if (status === 200) {
-            let data = xhrStages.response;
-            selectorData[data.category] = data;
-            let table = document.getElementById(`${selectorCategory}-challenge-table`);
-
-            table.style.display = 'table';
-
-            // clear table
-            while (table.rows.length > 1)
-                table.deleteRow(1);
-
-            if (stage == 'none') {
-                getStageData(`${selectorCategory}/${selectorYear}/${data.files[0].name}`);
-            }
-
-            let displayFields = {
-                'daily':    ['date', 'vehicleClass', 'eventName', 'stageName', 'country', 'challengeName'],
-                'weekly':   ['date', 'vehicleClass', 'eventName', 'country', 'stageCount'],
-            }[selectorCategory];
-
-            // add to table
-            data.files.forEach(function(stage) {
-                let challengeRow = document.getElementById(`challenge-row-${stage.challengeId}`);
-
-                // if the challenge already has a row, update necessary fields
-                if (challengeRow != null) {
-                    let stageCountCell = document.getElementById(`cell-${stage.challengeId}-stageCount`);
-                    if (stageCountCell != null) {
-                        stageCountCell.innerText = 1 + Number(stageCountCell.innerText);
-                    }
-                } else {
-                    // otherwise, create the challenge row
-                    let row = document.createElement('tr');
-                    row.id = `challenge-row-${stage.challengeId}`;
-                    displayFields.forEach(function(field) {
-                        let cell = document.createElement('td');
-                        let text = '';
-                        switch (field) {
-                        case 'date':
-                            text = stage.entryWindow.start;
-                            text = `${text.slice(8, 10)}.${text.slice(5, 7)}.${text.slice(0, 4)}`;
-                            break;
-                        case 'stageCount':
-                            text = '1';
-                            break;
-                        default:
-                            text = stage[field];
-                        }
-
-                        cell.id = `cell-${stage.challengeId}-${field}`;
-
-                        cell.appendChild(
-                            document.createTextNode(text)
-                        );
-                        row.appendChild(cell);
-                    });
-
-                    row.classList.add("w3-hover-dark-grey");
-
-                    row.onclick =  function() {
-                        getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
-                    };
-
-                    table.appendChild(row);
-                }
-            });
-
-            updateSelectorHighlighting();
-
-            document.getElementById('challenge-failed').style.display = 'none';
-        } else {
-            onFail();
+            reject();
         }
-    };
-    xhrStages.onerror = onFail;
-    xhrStages.send();
+
+        xhrStages.onload = function() {
+            var status = xhrStages.status;
+            if (status === 200) {
+                let data = xhrStages.response;
+                selectorData[data.category] = data;
+                let table = document.getElementById(`${selectorCategory}-challenge-table`);
+
+                table.style.display = 'table';
+
+                // clear table
+                while (table.rows.length > 1)
+                    table.deleteRow(1);
+
+                if (stage == 'none') {
+                    getStageData(`${selectorCategory}/${selectorYear}/${data.files[0].name}`);
+                }
+
+                let displayFields = {
+                    'daily':    ['date', 'vehicleClass', 'eventName', 'stageName', 'country', 'challengeName'],
+                    'weekly':   ['date', 'vehicleClass', 'eventName', 'country', 'stageCount'],
+                }[selectorCategory];
+
+                // add to table
+                data.files.forEach(function(stage) {
+                    let challengeRow = document.getElementById(`challenge-row-${stage.challengeId}`);
+
+                    // if the challenge already has a row, update necessary fields
+                    if (challengeRow != null) {
+                        let stageCountCell = document.getElementById(`cell-${stage.challengeId}-stageCount`);
+                        if (stageCountCell != null) {
+                            stageCountCell.innerText = 1 + Number(stageCountCell.innerText);
+                        }
+                    } else {
+                        // otherwise, create the challenge row
+                        let row = document.createElement('tr');
+                        row.id = `challenge-row-${stage.challengeId}`;
+                        displayFields.forEach(function(field) {
+                            let cell = document.createElement('td');
+                            let text = '';
+                            switch (field) {
+                            case 'date':
+                                text = stage.entryWindow.start;
+                                text = `${text.slice(8, 10)}.${text.slice(5, 7)}.${text.slice(0, 4)}`;
+                                break;
+                            case 'stageCount':
+                                text = '1';
+                                break;
+                            default:
+                                text = stage[field];
+                            }
+
+                            cell.id = `cell-${stage.challengeId}-${field}`;
+
+                            cell.appendChild(
+                                document.createTextNode(text)
+                            );
+                            row.appendChild(cell);
+                        });
+
+                        row.classList.add("w3-hover-dark-grey");
+
+                        row.onclick =  function() {
+                            getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
+                        };
+
+                        table.appendChild(row);
+                    }
+                });
+
+                updateSelectorHighlighting();
+
+                document.getElementById('challenge-failed').style.display = 'none';
+
+                resolve();
+            } else {
+                onFail();
+            }
+        };
+        xhrStages.onerror = onFail;
+        xhrStages.send();
+    });
 }
 
 function categoryUpdate() {
@@ -596,31 +600,38 @@ function updateLink() {
 }
 
 function updateCategoryTab(event, category) {
-    selectorCategory = category;
+    return new Promise((resolve, reject) => {
+        selectorCategory = category;
 
-    // update which table is showing
-    Array.prototype.forEach.call(
-        document.getElementsByClassName('category-tab-target'),
-        function(e) {
-            if (e.id == `${category}-challenge-table`) {
-                e.style.display = 'table';
-            } else {
-                e.style.display = 'none';
+        // update which table is showing
+        Array.prototype.forEach.call(
+            document.getElementsByClassName('category-tab-target'),
+            function(e) {
+                if (e.id == `${category}-challenge-table`) {
+                    e.style.display = 'table';
+                } else {
+                    e.style.display = 'none';
+                }
             }
-        }
-    );
-    // populate the table
-    getAvailableChallenges();
+        );
 
-    // update which tab link is highlighted
-    Array.prototype.forEach.call(
-        document.getElementsByClassName('category-tab-link'),
-        function(e) {
-            e.classList.remove('w3-light-blue');
-        }
-    );
+        // update which tab link is highlighted
+        Array.prototype.forEach.call(
+            document.getElementsByClassName('category-tab-link'),
+            function(e) {
+                e.classList.remove('w3-light-blue');
+            }
+        );
 
-    event.currentTarget.classList.add('w3-light-blue');
+        event.currentTarget.classList.add('w3-light-blue');
+
+        // populate the table
+        getAvailableChallenges()
+            .then(resolve)
+            .catch(err => {
+                reject(err);
+            });
+    });
 }
 
 // -------- convenience functions
