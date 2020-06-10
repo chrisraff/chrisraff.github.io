@@ -851,7 +851,7 @@ function plotData() {
 
     }
 
-    let titleDist = 'Distribution of Stage Times';
+    let titleDist = `Distribution of ${timeField == 'totalTime' && stageData.challengeType != 'daily' ? 'Total' : 'Stage'} Times`;
     if (category != 'none') {
         titleDist += ' by ' + categoryNames[category][''];
     }
