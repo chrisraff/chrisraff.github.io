@@ -365,35 +365,54 @@ function userUpdate() {
 
     searchWarning.hidden = false;
 
+    function isNameMatch(name) {
+        if (name == 'DiRT Player' && searchTerm != '') return false;
+        return name.toLowerCase().includes(searchTerm);
+    }
+
     let sortedStages = sortByKey([...stageData.entries], (e) => e[timeField]);
 
     let bestStageTime = Infinity;
     let bestTotalTime = Infinity;
 
-    sortedStages.forEach(function(entry) {
+    let usernameHits = 0;
+    let usernameIdx = 0;
+
+    for (let i = 0; i < sortedStages.length; i++) {
+        let entry = sortedStages[i];
+
         if (entry.stageTime < bestStageTime) {
             bestStageTime = entry.stageTime;
         }
         if (entry.totalTime < bestTotalTime) {
             bestTotalTime = entry.totalTime;
         }
-    });
 
-    // sortedStages.forEach(function(entry) {
-    for (let i = 0; i < sortedStages.length; i++) {
+        if (isNameMatch(entry.name)) {
+            usernameHits++;
+            usernameIdx = i;
+        }
+    }
+
+    let tableStart = 0;
+
+    if (usernameHits == 1) {
+        tableStart = Math.max(0, usernameIdx - 2);
+    }
+
+    let i = tableStart;
+    while (i < sortedStages.length) {
         entry = sortedStages[i];
 
         if (displayCount >= 5) break;
 
-        let name = entry['name'];
-        if (name == 'DiRT Player' && searchTerm != '') continue;
-        let match = name.toLowerCase().includes(searchTerm);
+        let match = isNameMatch(entry.name);
 
         if (match) {
             searchWarning.hidden = true;
         }
 
-        if (match || i == 0) {
+        if (match || i == 0 || usernameHits <= 1) {
             displayCount += 1;
 
             // add to table
@@ -440,6 +459,7 @@ function userUpdate() {
             })
             table.appendChild(row);
         }
+        i++;
     }
 }
 
