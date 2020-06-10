@@ -452,6 +452,10 @@ function userUpdate() {
                         text = entry[field];
                 }
 
+                if (match && searchTerm != '') {
+                    cell.classList.add('w3-light-blue');
+                }
+
                 cell.appendChild(
                     document.createTextNode(text)
                 );
