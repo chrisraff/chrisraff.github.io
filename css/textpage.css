@@ -8,3 +8,29 @@ body {
     background: white;
     margin: auto;
 }
+
+.main-header {
+    margin: 0;
+
+    background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url("../header-background.jpg");
+
+    height: min(500px, 200%);
+    height: 200px;
+
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+
+    color: white;
+}
+
+.main-header-content {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+
+    padding: 10px;
+}
