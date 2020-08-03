@@ -10,12 +10,17 @@
 
     <link href='https://fonts.googleapis.com/css?family=Anton|Roboto' rel='stylesheet' type='text/css'>
 
+    <link rel="stylesheet" href="../css/w3.css">
+    <link rel="stylesheet" href="../css/textpage.css">
+
     <style>
       body{
-      background:#eeeeee;
       margin:0;
       padding:0;
       text-align:center;
+      }
+      .main-content{
+      padding:0;
       }
       canvas{
       background-color: #ffffff;
@@ -23,11 +28,11 @@
       margin:auto;
       }
       a:link{
-      color:#aaaaaa;
+      color:#555;
       text-decoration:none;
       }
       a:visited{
-      color:#aaaaaa;
+      color:#555;
       text-decoration:none;
       }
 
@@ -53,14 +58,19 @@
   </head>
 
   <body>
-    <canvas id="myCanvas"></canvas>
 
-    <div style="padding:20px ;">
-      <a href="https://www.gamedesign.jp/games/dicewars" target="_blank">Play the original version here</a>
-    </div>
+    <div class="main-content">
 
-    <div style="padding:20px ;">
-      <a href="../dicewarsai/">Read about my AI and how you can make your own AI here</a>
+      <canvas id="myCanvas"></canvas>
+
+      <div style="padding:20px ;">
+        <a href="https://www.gamedesign.jp/games/dicewars" target="_blank">Play the original version here</a>
+      </div>
+
+      <div style="padding:20px ;">
+        <a href="../dicewarsai/">Read about my AI and how you can make your own AI here</a>
+      </div>
+
     </div>
 
   </body>

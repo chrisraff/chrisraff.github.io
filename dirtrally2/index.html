@@ -12,20 +12,22 @@
     <meta property="og:image:width" content="423" />
     <meta property="og:image:height" content="368" />
 
-	<title>DiRT RALLY 2.0 Events | Chris Raff</title>
+    <title>DiRT RALLY 2.0 Events | Chris Raff</title>
 
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120805992-1"></script>
-	<script>
-		window.dataLayer = window.dataLayer || [];
-		function gtag(){dataLayer.push(arguments);}
-		gtag('js', new Date());
+    <link rel="stylesheet" href="../css/w3.css">
+    <link rel="stylesheet" href="../css/textpage.css">
 
-		gtag('config', 'UA-120805992-1');
-	</script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120805992-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120805992-1');
+    </script>
 </head>
 <!-- https://www.w3schools.com/w3css/4/w3.css -->
-<link rel="stylesheet" href="w3.css">
 
 <script src="Chart.bundle.min.js"></script>
 <script src="dirtrallycharts.js"></script>
@@ -44,144 +46,147 @@
     </div>
 </div>
 
-<div class="w3-padding">
-    <div class="w3-row">
-        <div class="w3-col w3-padding" style="width:fit-content">
-            <label for="category">Group by:</label>
-            <select id="category" oninput="categoryUpdate()">
-                <option value="none">None</option>
-                <option value="vehicleName" selected>Car</option>
-                <option value="platform">Platform</option>
-                <option value="wheel">Controller</option>
-                <option value="assist">Assists</option>
-            </select>
-        </div>
+<div class="main-content">
 
-        <div class="w3-col w3-padding" style="width:fit-content">
-            <label for="chartType">Distributions:</label>
-            <select id="chartType" oninput="chartTypeUpdate()">
-                <option value="stacked">Stacked</option>
-                <option value="relative">Absolute</option>
-                <option value="normal">Normalized</option>
-            </select>
-        </div>
-
-        <div id="multistageSortDiv" class="w3-col w3-padding" style="width:fit-content; display: none">
-            <label for="multistageSort">Times:</label>
-            <select id="multistageSort" oninput="multistageSortUpdate()">
-                <option value="totalTime">Total Challenge</option>
-                <option value="stageTime">Stage</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="w3-row">
-        <div class="w3-half">
-            <div class="w3-container">
-                <canvas id="distributions" width="100" height=90></canvas>
+    <div class="w3-padding">
+        <div class="w3-row">
+            <div class="w3-col w3-padding" style="width:fit-content">
+                <label for="category">Group by:</label>
+                <select id="category" oninput="categoryUpdate()">
+                    <option value="none">None</option>
+                    <option value="vehicleName" selected>Car</option>
+                    <option value="platform">Platform</option>
+                    <option value="wheel">Controller</option>
+                    <option value="assist">Assists</option>
+                </select>
             </div>
 
+            <div class="w3-col w3-padding" style="width:fit-content">
+                <label for="chartType">Distributions:</label>
+                <select id="chartType" oninput="chartTypeUpdate()">
+                    <option value="stacked">Stacked</option>
+                    <option value="relative">Absolute</option>
+                    <option value="normal">Normalized</option>
+                </select>
+            </div>
+
+            <div id="multistageSortDiv" class="w3-col w3-padding" style="width:fit-content; display: none">
+                <label for="multistageSort">Times:</label>
+                <select id="multistageSort" oninput="multistageSortUpdate()">
+                    <option value="totalTime">Total Challenge</option>
+                    <option value="stageTime">Stage</option>
+                </select>
+            </div>
         </div>
-        <div class="w3-half">
-            <div class="w3-container">
-                <canvas id="counts" width="100" height=90></canvas>
+
+        <div class="w3-row">
+            <div class="w3-half">
+                <div class="w3-container">
+                    <canvas id="distributions" width="100" height=90></canvas>
+                </div>
+
+            </div>
+            <div class="w3-half">
+                <div class="w3-container">
+                    <canvas id="counts" width="100" height=90></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="w3-row">
+            <div class="w3-col w3-padding" style="width:fit-content" >
+                <input id="username" onfocusout="userUpdate()" placeholder="Username" autocorrect="off">
+                <p id="userNotFound" hidden>No matching username found</p>
+            </div>
+            <div class="w3-rest" style="min-width:70%">
+                <div class="w3-border" style="overflow-x:auto">
+                    <table id="userTable" class="w3-table-all">
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Car</th>
+                            <th>
+                                <div id="multistageSortStageBorder" class="w3-round w3-border-gray" style="width:fit-content; padding-left:3px; padding-right:3px;">
+                                    Time<span id="multistageSortStageArrow"> &#9660;</span>
+                                </div></th>
+                            <th>Diff</th>
+                            <th class="player-col-total">
+                                <div id="multistageSortTotalBorder" class="w3-round w3-border-gray" style="width:fit-content; padding-left:3px; padding-right:3px;">
+                                    Total Time<span id="multistageSortTotalArrow"> &#9660;</span>
+                                </div>
+                            </th>
+                            <th class="player-col-total">Total Diff</th>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="w3-row">
-        <div class="w3-col w3-padding" style="width:fit-content" >
-            <input id="username" onfocusout="userUpdate()" placeholder="Username" autocorrect="off">
-            <p id="userNotFound" hidden>No matching username found</p>
+    <div id="multistage-selector" class="w3-container w3-padding" style="display: none">
+        <h4 class="w3-padding">Select Stage:</h3>
+
+        <div id="challenge-stage" class="w3-container w3-border w3-padding challenge-category" style="height:300px;overflow:auto">
+            <table id="multistage-table" class="w3-table-all">
+                <tr>
+                    <th></th>
+                    <th>Stage</th>
+                    <th>Event</th>
+                </tr>
+                <tr>
+                    <td>Loading...</td>
+                </tr>
+            </table>
         </div>
-        <div class="w3-rest" style="min-width:70%">
-            <div class="w3-border" style="overflow-x:auto">
-                <table id="userTable" class="w3-table-all">
-                    <tr>
-                        <th>Rank</th>
-                        <th>Name</th>
-                        <th>Car</th>
-                        <th>
-                            <div id="multistageSortStageBorder" class="w3-round w3-border-gray" style="width:fit-content; padding-left:3px; padding-right:3px;">
-                                Time<span id="multistageSortStageArrow"> &#9660;</span>
-                            </div></th>
-                        <th>Diff</th>
-                        <th class="player-col-total">
-                            <div id="multistageSortTotalBorder" class="w3-round w3-border-gray" style="width:fit-content; padding-left:3px; padding-right:3px;">
-                                Total Time<span id="multistageSortTotalArrow"> &#9660;</span>
-                            </div>
-                        </th>
-                        <th class="player-col-total">Total Diff</th>
-                    </tr>
-                </table>
+    </div>
+
+    <h3 class="w3-padding">Select a Different Challenge:</h3>
+    <div class="w3-container w3-padding">
+        <!-- https://www.w3schools.com/w3css/w3css_tabulators.asp -->
+        <div class="w3-bar w3-black">
+            <button id="daily-category-tab-button" class="w3-bar-item w3-button category-tab-link w3-light-blue" onclick="updateCategoryTab(event, 'daily')">Daily</button>
+            <button id="weekly-category-tab-button" class="w3-bar-item w3-button category-tab-link" onclick="updateCategoryTab(event, 'weekly')">Weekly</button>
+        </div>
+
+        <!-- TODO year selector? -->
+        
+        <div class="w3-container w3-border w3-padding challenge-category" style="height:400px;overflow:auto">
+            <table id="daily-challenge-table" class="w3-table-all category-tab-target challenge-table">
+                <tr>
+                    <th>Date</th>
+                    <th>Class</th>
+                    <th>Event</th>
+                    <th>Stage</th>
+                    <th>Country</th>
+                    <th>Name</th>
+                </tr>
+                <tr>
+                    <td>Loading...</td>
+                </tr>
+            </table>
+
+            <table id="weekly-challenge-table" class="w3-table-all category-tab-target challenge-table" style="display: none">
+                <tr>
+                    <th>Date</th>
+                    <th>Class</th>
+                    <th>Event</th>
+                    <th>Country</th>
+                    <th>Stages</th>
+                </tr>
+                <tr>
+                    <td>Loading...</td>
+                </tr>
+            </table>
+
+            <div id="challenge-failed" class="w3-text-red" style="display: none">
+                <h3>Failed to load challenges</h3>
             </div>
         </div>
+
     </div>
+
+    <a href="https://dirtrally2.com/community-events" class="w3-text-grey w3-padding" target="_blank">Data from Dirt Rally 2.0 Community Events Page</a>
 </div>
-
-<div id="multistage-selector" class="w3-container w3-padding" style="display: none">
-    <h4 class="w3-padding">Select Stage:</h3>
-
-    <div id="challenge-stage" class="w3-container w3-border w3-padding challenge-category" style="height:300px;overflow:auto">
-        <table id="multistage-table" class="w3-table-all">
-            <tr>
-                <th></th>
-                <th>Stage</th>
-                <th>Event</th>
-            </tr>
-            <tr>
-                <td>Loading...</td>
-            </tr>
-        </table>
-    </div>
-</div>
-
-<h3 class="w3-padding">Select a Different Challenge:</h3>
-<div class="w3-container w3-padding">
-    <!-- https://www.w3schools.com/w3css/w3css_tabulators.asp -->
-    <div class="w3-bar w3-black">
-        <button id="daily-category-tab-button" class="w3-bar-item w3-button category-tab-link w3-light-blue" onclick="updateCategoryTab(event, 'daily')">Daily</button>
-        <button id="weekly-category-tab-button" class="w3-bar-item w3-button category-tab-link" onclick="updateCategoryTab(event, 'weekly')">Weekly</button>
-    </div>
-
-    <!-- TODO year selector? -->
-    
-    <div class="w3-container w3-border w3-padding challenge-category" style="height:400px;overflow:auto">
-        <table id="daily-challenge-table" class="w3-table-all category-tab-target challenge-table">
-            <tr>
-                <th>Date</th>
-                <th>Class</th>
-                <th>Event</th>
-                <th>Stage</th>
-                <th>Country</th>
-                <th>Name</th>
-            </tr>
-            <tr>
-                <td>Loading...</td>
-            </tr>
-        </table>
-
-        <table id="weekly-challenge-table" class="w3-table-all category-tab-target challenge-table" style="display: none">
-            <tr>
-                <th>Date</th>
-                <th>Class</th>
-                <th>Event</th>
-                <th>Country</th>
-                <th>Stages</th>
-            </tr>
-            <tr>
-                <td>Loading...</td>
-            </tr>
-        </table>
-
-        <div id="challenge-failed" class="w3-text-red" style="display: none">
-            <h3>Failed to load challenges</h3>
-        </div>
-    </div>
-
-</div>
-
-<a href="https://dirtrally2.com/community-events" class="w3-text-grey w3-padding" target="_blank">Data from Dirt Rally 2.0 Community Events Page</a>
 
 <div class="w3-container w3-center">
     <p class="w3-text-dark-grey">&copy; Chris Raff 2020</p>

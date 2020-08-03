@@ -1,0 +1,10 @@
+body {
+    background: #ddd;
+}
+
+.main-content {
+    max-width: 1366px;
+    padding: 10px 5% 50px 5%;
+    background: white;
+    margin: auto;
+}

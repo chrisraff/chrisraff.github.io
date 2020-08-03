@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name='description' content='Convert your spire schedule into something you can add to your calendar, or a reasonable looking image'/>
-    
+
     <title>Spire Schedule Parser | Chris Raff</title>
+
+    <link rel="stylesheet" href="../css/w3.css">
+    <link rel="stylesheet" href="../css/textpage.css">
 
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120805992-1"></script>
@@ -20,30 +24,34 @@
   </head>
   <!--<form onsubmit="download(this['name'].value, this['text'].value)">-->
 
-  <h1>Spire With Fewer Tears - Spire Schedule Parser</h1>
-  <p><b>Instructions:</b> Log into spire. Click "weekly schedule" and then select "List View". Highlight from the top left corner of the class list to the bottom right corner. Copy what you've highlighted (press ctrl + c or right click and select copy). Paste your schedule into the text field below (ctrl + v or right click and select paste).</p>
-  <p>Once the schedule has been parsed, you can click on the schedule image to download it. You can also download your schedule as an iCalander file to upload to your Google Calander.</p>
-  <p>Works on Google Chrome, Edge, and Safari (desktop). Doesn't work on Internet Explorer</p>
+  <div class="main-content">
 
-  <form onsubmit="return false;">
-    <input type="text" id="filename" name="filename" value="Schedule"/>
-    <p>Paste schedule here:</p>
-    <textarea rows="15" cols="140" id="classPaste" name="text" style="margin: 10px 65.2px 10px 10px; max-width: 98%; white-space: pre-wrap;" onInput="parseAndUpdate(document.getElementById('classPaste').value); return false;"></textarea>
+    <h1>Spire With Fewer Tears - Spire Schedule Parser</h1>
+    <p><b>Instructions:</b> Log into spire. Click "weekly schedule" and then select "List View". Highlight from the top left corner of the class list to the bottom right corner. Copy what you've highlighted (press ctrl + c or right click and select copy). Paste your schedule into the text field below (ctrl + v or right click and select paste).</p>
+    <p>Once the schedule has been parsed, you can click on the schedule image to download it. You can also download your schedule as an iCalander file to upload to your Google Calander.</p>
+    <p>Works on Google Chrome, Edge, and Safari (desktop). Doesn't work on Internet Explorer</p>
 
-    <input type="submit" value="Submit"/>
-    <input type="button" value="Clear" onclick="document.getElementById('classPaste').value = '';"/>
-    
-    <!-- this div is where the parser can tell you if something went wrong -->
-    <div id="output"></div>
+    <form onsubmit="return false;">
+      <input type="text" id="filename" name="filename" value="Schedule"/>
+      <p>Paste schedule here:</p>
+      <textarea rows="15" cols="140" id="classPaste" name="text" style="margin: 10px 65.2px 10px 10px; max-width: 98%; white-space: pre-wrap;" onInput="parseAndUpdate(document.getElementById('classPaste').value); return false;"></textarea>
 
-    <input id="downloadCalendar" type="button" value="Download As iCalendar" onclick="download(document.getElementById('filename').value + '.ics', getIcalString(globalClasses)); return false;"/>
-    <a id="downloadImage">
-      <input type="button" value="Download Weekly Calendar Image"/>
-      <canvas width="1050" height="650" id="image" style="max-width: 100%; margin: 0px;">Weekly Calendar Image</canvas>
-    </a>
+      <input type="submit" value="Submit"/>
+      <input type="button" value="Clear" onclick="document.getElementById('classPaste').value = '';"/>
+      
+      <!-- this div is where the parser can tell you if something went wrong -->
+      <div id="output"></div>
 
-    <p>Color: 
-      <input type="range" min="0" max="255" value="1" id="colorSlider" onInput="updateCanvasImage();"/>
-    </p>
-  </form>
+      <input id="downloadCalendar" type="button" value="Download As iCalendar" onclick="download(document.getElementById('filename').value + '.ics', getIcalString(globalClasses)); return false;"/>
+      <a id="downloadImage">
+        <input type="button" value="Download Weekly Calendar Image"/>
+        <canvas width="1050" height="650" id="image" style="max-width: 100%; margin: 0px;">Weekly Calendar Image</canvas>
+      </a>
+
+      <p>Color: 
+        <input type="range" min="0" max="255" value="1" id="colorSlider" onInput="updateCanvasImage();"/>
+      </p>
+    </form>
+
+  </div>
 </html>
