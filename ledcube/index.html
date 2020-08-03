@@ -22,33 +22,40 @@
 
 <body>
 
+<div class="main-header">
+	<div class="main-header-content">
+		<h1>
+			<b>
+				<a href='../'>
+					Chris Raff
+				</a>
+			</b>
+		</h1>
+		
+		<h2>LED Cube</h2>
+	</div>
+</div>
+
 <div class="main-content">
 
-	<h1>
-		<a href='../'>
-			Chris Raff
-		</a>
-	</h1>
-	<h2>LED Cube</h2>
+	<p><a href="https://www.alexlamson.com" target="_blank">Alex Lamson</a> and I built the 8x8x8 for UMass Amherst's CICS 290m class, a class that was new at the time which exposes computer science students to hardware and microcontrollers. This project was well beyond the requirements for the final project. Since it's completion, we have demoed the cube several times at CS events and we continue to program new patterns and visualizations for it.</p>
+	<p>This <a href='https://sites.google.com/umass.edu/ledcube/home' target="_blank">website</a> documents the construction of the cube</p>
+	<p>You can also view the <a href='https://github.com/AlexLamson/ledcube' target="_blank">GitHub repo</a> for the code that drives the visualizations on the cube</p>
 	
 	<div style="overflow:hidden;" >
 		<img src='cube_corner.jpg' alt='LED Cube viewed from corner' style='max-width:150%; margin-left: 50%; transform: translateX(-50%);'/>
 	</div>
 	
-	<p>I built this with Alex Lamson for the CICS 290m class, a class that was new at the time which exposes computer science students to working with hardware and microcontrollers. This project certainly went beyond the requirements for the final project. Since it's completion, we have demoed the cube several times at CS events and we continue to program new patterns and visualizations for it.</p>
-	<p>This <a href='https://sites.google.com/umass.edu/ledcube/home' target="_blank">website</a> documents the construction of the cube</p>
-	<p>You can also view the <a href='https://github.com/AlexLamson/ledcube' target="_blank">GitHub repo</a> for the code that drives the visualizations on the cube</p>
-	
-	<h4>Revolutionary Wiring Scheme</h4>
+	<h4>Custom Wiring Scheme</h4>
 	<p>When looking around at how other people built LED cubes, it was commonplace to deliver power to the LEDs by running one 5V and one G wire per column of LEDs. Since one column of LEDs requires wire of about 20 cm from base to top and there are 64 columns, this would've meant 2 * 64 * 20 cm = 25.6 meters of wire! I was able to come up with a wiring scheme that used only one wire per column by alternating 5V and G and having LEDs bridge from their column to a neighbouring column on one axis. This halved the material required while also reducing visual clutter, weight and construction time. Here is a rough first sketch of the power delivery solution:</p>
 	<img src='cube_power.png' alt='Alternating 5V and G' style='max-width: 100%; max-height: 500pt'/>
 	<p>As demonstrated on the right side, things do get a bit cluttered at one edge (to the point that I failed to draw a connection) but I believe this one drawback is worth it and it didn't actually create much of a problem when building.</p>
-	<p>There is one small disclaimer to make about this wire scheme, which is that it seems to be creating some voltage spike problems that can corrupt the data signal that drives the neopixels. This seems to be the reason that the final layer of LEDs sometimes flashes, a problem that had no clear source until now. When I have more time, I hope to explore solutions. The data sheet for the LEDs says you're supposed to include a small capacitor in parallel with each LED, a step that we were eager to ignore when building the cube. It apparently doesn't suffice to just put a large capacitor in parallel with the whole thing.</p>
+	<p>As we've worked more with the cube, we have discovered that there are some voltage spike problems that can corrupt the data signal that drives the neopixels. This is likely related to the way power is delivered, specifically on the side of the cube with the bunched up wiring. These voltage spikes seems to be the reason that the final layer of LEDs sometimes flashes, a problem that previously had no clear source. When I have more time, I hope to explore solutions. The data sheet for the LEDs says that you're supposed to include a small capacitor in parallel with each LED, a step that we were eager to ignore when building the cube. It apparently doesn't suffice to simply put a large capacitor in parallel with the whole thing.</p>
 	
 	<h4>Programming</h4>
-	<p>An arduino chip drives the cube, specifically a Wemos R1 mini. This chip is a great chip all around - it's based on the ESP8266 so it's clock speed is fast by default and can go up to 160Mhz, it has a lot of memory which is critical since 512 colors need to be in memory at the very least, and it's tiny. Some of the demos run on data delivered over serial to the arduino, but I find this is ineffective for streaming the entire image to the cube since it's slow and prone to corruption. I prefer to do as much of the work as possible on the arduino side to keep it fast and independent.</p>
-	<p>I acquired several ESP32 chips, which is an improved version of the ESP8266. It has 2 cores, and fancy hardware for faster floating point operations. Sadly, I haven't been able to get it to work with the cube yet since the signal it produces to drive the lights seems much more prone to corruption. By default, it tries to drive all four LED data pins at once (which would be really impressive if it worked) but it seems that this creates some odd voltage spikes. The framerate is really impressive, though, and I hope to get it working eventually.</p>
-	<p>The FastLED library is superior to Adafruit's neopixel library in many ways, and I can't endorse it enough. It lets you access the array of pixels in memory directly which is quite handy, it lets you specify colors by hue in addition to RGB, and it includes many convenient and efficient math functions.</p>
+	<p>Arduino drives the cube, specifically we use a <a href="https://docs.wemos.cc/en/latest/d1/d1_mini.html" target="_blank">Wemos R1 mini</a>. This chip is greater all around - it's based on the ESP8266 so it's clock speed is fast by default and can go up to 160Mhz, it has a lot of memory which is critical since 512 colors need to be in memory at the very least, and it's tiny. Some of the demos run on data delivered over serial to the arduino, but I find this is ineffective for streaming the entire image to the cube since it's slow and prone to corruption. I prefer to do as much of the work as possible on the arduino side to keep it fast and independent.</p>
+	<p>I acquired several ESP32 chips (ESP32 MH-ET LIVE MiniKit), which is an improved version of the ESP8266. It has 2 cores, and fancy hardware for faster floating point operations. Sadly, I haven't been able to get it to work with the cube yet since the signal it produces to drive the lights seems much more prone to corruption. By default, it tries to drive all four LED data pins at once (which would be really impressive if it worked) but it seems that this creates some odd voltage spikes. The framerate is really impressive though, and I hope to get it working eventually.</p>
+	<p>The <a href="https://github.com/FastLED/FastLED" target="_blank">FastLED</a> library is superior to Adafruit's neopixel library in many ways, and I can't endorse it enough. It lets you access the array of pixels in memory directly which is quite handy, it lets you specify colors by hue in addition to RGB, and it includes many convenient and efficient math functions.</p>
 	<p>It took quite a while to get all the demos to run smoothly, but the main takeaways are:
 		<ul>
 			<li>
