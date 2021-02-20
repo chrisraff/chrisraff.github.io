@@ -49,6 +49,24 @@ var categoryNames = {
     },
 }
 
+vehicleClassMap = {
+    'RallyH1FwdCaps': 'H1 FWD',
+    'RallyH2FwdCaps': 'H2 FWD',
+    'RallyH2RwdCaps': 'H2 RWD',
+    'RallyH3RwdCaps': 'H3 RWD',
+    'RallyGrpACaps': 'Group A',
+    'RallyGrpB4wdCaps': 'Group B 4WD',
+    'RallyNr4R4Caps': 'NR4/R4',
+    'RallyR2Caps': 'R2',
+    'RallyR5Caps': 'R5',
+    'RallyRGtCaps': 'Rally GT',
+
+    'MultiCrosskartCaps': 'Crosskarts',
+    'RallyxLitesCaps': 'RallyX Lites',
+    'Rallyx1600sCaps': 'Super 1600',
+    'RallyxSupercarsCaps': 'RallyX Supercars'
+}
+
 window.onload = function() {
     // init charts
     chartDists = new Chart('distributions', {
@@ -271,6 +289,9 @@ function getAvailableChallenges() {
                             case 'date':
                                 text = stage.entryWindow.start;
                                 text = `${text.slice(8, 10)}.${text.slice(5, 7)}.${text.slice(0, 4)}`;
+                                break;
+                            case 'vehicleClass':
+                                text = safeDictionary( vehicleClassMap, stage[field] );
                                 break;
                             case 'stageCount':
                                 text = '1';
