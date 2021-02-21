@@ -778,7 +778,7 @@ function getDistribution(times, xValueArray, normalizationMax=null, bandwidth=5)
 
     let multiplier = 1;
     if (normalizationMax !== null) {
-        multiplier = normalizationMax / Math.max(...dist);
+        multiplier = normalizationMax / dist.reduce((a, b) => a + b, 0);
     }
 
     // compile the final results into (x, y) points
