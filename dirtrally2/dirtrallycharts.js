@@ -365,6 +365,7 @@ function multistageSortUpdate(multistageSort = null) {
 // update the user table
 function userUpdate() {
     updateTimeColumns();
+    tableRows = 7;
 
     let input = document.getElementById('username');
     let table = document.getElementById('userTable');
@@ -418,14 +419,14 @@ function userUpdate() {
     let tableStart = 0;
 
     if (usernameHits == 1) {
-        tableStart = Math.max(0, usernameIdx - 2);
+        tableStart = Math.max(0, usernameIdx - Math.floor(tableRows/2));
     }
 
     let i = tableStart;
     while (i < sortedStages.length) {
         entry = sortedStages[i];
 
-        if (displayCount >= 5) break;
+        if (displayCount >= tableRows) break;
 
         let match = isNameMatch(entry.name);
 
