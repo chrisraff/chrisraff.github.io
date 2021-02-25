@@ -522,7 +522,7 @@ function updateMultistageTable(challengeId, category) {
             row.classList.add("w3-hover-dark-grey");
 
             row.onclick =  function() {
-                getStageData(`${category}/${stage.entryWindow.start.slice(0,4)}/${stage.name}`);
+                getStageData(`${category}/${selectorYear}/${stage.name}`);
             };
 
             table.children[0].insertBefore(row, table.children[0].children[1]);
