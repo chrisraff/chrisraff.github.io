@@ -34,3 +34,21 @@ body {
 
     padding: 10px;
 }
+
+/* dark */
+
+body.dark {
+    background: #444;
+    color: #fafafa;
+}
+
+.dark .main-content {
+    max-width: 1366px;
+    padding: 10px 5% 50px 5%;
+    background: #262626;
+    margin: auto;
+}
+
+.dark .darkmode-able {
+    filter: invert(0.9) hue-rotate(180deg) contrast(0.88);
+}

@@ -40,6 +40,15 @@
       gtag('config', 'UA-120805992-1');
     </script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        $(document).ready(function() {
+          $('body').addClass('dark');
+        });
+      }
+    </script>
+
   </head>
 
   <body>

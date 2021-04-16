@@ -10,7 +10,7 @@ redirect_from:
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="DiRT RALLY 2.0 Community Event graphs"/>
-    
+
     <meta property="og:title" content="Dirt Rally 2 Graphs" />
     <meta property="og:description" content="DiRT RALLY 2.0 Community Event graphs" />
     <meta property="og:url" content="https://www.chrisraff.com/dirtrally2" />
@@ -32,6 +32,15 @@ redirect_from:
         gtag('js', new Date());
 
         gtag('config', 'UA-120805992-1');
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        $(document).ready(function() {
+          $('body').addClass('dark');
+        });
+      }
     </script>
 </head>
 <!-- https://www.w3schools.com/w3css/4/w3.css -->
@@ -176,7 +185,7 @@ redirect_from:
         </div>
 
         <!-- TODO year selector? -->
-        
+
         <div class="w3-container w3-border w3-padding challenge-category" style="height:400px;overflow:auto">
             <table id="daily-challenge-table" class="w3-table-all category-tab-target challenge-table">
                 <tr>
@@ -213,6 +222,7 @@ redirect_from:
     </div>
 
     <a href="https://dirtrally2.com/community-events" class="w3-text-grey w3-padding" target="_blank">Data from Dirt Rally 2.0 Community Events Page</a>
+
 </div>
 
 <div class="w3-container w3-center">

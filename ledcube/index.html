@@ -18,6 +18,15 @@
 
 		gtag('config', 'UA-120805992-1');
 	</script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        $(document).ready(function() {
+          $('body').addClass('dark');
+        });
+      }
+    </script>
 </head>
 
 <body>
@@ -48,7 +57,7 @@
 	
 	<h4>Custom Wiring Scheme</h4>
 	<p>When looking around at how other people built LED cubes, it was commonplace to deliver power to the LEDs by running one 5V and one G wire per column of LEDs. Since one column of LEDs requires wire of about 20 cm from base to top and there are 64 columns, this would've meant 2 * 64 * 20 cm = 25.6 meters of wire! I was able to come up with a wiring scheme that used only one wire per column by alternating 5V and G and having LEDs bridge from their column to a neighbouring column on one axis. This halved the material required while also reducing visual clutter, weight and construction time. Here is a rough first sketch of the power delivery solution:</p>
-	<img src='cube_power.png' alt='Alternating 5V and G' style='max-width: 100%; max-height: 500pt'/>
+	<img class='darkmode-able' src='cube_power.png' alt='Alternating 5V and G' style='max-width: 100%; max-height: 500pt'/>
 	<p>As demonstrated on the right side, things do get a bit cluttered at one edge (to the point that I failed to draw a connection) but I believe this one drawback is worth it and it didn't actually create much of a problem when building.</p>
 	<p>As we've worked more with the cube, we have discovered that there are some voltage spike problems that can corrupt the data signal that drives the neopixels. This is likely related to the way power is delivered, specifically on the side of the cube with the bunched up wiring. These voltage spikes seems to be the reason that the final layer of LEDs sometimes flashes, a problem that previously had no clear source. When I have more time, I hope to explore solutions. The data sheet for the LEDs says that you're supposed to include a small capacitor in parallel with each LED, a step that we were eager to ignore when building the cube. It apparently doesn't suffice to simply put a large capacitor in parallel with the whole thing.</p>
 	
