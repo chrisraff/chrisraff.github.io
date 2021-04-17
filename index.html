@@ -25,6 +25,14 @@
 				$('body').addClass('dark');
 			});
 		}
+		window.matchMedia('(prefers-color-scheme: dark)')
+			.addEventListener('change', event => {
+				if (event.matches) {
+					$('body').addClass('dark');
+				} else {
+					$('body').removeClass('dark');
+			}
+		});
 	</script>
 </head>
 

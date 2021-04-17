@@ -47,18 +47,18 @@ redirect_from:
                 Chart.defaults.global.defaultFontColor = "#ddd";
             });
         }
-    window.matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener('change', event => {
-            if (event.matches) {
-                $('body').addClass('dark');
-                Chart.defaults.global.defaultFontColor = "#ddd";
-                plotData();
-            } else {
-                $('body').removeClass('dark');
-                Chart.defaults.global.defaultFontColor = "#666";
-                plotData();
-        }
-    });
+        window.matchMedia('(prefers-color-scheme: dark)')
+            .addEventListener('change', event => {
+                if (event.matches) {
+                    $('body').addClass('dark');
+                    Chart.defaults.global.defaultFontColor = "#ddd";
+                    plotData();
+                } else {
+                    $('body').removeClass('dark');
+                    Chart.defaults.global.defaultFontColor = "#666";
+                    plotData();
+            }
+        });
     </script>
 </head>
 <!-- https://www.w3schools.com/w3css/4/w3.css -->
