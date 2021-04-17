@@ -35,10 +35,17 @@ body {
     padding: 10px;
 }
 
+.dr2-header {
+    background-color: #ddd;
+    max-width: 1366px;
+    padding: 10px 5% 10px 5%;
+    margin: auto;
+}
+
 /* dark */
 
 body.dark {
-    background: #444;
+    background: #1b1b1b;
     color: #fafafa;
 }
 
@@ -51,4 +58,33 @@ body.dark {
 
 .dark .darkmode-able {
     filter: invert(0.9) hue-rotate(180deg) contrast(0.88);
+}
+
+.dark .dr2-header {
+    background-color: #333;
+}
+
+.dark input,
+.dark select
+{
+    background-color: #333;
+    color: #fafafa;
+}
+
+.dark .w3-table-all tr:nth-child(odd) {
+    background-color: #262626;
+}
+.dark .w3-table-all tr:nth-child(even) {
+    background-color: #363636;
+}
+
+.dark .w3-table-all {
+    border-color: #444;
+}
+.dark .w3-border {
+    border-color: #444 !important;
+}
+
+.dark .w3-bordered tr, .w3-table-all tr {
+    border-bottom-color: #323232;
 }
