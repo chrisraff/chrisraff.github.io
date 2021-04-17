@@ -4,6 +4,8 @@ redirect_from:
   - /dirtrally2graph/
   - /dirtrallygraphs/
   - /dirtrallygraph/
+  - /dr2/
+  - /dr2graphs/
 ---
 <!DOCTYPE html>
 <html prefix="og: http://ogp.me/ns#">
@@ -35,17 +37,31 @@ redirect_from:
     </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="Chart.bundle.min.js"></script>
+
     <script>
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        $(document).ready(function() {
-          $('body').addClass('dark');
-        });
-      }
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            $(document).ready(function() {
+                $('body').addClass('dark');
+                Chart.defaults.global.defaultFontColor = "#ddd";
+            });
+        }
+    window.matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', event => {
+            if (event.matches) {
+                $('body').addClass('dark');
+                Chart.defaults.global.defaultFontColor = "#ddd";
+                plotData();
+            } else {
+                $('body').removeClass('dark');
+                Chart.defaults.global.defaultFontColor = "#666";
+                plotData();
+        }
+    });
     </script>
 </head>
 <!-- https://www.w3schools.com/w3css/4/w3.css -->
-
-<script src="Chart.bundle.min.js"></script>
 <script src="dirtrallycharts.js"></script>
 
 <body>

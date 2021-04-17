@@ -68,6 +68,7 @@ vehicleClassMap = {
 }
 
 window.onload = function() {
+
     // init charts
     chartDists = new Chart('distributions', {
         type: 'line',
@@ -710,6 +711,10 @@ function timeToString(value, precision=3) {
     return `${Math.floor(value / 60)}:${seconds}`;
 }
 
+function isDarkMode() {
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
 // ------- functions related to graphing
 
 function getXValues(times, resolution=150) {
@@ -814,7 +819,7 @@ function plotData() {
                 backgroundColor: 'rgba(255, 0, 0, 0.1)'
             }]
         }
-        
+
         // show DNFs on the count chart
         let timeLists = groupTimesByCategory(stageData['entries'], 'dnf');
         let keys = Object.keys(timeLists);
