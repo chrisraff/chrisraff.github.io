@@ -35,8 +35,28 @@ body {
     padding: 10px;
 }
 
+.tab-bar {
+    background-color: #aaa;
+}
+
+.tab-bar .category-tab-link:hover:not(.focused) {
+    background-color: #ccc;
+}
+
+.focused {
+    background-color: #77cbec !important;
+}
+.focused:hover {
+    background-color: #99e2ff !important;
+}
+
+.selectable:hover:not(.focused) {
+    background-color: #999 !important;
+    cursor: pointer;
+}
+
 .dr2-header {
-    background-color: #ddd;
+    background-color: #eee;
     max-width: 1366px;
     padding: 10px 5% 10px 5%;
     margin: auto;
@@ -64,6 +84,29 @@ body.dark {
     background-color: #333;
 }
 
+.dark .tab-bar {
+    background-color: #444;
+}
+
+.dark .tab-bar .category-tab-link:hover:not(.focused) {
+    color: #fafafa !important;
+    background-color: #555 !important;
+}
+
+.dark .focused {
+    color: #000;
+    background-color: #2cb4eb !important;
+}
+.dark .focused:hover {
+    color: #000;
+    background-color: #81cfee !important;
+}
+
+.dark .selectable:hover:not(.focused) {
+    background-color: #444444 !important;
+}
+
+
 .dark input,
 .dark select
 {
@@ -85,6 +128,6 @@ body.dark {
     border-color: #444 !important;
 }
 
-.dark .w3-bordered tr, .w3-table-all tr {
+.dark .w3-bordered tr, .dark .w3-table-all tr {
     border-bottom-color: #323232;
 }

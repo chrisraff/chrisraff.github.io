@@ -308,7 +308,7 @@ function getAvailableChallenges() {
                             row.appendChild(cell);
                         });
 
-                        row.classList.add("w3-hover-dark-grey");
+                        row.classList.add("selectable");
 
                         row.onclick =  function() {
                             getStageData(`${selectorCategory}/${selectorYear}/${stage.name}`);
@@ -475,7 +475,7 @@ function userUpdate() {
                 }
 
                 if (match && searchTerm != '') {
-                    cell.classList.add('w3-light-blue');
+                    cell.classList.add('focused');
                 }
 
                 cell.appendChild(
@@ -519,7 +519,7 @@ function updateMultistageTable(challengeId, category) {
 
             row.id = `stage-row-${stage.stageId}`;
 
-            row.classList.add("w3-hover-dark-grey");
+            row.classList.add("selectable");
 
             row.onclick =  function() {
                 getStageData(`${category}/${selectorYear}/${stage.name}`);
@@ -585,18 +585,18 @@ function updateTimeColumns() {
 
     if (stageData['challengeType'] != 'daily') {
         stageBorder.classList.add('w3-border');
-        stageBorder.classList.add('w3-hover-gray');
+        stageBorder.classList.add('selectable');
         totalBorder.classList.add('w3-border');
-        totalBorder.classList.add('w3-hover-gray');
+        totalBorder.classList.add('selectable');
 
         stageBorder.style = 'width:fit-content; padding-left:3px; padding-right:3px;';
         totalBorder.style = 'width:fit-content; padding-left:3px; padding-right:3px;';
 
     } else {
         stageBorder.classList.remove('w3-border');
-        stageBorder.classList.remove('w3-hover-gray');
+        stageBorder.classList.remove('selectable');
         totalBorder.classList.remove('w3-border');
-        totalBorder.classList.remove('w3-hover-gray');
+        totalBorder.classList.remove('selectable');
 
         stageBorder.style = 'width:fit-content;';
         totalBorder.style = 'width:fit-content;';
@@ -611,7 +611,7 @@ function updateSelectorHighlighting() {
     Array.prototype.forEach.call(
         document.getElementsByClassName('challenge-selected'),
         function(e) {
-            e.classList.remove('w3-light-blue');
+            e.classList.remove('focused');
             e.classList.remove('challenge-selected');
         }
     );
@@ -619,12 +619,12 @@ function updateSelectorHighlighting() {
     if (stageData != undefined) {
         let challengeRow = document.getElementById(`challenge-row-${stageData.challengeId}`);
         if (challengeRow != null) {
-            challengeRow.classList.add('w3-light-blue');
+            challengeRow.classList.add('focused');
             challengeRow.classList.add('challenge-selected');
         }
         let stageRow = document.getElementById(`stage-row-${stageData.stageId}`);
         if (stageRow != null && stageData.challengeType != 'daily') {
-            stageRow.classList.add('w3-light-blue');
+            stageRow.classList.add('focused');
             stageRow.classList.add('challenge-selected');
         }
     }
@@ -665,11 +665,11 @@ function updateCategoryTab(event, category) {
         Array.prototype.forEach.call(
             document.getElementsByClassName('category-tab-link'),
             function(e) {
-                e.classList.remove('w3-light-blue');
+                e.classList.remove('focused');
             }
         );
 
-        event.currentTarget.classList.add('w3-light-blue');
+        event.currentTarget.classList.add('focused');
 
         // populate the table
         getAvailableChallenges()
