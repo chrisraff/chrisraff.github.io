@@ -7,6 +7,7 @@
 
 	<link rel="stylesheet" href="css/w3.css">
 	<link rel="stylesheet" href="css/textpage.css">
+	<link rel="stylesheet" href="css/mainpage.css"></style>
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120805992-1"></script>
@@ -58,44 +59,68 @@
 	<div class="main-content">
 
 		<!-- Bio paragraph -->
-		<p>I'm a progammer, both professionally and as a hobby. I hope you enjoy some of the projects I've made:</p>
+		<p>I'm a progammer, both professionally and as a hobby. I hope you enjoy some of the projects I've made!</p>
 
 		<!-- List of project links -->
-		<h4>
-			<a href='3d-maze' onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': '3d-maze'})">
-				3D Maze Game
-			</a>
-		</h4>
 
-		<h4>
-			<a href='dicewarsai' onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': 'dicewarsai'})">
-				Improved Dice Wars AI
-			</a>
-		</h4>
+		<h2 class="section-title">Games</h2>
+		<hr/>
 
-		<h4>
-			<a href='ledcube' onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': 'ledcube'})">
-				LED Cube
-			</a>
-		</h4>
+		<div class="w3-row">
 
-		<h4>
-			<a href='dirtrally2' onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': 'dirtrally2'})">
-				Dirt Rally 2 Event Graphs
+			<a class="w3-third w3-section w3-padding" href='3d-maze' onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': '3d-maze'})">
+				<div class="w3-card w3-display-container w3-round">
+					<img src="https://github.com/chrisraff/3d-maze/blob/master/screenshot.png?raw=true"></img>
+					<div class="w3-display-bottomleft card-title">
+						<h3 class="w3-padding w3-text-white"> 3D Maze </h3>
+					</div>
+				</div>
 			</a>
-		</h4>
 
-		<h4>
-			<a href='https://github.com/AlexLamson/smart-skates' target="_blank" onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': 'smartskates'})">
-				Smart Skates
+			<a class="w3-third w3-section w3-padding" href='dicewarsai' onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': 'dicewarsai'})">
+				<div class="w3-card w3-display-container w3-round">
+					<img src="./images/dice-thumbnail.png"></img>
+					<div class="w3-display-bottomleft card-title">
+						<h3 class="w3-padding w3-text-white"> Dice Wars with Improved AI </h3>
+					</div>
+				</div>
 			</a>
-		</h4>
 
-		<h4>
-			<a href='https://github.com/chrisraff/context-free-network/blob/master/682_Final_Report.pdf' target="_blank" onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': 'context-free-network'})">
-				Exploring the Effects of Context Free Networks
+		</div>
+
+		<h2 class="section-title"> Projects </h2>
+		<hr/>
+
+		<div class="w3-row">
+
+			<a class="w3-third w3-section w3-padding" href='dirtrally2' onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': 'dirtrally2'})">
+				<div class="w3-card w3-display-container w3-round">
+					<img src="./images/dr2-thumbnail.png"></img>
+					<div class="w3-display-bottomleft card-title">
+						<h3 class="w3-padding w3-text-white"> Dirt Rally 2 Event Graphs </h3>
+					</div>
+				</div>
 			</a>
-		</h4>
+
+			<a class="w3-third w3-section w3-padding" href='ledcube' onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': 'ledcube'})">
+				<div class="w3-card w3-display-container w3-round">
+					<img src="./images/led_cube_thumbnail.jpg"></img>
+					<div class="w3-display-bottomleft card-title">
+						<h3 class="w3-padding w3-text-white"> LED Cube </h3>
+					</div>
+				</div>
+			</a>
+
+			<a class="w3-third w3-section w3-padding" href='https://github.com/AlexLamson/smart-skates' target="_blank" onclick="gtag('event', 'link', {'event_category': 'homepage', 'event_label': 'smartskates'})">
+				<div class="w3-card w3-display-container w3-round">
+					<img src="./images/smart-skates.png"></img>
+					<div class="w3-display-bottomleft card-title">
+						<h3 class="w3-padding w3-text-white"> Smart Skates </h3>
+					</div>
+				</div>
+			</a>
+
+		</div>
 
 	</div>
 

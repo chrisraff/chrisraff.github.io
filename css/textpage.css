@@ -131,3 +131,7 @@ body.dark {
 .dark .w3-bordered tr, .dark .w3-table-all tr {
     border-bottom-color: #323232;
 }
+
+.dark hr {
+  border: 1px solid #555;
+}

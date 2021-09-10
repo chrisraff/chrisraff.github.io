@@ -1,0 +1,54 @@
+
+.card-title {
+	width: 100%;
+	background-image: linear-gradient(#30303000, #303030aa, #303030cc);
+}
+
+.w3-card {
+	overflow: hidden;
+}
+
+a .w3-card {
+	height: 100%;
+	display: flex;
+}
+
+a .w3-container {
+	flex: 1;
+}
+
+.w3-card img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	overflow: hidden;
+	transition: 0.25s all ease-in-out;
+}
+
+.w3-card:hover img {
+	transform: scale(1.075);
+	filter: brightness(1.25);
+}
+
+.w3-card h3 {
+	margin-bottom: 0;
+	text-shadow: 2px 2px 0px #000;
+}
+
+.img-fill img {
+	align-self: center;
+}
+
+.w3-row {
+    display: flex;
+	flex-wrap: wrap;
+}
+
+h2.section-title {
+	color: #444;
+}
+
+.dark h2.section-title {
+	color: #bbb;
+}
