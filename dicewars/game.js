@@ -620,7 +620,7 @@ var Game = function(){
 					if ( area_info[ this.area_from ].unfriendly_neighbors == 1) { // if it's the only way out
 						if ( area_info[j].unfriendly_neighbors == 1 ) { // ...for both of them
 							if ( this.adat[j].dice < this.adat[ this.area_from ].dice ) continue; // prefer larger dice
-							else if ( adat[j].dice == this.adat[ this.area_from ] .dice)
+							else if ( game.adat[j].dice == this.adat[ this.area_from ] .dice)
 								// then prefer the less connected region
 								if ( area_info[j].num_neighbors < area_info[this.area_from].num_neighbors )
 									continue
