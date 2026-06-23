@@ -14,6 +14,19 @@
 .blog-archive {
 	flex: 1;
 	min-width: 0;
+	overflow-wrap: break-word;
+}
+
+.blog-post img,
+.blog-archive img {
+	max-width: 100%;
+	height: auto;
+}
+
+.blog-post pre,
+.blog-archive pre {
+	overflow-x: auto;
+	max-width: 100%;
 }
 
 .post-meta {
@@ -182,6 +195,7 @@
 @media screen and (max-width: 700px) {
 	.blog-layout {
 		flex-direction: column;
+		align-items: stretch;
 	}
 
 	.blog-sidebar {
