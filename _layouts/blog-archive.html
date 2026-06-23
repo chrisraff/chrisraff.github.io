@@ -13,7 +13,10 @@
 
 	<div class="main-content blog-layout">
 
-		<aside class="blog-sidebar" id="blog-sidebar"></aside>
+		<aside class="blog-sidebar">
+			<button type="button" class="blog-sidebar-toggle" id="blog-sidebar-toggle" aria-expanded="false" aria-controls="blog-sidebar">Browse posts</button>
+			<div id="blog-sidebar"></div>
+		</aside>
 
 		<div class="blog-archive">
 			<h1>{{ page.title }}</h1>

@@ -56,9 +56,19 @@ var Blog = (function () {
 		container.appendChild(wrap);
 	}
 
+	function initSidebarToggle(toggle, content) {
+		if (!toggle || !content) return;
+		toggle.addEventListener('click', function () {
+			var isOpen = content.classList.toggle('open');
+			toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+		});
+	}
+
 	function renderSidebar(selector) {
 		var container = document.querySelector(selector);
 		if (!container) return;
+
+		initSidebarToggle(document.getElementById('blog-sidebar-toggle'), container);
 
 		function draw() {
 			fetchPosts().then(function (posts) {
@@ -156,19 +166,32 @@ var Blog = (function () {
 			var list = document.createElement('div');
 			list.className = 'post-teaser-list';
 			posts.slice(0, count).forEach(function (post) {
-				var entry = document.createElement('div');
+				var entry = document.createElement('a');
 				entry.className = 'post-teaser';
+				entry.href = post.url;
+
+				if (post.image) {
+					var thumb = document.createElement('img');
+					thumb.className = 'post-teaser-thumb';
+					thumb.src = post.image;
+					thumb.alt = '';
+					entry.appendChild(thumb);
+				}
+
+				var text = document.createElement('div');
+				text.className = 'post-teaser-text';
 
 				var date = document.createElement('span');
 				date.className = 'post-teaser-date';
 				date.textContent = formatDate(post.date);
 
-				var a = document.createElement('a');
-				a.href = post.url;
-				a.textContent = post.title;
+				var title = document.createElement('span');
+				title.className = 'post-teaser-title';
+				title.textContent = post.title;
 
-				entry.appendChild(date);
-				entry.appendChild(a);
+				text.appendChild(date);
+				text.appendChild(title);
+				entry.appendChild(text);
 				list.appendChild(entry);
 			});
 			container.appendChild(list);
