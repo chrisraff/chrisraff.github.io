@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="css/w3.css">
 	<link rel="stylesheet" href="css/textpage.css">
 	<link rel="stylesheet" href="css/mainpage.css"></style>
+	<link rel="stylesheet" href="css/blog.css">
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120805992-1"></script>
@@ -60,6 +61,11 @@
 
 		<!-- Bio paragraph -->
 		<p>I'm a progammer, both professionally and as a hobby. I hope you enjoy some of the projects I've made!</p>
+
+		<!-- Latest blog posts -->
+		<h2 class="section-title">Latest Posts</h2>
+		<hr/>
+		<div id="latest-posts"></div>
 
 		<!-- List of project links -->
 
@@ -132,6 +138,13 @@
 		</div>
 
 	</div>
+
+	<script src="blog/blog.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			Blog.renderHomeTeaser('#latest-posts', 3);
+		});
+	</script>
 
 </body>
 </html>

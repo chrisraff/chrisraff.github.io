@@ -1,2 +1,11 @@
 gems:
   - jekyll-redirect-from
+
+permalink: /blog/:title/
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: blog-post
