@@ -15,12 +15,39 @@
 	flex: 1;
 	min-width: 0;
 	overflow-wrap: break-word;
+	display: flow-root;
 }
 
 .blog-post img,
 .blog-archive img {
 	max-width: 100%;
 	height: auto;
+}
+
+.blog-post iframe,
+.blog-archive iframe {
+	max-width: 100%;
+	border: 0;
+}
+
+/* Embeds float into a right-hand column, article text wrapping beside them.
+   Width comes from a height budget so they never outgrow the viewport;
+   aspect-ratio then supplies the height. Keep the 18/65 in the width calc in
+   sync with aspect-ratio. */
+.embed-frame {
+	float: right;
+	width: min(45%, calc(min(45vh, 620px) * 18 / 65));
+	aspect-ratio: 18 / 58;
+	margin: 0 0 20px 32px;
+	overflow: hidden;
+}
+
+.embed-frame iframe {
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	transform-origin: top left;
 }
 
 .blog-post pre,
@@ -214,5 +241,19 @@
 
 	#blog-sidebar.open {
 		display: block;
+	}
+
+	/* No room for a side column, so centre the embed at half the height budget.
+	   The iframe still lays out at 100vh worth of scene (4 x a 25vh box) and is
+	   scaled to fit, keeping the desktop framing at half the on-screen size. */
+	.embed-frame {
+		width: min(100%, calc(25vh * 18 / 65));
+		margin: 0 auto 20px;
+	}
+
+	.embed-frame iframe {
+		width: 200%;
+		height: 200%;
+		transform: scale(0.5);
 	}
 }
