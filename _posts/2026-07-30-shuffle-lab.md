@@ -22,4 +22,4 @@ I always theorized about how I might best visualize and experiment with riffle s
 </div>
 
 ## Feedback
-Dive into the code and [open a github issue](https://github.com/chrisraff/shuffle-lab/issues) [todo confirm shuffle lab repo url] if you have any requests or fixes, or shoot me a message on [linkedin](https://www.linkedin.com/in/chris-raff/). Enjoy your newly randomized decks!
+Dive into the code and [open a github issue](https://github.com/chrisraff/shuffle-lab/issues) if you have any requests or fixes, or shoot me a message on [linkedin](https://www.linkedin.com/in/chris-raff/). Enjoy your newly randomized decks!
