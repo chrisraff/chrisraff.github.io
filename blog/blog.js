@@ -154,13 +154,20 @@ var Blog = (function () {
 		draw();
 	}
 
-	function renderHomeTeaser(selector, count) {
+	// tag is optional: pass one to scope a teaser list to a single project,
+	// omit it for the site-wide list on the home page.
+	function renderHomeTeaser(selector, count, tag) {
 		count = count || 3;
 		var container = document.querySelector(selector);
 		if (!container) return;
 
 		fetchPosts().then(function (posts) {
 			container.innerHTML = '';
+			if (tag) {
+				posts = posts.filter(function (post) {
+					return (post.tags || []).indexOf(tag) !== -1;
+				});
+			}
 			if (posts.length === 0) return;
 
 			var list = document.createElement('div');

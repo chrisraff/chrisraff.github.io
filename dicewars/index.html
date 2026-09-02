@@ -10,6 +10,8 @@
 
     <link rel="stylesheet" href="../css/w3.css">
     <link rel="stylesheet" href="../css/textpage.css">
+    <link rel="stylesheet" href="../css/mainpage.css">
+    <link rel="stylesheet" href="../css/blog.css">
 
     <style>
       .main-content{
@@ -19,6 +21,50 @@
       background-color: #ffffff;
       display:block;
       margin:auto;
+      }
+
+      /* This page overrides .main-content padding to let the game run
+         full-bleed, so the announcements column carries its own. */
+      .announcements-column {
+        box-sizing: border-box;
+        padding: 20px;
+      }
+
+      /* 1366 content card + 16 gap + 300 column = 1682, so only past 1700 is
+         there room to sit it in the left gutter without squeezing the game.
+         Under that .page-layout is a plain block and, since the column comes
+         after the card in the markup, it simply falls to the bottom. */
+      @media screen and (min-width: 1700px) {
+        .page-layout {
+          display: flex;
+          justify-content: center;
+          align-items: flex-start;
+          gap: 16px;
+        }
+
+        .page-layout .main-content {
+          /* Its own margin:auto would absorb the free space and shove the
+             column out to the window edge, so the flex container centres the
+             pair instead. */
+          flex: 0 0 1366px;
+          margin: 0;
+        }
+
+        .announcements-column {
+          /* Last in the markup so it stacks at the bottom, moved to the left
+             of the card only once it's a row. */
+          order: -1;
+          flex: 0 0 300px;
+          position: sticky;
+          top: 10px;
+        }
+
+        /* Date over title rather than inline - the column is too narrow to
+           read them on one line. */
+        .announcements-column .post-teaser-text {
+          display: flex;
+          flex-direction: column;
+        }
       }
 
     </style>
@@ -68,19 +114,36 @@
       </div>
     </div>
 
-    <div class="main-content">
+    <div class="page-layout">
 
-      <iframe src="https://chrisraff.com/dicewarsjs/" style="border:none; width:100%; aspect-ratio:1; display:block;"></iframe>
+      <div class="main-content">
 
-      <div style="padding:20px ; text-align: center;">
-        <a href="https://www.gamedesign.jp/games/dicewars" target="_blank">Play the original version here</a>
+        <iframe src="https://chrisraff.com/dicewarsjs/" style="border:none; width:100%; aspect-ratio:1; display:block;"></iframe>
+
+        <div style="padding:20px ; text-align: center;">
+          <a href="https://www.gamedesign.jp/games/dicewars" target="_blank">Play the original version here</a>
+        </div>
+
+        <div style="padding:20px ; text-align: center;">
+          <a href="../dicewarsai/">Read about my AI and how you can make your own AI here</a>
+        </div>
+
       </div>
 
-      <div style="padding:20px ; text-align: center;">
-        <a href="../dicewarsai/">Read about my AI and how you can make your own AI here</a>
+      <div class="announcements-column">
+        <h2 class="section-title">Announcements</h2>
+        <hr/>
+        <div id="latest-posts"></div>
       </div>
 
     </div>
+
+    <script src="../blog/blog.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        Blog.renderHomeTeaser('#latest-posts', 3);
+      });
+    </script>
 
   </body>
 </html>
