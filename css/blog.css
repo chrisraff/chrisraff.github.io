@@ -50,6 +50,25 @@
 	transform-origin: top left;
 }
 
+/* Images that sit alongside the paragraph they illustrate. The float shrinks
+   to fit its image, so nothing upscales past its native size; max-width caps
+   how much of the column it can claim. Goes inline and centred below 700px. */
+.post-figure-right {
+	float: right;
+	max-width: 40%;
+	margin: 0 0 16px 24px;
+}
+
+.post-figure-wide {
+	max-width: 50%;
+}
+
+.post-figure-right img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
 .blog-post pre,
 .blog-archive pre {
 	overflow-x: auto;
@@ -163,9 +182,13 @@
 	text-decoration: none;
 }
 
+/* Fixed 16:9 box so every teaser's text starts at the same x, whatever the
+   thumbnail's native ratio. cover crops the overflow rather than stretching. */
 .post-teaser-thumb {
+	width: 89px;
 	height: 50px;
-	width: auto;
+	object-fit: cover;
+	object-position: center;
 	flex-shrink: 0;
 	border-radius: 4px;
 }
@@ -255,5 +278,13 @@
 		width: 200%;
 		height: 200%;
 		transform: scale(0.5);
+	}
+
+	.post-figure-right,
+	.post-figure-wide {
+		float: none;
+		width: fit-content;
+		max-width: 100%;
+		margin: 0 auto 20px;
 	}
 }
