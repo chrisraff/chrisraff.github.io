@@ -55,6 +55,7 @@
    how much of the column it can claim. Goes inline and centred below 700px. */
 .post-figure-right {
 	float: right;
+	clear: right;
 	max-width: 40%;
 	margin: 0 0 16px 24px;
 }
@@ -67,6 +68,17 @@
 	display: block;
 	max-width: 100%;
 	height: auto;
+}
+
+.post-figure-right figcaption {
+	margin-top: 6px;
+	font-size: 0.85em;
+	line-height: 1.4;
+	color: #666;
+}
+
+.dark .post-figure-right figcaption {
+	color: #aaa;
 }
 
 .blog-post pre,
